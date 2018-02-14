@@ -35,7 +35,8 @@ sudo /opt/kafka/kafka_2.11-1.0.0/bin/kafka-topics.sh --create --zookeeper localh
 echo "Listing available topic on apache kafka..."
 sudo /opt/kafka/kafka_2.11-1.0.0/bin/kafka-topics.sh --list --zookeeper localhost:2181
 
-
-#git clone https://github.com/arpitaggarwal/hello-spring.git
-
- 
+echo "Building and deploying app-1"
+cd /mnt; mvn clean install
+sudo cp target/app-1.war /var/lib/tomcat8/webapps/
+echo "Restarting tomcat server"
+sudo service tomcat8 restart

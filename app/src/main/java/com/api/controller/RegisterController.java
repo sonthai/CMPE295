@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/data")
 public class RegisterController {
     private static final Logger log = LoggerFactory.getLogger(RegisterController.class);
 

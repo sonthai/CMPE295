@@ -1,7 +1,5 @@
 package com.api.model;
 
-import org.springframework.context.annotation.Bean;
-
 public class ResponseMessage {
     private int responseCode;
     private String responseMsg;
