@@ -1,13 +1,15 @@
 package com.api.model;
 
+import com.api.constant.Constant.ResponseStatus;
+
 public class ResponseMessage {
-    private int responseCode;
+    private ResponseStatus responseCode;
     private String responseMsg;
 
-    public int getResponseCode() {
+    public ResponseStatus getResponseCode() {
         return responseCode;
     }
-    public void setResponseCode(int responseCode) {
+    public void setResponseCode(ResponseStatus responseCode) {
         this.responseCode = responseCode;
     }
     public String getResponseMsg() {

@@ -1,27 +1,29 @@
 package com;
 
-import com.api.database.domain.UserTable;
 import com.api.database.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.UUID;
 
 @ImportResource("classpath*:/appContext.xml")
-@PropertySource("classpath:/application.properties")
 @SpringBootApplication
-public class Application implements CommandLineRunner {
+public class Application {
     @Autowired
-    UserRepository userRepository;
+    //UserRepository userRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
+/*
     @Override
     public void run(String... strings) throws Exception {
         clearData();
@@ -47,5 +49,5 @@ public class Application implements CommandLineRunner {
 
     public void lookup() {
         Iterable<UserTable> userList = userRepository.findAll();
-    }
+    }*/
 }

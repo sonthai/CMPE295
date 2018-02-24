@@ -1,7 +1,8 @@
 package com.api.services;
 
-import com.api.database.domain.UserTable;
-import com.api.database.repository.UserRepository;
+import com.api.constant.Constant;
+import com.api.constant.Constant.*;
+import com.api.database.transaction.UserTransaction;
 import com.api.model.ResponseMessage;
 import com.api.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,19 +19,18 @@ public class UserService implements IUserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    UserRepository userRepository;
+    UserTransaction userTransaction;
 
     @Override
     public ResponseMessage register(Map<String, String> data) {
         log.info("Registration service is called");
         ObjectMapper mapper = new ObjectMapper();
         User u = mapper.convertValue(data, User.class);
-        UserTable userRow = new UserTable(UUID.randomUUID(), u.getUsername(), u.getEmail(), u.getPassword());
-        userRepository.save(userRow);
-        ResponseMessage response = new ResponseMessage();
-        response.setResponseCode(0);
-        response.setResponseMsg("Register successfully: " + data);
+        userTransaction.save(u);
 
+        ResponseMessage response = new ResponseMessage();
+        response.setResponseCode(ResponseStatus.OK);
+        response.setResponseMsg(u.getUsername() + " successfully registered");
         return response;
     }
 
@@ -39,10 +39,15 @@ public class UserService implements IUserService {
         log.info("Login service is called");
         ObjectMapper mapper = new ObjectMapper();
         User u = mapper.convertValue(data, User.class);
+        boolean found = userTransaction.findUser(u);
         ResponseMessage response = new ResponseMessage();
-        response.setResponseCode(0);
-        response.setResponseMsg("Login successfully: " + data);
-
+        if (found) {
+            response.setResponseCode(ResponseStatus.OK);
+            response.setResponseMsg(u.getUsername() + " logged in successfully.");
+        } else {
+            response.setResponseCode(ResponseStatus.OK);
+            response.setResponseMsg(u.getUsername() + " failed to login.");
+        }
         return response;
     }
 }

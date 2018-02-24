@@ -9,12 +9,12 @@ import org.springframework.data.cassandra.core.mapping.Table;
 import java.util.UUID;
 
 @Table("user")
-public class UserTable {
+public class UserDao {
+    @PrimaryKeyColumn(name = "user_id", ordinal = 0, ordering = Ordering.ASCENDING)
+    private UUID id;
+
     @PrimaryKeyColumn(name="user_name", type = PrimaryKeyType.PARTITIONED)
     private String username;
-
-    @PrimaryKeyColumn(name = "user_id", ordinal = 1, ordering = Ordering.ASCENDING)
-    private UUID id;
 
     @Column(value = "user_email")
     private String email;
@@ -22,13 +22,11 @@ public class UserTable {
     @Column(value = "user_password")
     private String password;
 
-    public UserTable(){}
-
-    public UserTable(UUID id, String username, String email, String password) {
+    public UserDao(UUID id, String username, String password, String email) {
         this.id = id;
         this.username = username;
-        this.email = email;
         this.password = password;
+        this.email = email;
     }
 
     public String getUsername() {
@@ -53,6 +51,10 @@ public class UserTable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
 }

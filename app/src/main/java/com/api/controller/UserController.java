@@ -1,5 +1,6 @@
 package com.api.controller;
 
+import com.api.constant.Constant;
 import com.api.database.repository.UserRepository;
 import com.api.model.ResponseMessage;
 import com.api.services.UserService;
@@ -20,30 +21,25 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    UserRepository userRepository;
-
     @RequestMapping(method = RequestMethod.POST, value="/register", consumes = "application/json", produces = "application/json")
     public ResponseMessage register(@RequestBody Map<String, String> bodyRequest) {
-        log.info("Register API is called");
+        log.info("Register API");
 
-        ResponseMessage response = userService.register(bodyRequest);
-
-        return response;
+        ResponseMessage responseMessage =  userService.register(bodyRequest);
+        return responseMessage;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/login", consumes = "application/json", produces = "application/json")
     public ResponseMessage logIn(@RequestBody Map<String, String> bodyRequest) {
         log.info("Log In API");
-        ResponseMessage response = userService.logIn(bodyRequest);
-        return response;
+        return userService.logIn(bodyRequest);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/test", produces = "application/json")
     public ResponseMessage testApi() {
         log.info("Test Rest API");
         ResponseMessage response = new ResponseMessage();
-        response.setResponseCode(0);
+        response.setResponseCode(Constant.ResponseStatus.OK);
         response.setResponseMsg("Rest API works!!!");
 
         return response;
@@ -53,7 +49,7 @@ public class UserController {
     public ResponseMessage getUser() {
         log.info("Get user");
         ResponseMessage response = new ResponseMessage();
-        response.setResponseCode(0);
+        response.setResponseCode(Constant.ResponseStatus.OK);
         response.setResponseMsg("Hello");
 
         return response;
