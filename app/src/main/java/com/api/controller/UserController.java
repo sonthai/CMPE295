@@ -1,7 +1,6 @@
 package com.api.controller;
 
 import com.api.constant.Constant;
-import com.api.database.repository.UserRepository;
 import com.api.model.ResponseMessage;
 import com.api.services.UserService;
 import org.slf4j.Logger;
@@ -9,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @RestController
