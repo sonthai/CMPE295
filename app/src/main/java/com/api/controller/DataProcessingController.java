@@ -18,13 +18,24 @@ public class DataProcessingController {
     @Autowired
     DataProcessingService dataProcessingService;
 
-    @RequestMapping(method = RequestMethod.POST, value="/recommend", consumes = "application/json")
+    @RequestMapping(method = RequestMethod.POST, value="/processData", consumes = "application/json")
     public ResponseMessage processUserData(@RequestBody Map<String, String> bodyRequest) {
         log.info("Process data from IoT device API");
         dataProcessingService.processData(bodyRequest);
 
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setResponseMsg("Kafka API called");
+        responseMessage.setResponseCode(Constant.ResponseStatus.OK);
+        return responseMessage;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="recommend", consumes = "application/json")
+    public ResponseMessage getRecommendation(@RequestBody Map<String, String> bodyRequest) {
+        log.info("Get recommendation API");
+        dataProcessingService.getRecommendation(bodyRequest);
+
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setResponseMsg("Retrieve result from engine");
         responseMessage.setResponseCode(Constant.ResponseStatus.OK);
         return responseMessage;
     }

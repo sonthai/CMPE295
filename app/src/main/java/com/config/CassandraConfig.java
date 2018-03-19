@@ -10,6 +10,7 @@ import org.springframework.data.cassandra.core.cql.keyspace.KeyspaceOption;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -36,10 +37,10 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
         return Arrays.asList(specification);
     }
 
-    @Override
-    protected List<DropKeyspaceSpecification> getKeyspaceDrops() {
-        return Arrays.asList(DropKeyspaceSpecification.dropKeyspace(KEYSPACE));
-    }
+    //@Override
+    //protected List<DropKeyspaceSpecification> getKeyspaceDrops() {
+      //  return Arrays.asList(DropKeyspaceSpecification.dropKeyspace(KEYSPACE));
+    //}
 
 
     @Override
@@ -47,8 +48,11 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
         return new String[]{"com.api.database.domain"};
     }
 
-    /*@Override
-    protected List<String> getStartupScripts() {
-        return Collections.singletonList("CREATE TABLE IF NOT EXISTS myKeySpace.test(id UUID PRIMARY KEY, greeting text, occurrence timestamp) WITH default_time_to_live = 600;");
-    }*/
+    //@Override
+    //protected List<String> getStartupScripts() {
+        //String insertions = "INSERT INTO app_keyspace.classifier (product_id, id, color_id, style_id, brand_id, upper_id, lower_id, gender_id) "
+          //      + " VALUES ('1',0,'1','2','3','2','3','1')";
+        //return Collections.singletonList(insertions);
+        //return Collections.singletonList("CREATE TABLE IF NOT EXISTS myKeySpace.test(id UUID PRIMARY KEY, greeting text, occurrence timestamp) WITH default_time_to_live = 600;");
+    //}
 }

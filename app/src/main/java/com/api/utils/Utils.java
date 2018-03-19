@@ -1,13 +1,20 @@
 package com.api.utils;
 
+import com.api.constant.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Component
 public class Utils {
@@ -34,5 +41,32 @@ public class Utils {
         Cipher cipher = getMutual();
         cipher.init(Cipher.DECRYPT_MODE, getAesKey());
         return new String(cipher.doFinal(encrypted.getBytes()));
+    }
+
+    public static String executeScript(String script, String options, String [] params) {
+        List<String> commands = new ArrayList<>();
+        commands.add(Constant.PYTHON_CMD);
+        commands.add(Constant.SCRIPTS_PATH + script);
+        commands.add(options);
+        commands.addAll(Arrays.asList(params));
+
+        String execCmd = commands.stream().map(i -> i.toString()).collect(Collectors.joining(" "));
+        StringBuffer output = new StringBuffer();
+        Process p = null;
+        try {
+            p = Runtime.getRuntime().exec(execCmd);
+            p.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                output.append(line);
+            }
+        } catch (Exception e) {
+            output.setLength(0);
+            output.append("Failed to execute script: " + execCmd);
+            e.printStackTrace();
+        } finally {
+            return output.toString();
+        }
     }
 }

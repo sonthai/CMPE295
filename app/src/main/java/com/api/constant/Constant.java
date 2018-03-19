@@ -1,5 +1,8 @@
 package com.api.constant;
 
 public class Constant {
-    public static enum ResponseStatus { OK, FAIL };
+    public enum ResponseStatus { OK, FAIL };
+
+    public static String PYTHON_CMD = "python";
+    public static String SCRIPTS_PATH = "/home/vagrant/scripts/";
 }

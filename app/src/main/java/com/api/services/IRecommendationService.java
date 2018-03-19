@@ -5,5 +5,6 @@ import com.api.model.ResponseMessage;
 import java.util.Map;
 
 public interface IRecommendationService {
-    public ResponseMessage recommend(Map<String, String> bodyRequest);
+    public ResponseMessage processInCommingData(Map<String, String> bodyRequest);
+    public ResponseMessage recommend(String ids);
 }

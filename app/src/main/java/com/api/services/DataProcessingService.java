@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -16,7 +15,10 @@ public class DataProcessingService {
     private static final Logger log = LoggerFactory.getLogger(DataProcessingService.class);
 
     @Autowired
-    KafkaProducer producer;
+    KafkaProducerService producer;
+
+    @Autowired
+    RecommendationService recommendationService;
 
     public void processData(Map<String, String> data) {
         ObjectMapper mapper = new ObjectMapper();
@@ -24,6 +26,10 @@ public class DataProcessingService {
 
         producer.send(convertUserAppearanceData(appearance));
 
+    }
+
+    public void getRecommendation(Map<String, String> data) {
+        recommendationService.recommend(data.get("ids"));
     }
 
     private ClassifierDao convertUserAppearanceData(UserAppearance ua) {

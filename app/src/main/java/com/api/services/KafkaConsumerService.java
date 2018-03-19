@@ -8,8 +8,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class KafkaConsumer {
-    private static final Logger log = LoggerFactory.getLogger(KafkaConsumer.class);
+public class KafkaConsumerService {
+    private static final Logger log = LoggerFactory.getLogger(KafkaConsumerService.class);
 
     @Autowired
     RecommendationService recommendationService;

@@ -2,6 +2,7 @@ package com.api.controller;
 
 import com.api.constant.Constant;
 import com.api.model.ResponseMessage;
+import com.api.services.RecommendationService;
 import com.api.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RecommendationService recommendationService;
 
     @RequestMapping(method = RequestMethod.POST, value="/register", consumes = "application/json", produces = "application/json")
     public ResponseMessage register(@RequestBody Map<String, String> bodyRequest) {
@@ -35,11 +39,12 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/test", produces = "application/json")
     public ResponseMessage testApi() {
         log.info("Test Rest API");
-        ResponseMessage response = new ResponseMessage();
+        return  recommendationService.processInCommingData(null);
+        /*ResponseMessage response = new ResponseMessage();
         response.setResponseCode(Constant.ResponseStatus.OK);
         response.setResponseMsg("Rest API works!!!");
 
-        return response;
+        return response;*/
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/user", produces = "application/json")

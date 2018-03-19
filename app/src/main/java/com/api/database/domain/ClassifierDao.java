@@ -6,12 +6,14 @@ import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import java.io.Serializable;
 import java.util.UUID;
 
+// This class might be removed later
 @Table("classifier")
-public class ClassifierDao {
+public class ClassifierDao implements Serializable {
     @PrimaryKeyColumn(name = "id", ordinal = 0, ordering = Ordering.ASCENDING)
-    private UUID id;
+    private int id;
 
     @PrimaryKeyColumn(name = "product_id", type = PrimaryKeyType.PARTITIONED)
     private String product;
@@ -34,11 +36,11 @@ public class ClassifierDao {
     @Column(value = "gender_id")
     private String gender;
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -97,4 +99,6 @@ public class ClassifierDao {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    public ClassifierDao() {}
 }
