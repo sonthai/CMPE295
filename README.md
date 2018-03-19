@@ -18,6 +18,6 @@
 - Process recommendation: POST /customer/processData
 	Body: {"id": "", 
 		   "image": "" , 
-		   "user_id": "" (Note: only mobile needs to send user_id over network
+		   "user_id": "" (Note: only mobile needs to send user_id over network)
 		  }
 		   
