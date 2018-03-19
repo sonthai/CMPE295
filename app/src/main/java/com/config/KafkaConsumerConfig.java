@@ -1,6 +1,6 @@
 package com.config;
 
-import com.api.database.domain.ClassifierDao;
+import com.api.model.UserRequest;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,9 +25,9 @@ public class KafkaConsumerConfig {
     private String kafkaConsumerGrpId;
 
     @Bean
-    public ConsumerFactory<String, ClassifierDao> consumerFactory() {
+    public ConsumerFactory<String, UserRequest> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfigs(), new StringDeserializer(),
-                new JsonDeserializer<>(ClassifierDao.class));
+                new JsonDeserializer<>(UserRequest.class));
     }
 
     @Bean
@@ -44,8 +44,8 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ClassifierDao> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ClassifierDao> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, UserRequest> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, UserRequest> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }

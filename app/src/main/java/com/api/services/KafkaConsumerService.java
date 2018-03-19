@@ -1,6 +1,6 @@
 package com.api.services;
 
-import com.api.database.domain.ClassifierDao;
+import com.api.model.UserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,8 @@ public class KafkaConsumerService {
     RecommendationService recommendationService;
 
     @KafkaListener(topics="${kafka.topic}")
-    public void receive(ClassifierDao data) {
-        log.info("received content = " + data);
+    public void receive(UserRequest userRequest) {
+        log.info("received content = " + userRequest.getImagePath());
+        recommendationService.processRecommendation(userRequest);
     }
 }

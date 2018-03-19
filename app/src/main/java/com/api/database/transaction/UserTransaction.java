@@ -61,7 +61,11 @@ public class UserTransaction implements ITransaction<User, UserDao> {
                 }
             }
         }
+    }
 
+    public boolean userExists(User rawData) {
+        List<UserDao> users = userRepository.findUserByUserName(rawData.getUsername());
+        return users.size() == 1;
     }
 
 }

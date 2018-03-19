@@ -4,11 +4,13 @@ import com.api.constant.Constant;
 import com.api.model.ResponseMessage;
 import com.api.services.RecommendationService;
 import com.api.services.UserService;
+import org.apache.kafka.common.protocol.types.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -18,9 +20,6 @@ public class UserController {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    RecommendationService recommendationService;
 
     @RequestMapping(method = RequestMethod.POST, value="/register", consumes = "application/json", produces = "application/json")
     public ResponseMessage register(@RequestBody Map<String, String> bodyRequest) {
@@ -39,12 +38,11 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/test", produces = "application/json")
     public ResponseMessage testApi() {
         log.info("Test Rest API");
-        return  recommendationService.processInCommingData(null);
-        /*ResponseMessage response = new ResponseMessage();
+        ResponseMessage response = new ResponseMessage();
         response.setResponseCode(Constant.ResponseStatus.OK);
         response.setResponseMsg("Rest API works!!!");
 
-        return response;*/
+        return response;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/user", produces = "application/json")

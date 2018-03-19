@@ -8,12 +8,19 @@ import org.springframework.stereotype.Component;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.xml.bind.DatatypeConverter;
 
 
 @Component
@@ -68,5 +75,19 @@ public class Utils {
         } finally {
             return output.toString();
         }
+    }
+
+    public static String saveIncomingImage(String id, String data) {
+        try {
+            byte[] decodedImg = Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8));
+            String filename = id + ".jpg";
+            Path destinationFile = Paths.get(Constant.IMAGE_PATH, filename);
+            Files.write(destinationFile, decodedImg);
+            return destinationFile.toString();
+        } catch (IOException ex) {
+            log.error("Failed to save image file  {}", ex);
+            return Constant.UPLOAD_FAILED;
+        }
+
     }
 }

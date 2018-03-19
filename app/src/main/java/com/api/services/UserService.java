@@ -25,11 +25,19 @@ public class UserService implements IUserService {
         log.info("Registration service is called");
         ObjectMapper mapper = new ObjectMapper();
         User u = mapper.convertValue(data, User.class);
-        userTransaction.save(u);
+        String msg = "";
+        ResponseStatus status = ResponseStatus.OK;
+        if (userTransaction.userExists(u)) {
+            msg = "User already exists";
+            status = ResponseStatus.FAIL;
+        } else {
+            userTransaction.save(u);
+            msg = u.getUsername() + " successfully registered";
+        }
 
         ResponseMessage response = new ResponseMessage();
-        response.setResponseCode(ResponseStatus.OK);
-        response.setResponseMsg(u.getUsername() + " successfully registered");
+        response.setResponseCode(status);
+        response.setResponseMsg(msg);
         return response;
     }
 
@@ -40,13 +48,16 @@ public class UserService implements IUserService {
         User u = mapper.convertValue(data, User.class);
         boolean found = userTransaction.findUser(u);
         ResponseMessage response = new ResponseMessage();
+        String msg = "";
+        ResponseStatus status = ResponseStatus.OK;
         if (found) {
-            response.setResponseCode(ResponseStatus.OK);
-            response.setResponseMsg(u.getUsername() + " logged in successfully.");
+            msg = u.getUsername() + " logged in successfully.";
         } else {
-            response.setResponseCode(ResponseStatus.OK);
-            response.setResponseMsg(u.getUsername() + " failed to login.");
+            msg = u.getUsername() + " failed to login.";
+            status = ResponseStatus.FAIL;
         }
+        response.setResponseMsg(msg);
+        response.setResponseCode(status);
         return response;
     }
 }

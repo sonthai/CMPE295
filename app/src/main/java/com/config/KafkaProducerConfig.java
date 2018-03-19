@@ -1,6 +1,6 @@
 package com.config;
 
-import com.api.database.domain.ClassifierDao;
+import com.api.model.UserRequest;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,12 +20,12 @@ public class KafkaProducerConfig {
     private String bootstrapServers;
 
     @Bean
-    public KafkaTemplate<String, ClassifierDao> kafkaTemplate() {
+    public KafkaTemplate<String, UserRequest> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
     @Bean
-    public ProducerFactory<String, ClassifierDao> producerFactory() {
+    public ProducerFactory<String, UserRequest> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 

@@ -6,7 +6,7 @@ sudo apt-get install -y default-jdk
 
 echo "Installing python and package dependency ..."
 python3 -V
-sudo apt-get update
+sudo apt-get upgrade
 sudo apt-get install -y python3-pip python3-dev
 pip3 install tensorflow
 pip3 install tensorflow-gpu
@@ -53,6 +53,10 @@ sudo cp target/app-1.war /var/lib/tomcat8/webapps/
 echo "Restarting tomcat server"
 sudo service tomcat8 restart
 
-echo "Copying classify image scripts to scripts folder"
+echo "Copying classify image scripts to scripts folder ..."
 cd /mnt
 sudo cp -R scripts/classify_images.py /home/vagrant/
+
+echo "Create uploads folder to store uploaded image ..."
+mkdir /home/vagrant/uploads
+sudo chown tomcat8:tomcat8 /home/vagrant/uploads
