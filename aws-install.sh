@@ -11,15 +11,12 @@ sudo apt-get install -y default-jdk
 echo "Installing python and package dependency ..."
 python3 -V
 sudo apt-get -y update
-#sudo apt-get install cuda-9.0
 sudo apt-get install -y python3-pip python3-dev
 pip3 install tensorflow
-#pip3 install tensorflow-gpu
 pip3 install psutil
 pip3 install annoy 
 pip3 install scipy 
 pip3 install nltk
-#pip3 install --upgrade tensorflow
 
 echo "Installing tomcat8..."
 #sudo echo "export CATALINA_OPTS=\"-Xms512m -Xmx1024m\"" >> $ROOT/.bashrc
@@ -44,6 +41,7 @@ sudo mkdir /opt/kafka
 sudo tar -xvf kafka_2.11-1.0.0.tgz -C /opt/kafka
 sudo rm kafka_2.11-1.0.0.tgz
 sudo echo "export KAFKA_HEAP_OPTS=\"-Xms500m -Xmx500m\"" >> $ROOT/../.bashrc
+source $ROOT/../.bashrc
 sudo nohup /opt/kafka/kafka_2.11-1.0.0/bin/kafka-server-start.sh /opt/kafka/kafka_2.11-1.0.0/config/server.properties > /tmp/kafka.log 2>&1 &
 echo "Waiting 10s for kafka to start..."
 sleep 10
@@ -55,15 +53,11 @@ sudo /opt/kafka/kafka_2.11-1.0.0/bin/kafka-topics.sh --list --zookeeper localhos
 
 
 echo "Building and deploying app-1"
-#sudo cp -R /mnt/app $ROOT/app
 cd $ROOT/app; mvn clean install
 sudo cp target/app-1.war /var/lib/tomcat8/webapps/
 echo "Restarting tomcat server"
 sudo service tomcat8 restart
 
-#echo "Copying engine folder ..."
-#cd /mnt
-#sudo cp -R engine/ $ROOT
 
 echo "Create uploads folder to store uploaded images ..."
 mkdir -p $ROOT/engine/uploads
