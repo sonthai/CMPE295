@@ -1,6 +1,9 @@
 package com.api.model;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.util.UUID;
 
 public class UserRequest {
 
@@ -12,20 +15,22 @@ public class UserRequest {
         this.imagePath = imagePath;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
-    public UserRequest(String userId, String imagePath) {
-        this.userId = userId;
+    public UserRequest(String userEmail, String imagePath) {
+        if (!StringUtils.isEmpty(userEmail)) {
+            this.userEmail = userEmail;
+        }
         this.imagePath = imagePath;
     }
 
-    private String userId;
+    private String userEmail;
     private String imagePath;
 
 }

@@ -13,7 +13,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
         ctx.register(AppConfig.class);
-        ctx.register(CassandraConfig.class);
+        ctx.register(DynamoDBConfig.class);
         ctx.register(KafkaProducerConfig.class);
         ctx.register(KafkaConsumerConfig.class);
         ctx.setServletContext(servletContext);

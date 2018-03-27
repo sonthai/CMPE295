@@ -6,7 +6,7 @@ echo "Root $ROOT"
 echo "******************************************"
 
 echo "Installing maven, git, curl, and java8 ..."
-sudo apt-get -y install maven git curl
+sudo apt-get -y install maven git curl, awscli
 sudo apt-get install -y default-jdk
 
 echo "Installing python and package dependency ..."
@@ -22,15 +22,6 @@ pip3 install nltk
 echo "Installing tomcat8..."
 #sudo echo "export CATALINA_OPTS=\"-Xms512m -Xmx1024m\"" >> $ROOT/.bashrc
 sudo apt-get -y install tomcat8 tomcat8-docs tomcat8-examples tomcat8-admin
-
-echo "Installing Apache Cassandra..."
-echo "deb http://www.apache.org/dist/cassandra/debian 311x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
-curl https://www.apache.org/dist/cassandra/KEYS | sudo apt-key add -
-sudo apt-key adv --keyserver pool.sks-keyservers.net --recv-key A278B781FE4B2BDA
-sudo apt-get update
-sudo apt-get install -y cassandra
-echo "Starting Apache Cassandra..."
-sudo sudo service cassandra start
 
 echo "Downloading kafka jar file ...."
 curl -O http://mirrors.advancedhosters.com/apache/kafka/1.0.0/kafka_2.11-1.0.0.tgz

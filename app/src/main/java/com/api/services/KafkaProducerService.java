@@ -26,7 +26,7 @@ public class KafkaProducerService {
         log.info("sending data=" + userRequest.getImagePath());
 
         // User Request sent from mobile
-        if (!StringUtils.isEmpty(userRequest.getUserId())) {
+        if (!StringUtils.isEmpty(userRequest.getUserEmail())) {
             return recommendationService.processRecommendation(userRequest);
         } else {
             // User Request sent from Jetson Tx2

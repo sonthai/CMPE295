@@ -1,14 +1,15 @@
 package com.api.database.repository;
 
-import com.api.database.domain.UserDao;
-import org.springframework.data.cassandra.repository.CassandraRepository;
-import org.springframework.data.cassandra.repository.Query;
+import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
+import com.api.constant.Constant;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.*;
 
 @Repository
-public interface UserRepository extends CassandraRepository<UserDao, String> {
-    @Query("select * from user where user_name = ?0")
-    List<UserDao> findUserByUserName(String username);
+public class UserRepository<UserDao> extends BasicAWSDynamoOps<UserDao> {
+    public List<Map<String, Object>> findByUserEmail(String userEmail) {
+        Map<String, Object> valueMap = new ValueMap().withString(":email", userEmail);
+        return scan(Constant.USER_TABLE, "Id, Email, Password", "Email = :email", valueMap);
+    }
 }

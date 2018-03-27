@@ -1,8 +1,8 @@
 package com.api.database.transaction;
 
+import com.api.constant.Constant;
 import com.api.database.domain.UserDao;
 import com.api.database.repository.UserRepository;
-import com.api.model.User;
 import com.api.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
+
 
 @Component
-public class UserTransaction implements ITransaction<User, UserDao> {
+public class UserTransaction implements ITransaction<Map<String, String>, UserDao> {
     private static final Logger log = LoggerFactory.getLogger(UserTransaction.class);
+
 
     @Autowired
     UserRepository userRepository;
@@ -23,7 +25,7 @@ public class UserTransaction implements ITransaction<User, UserDao> {
     Utils utils;
 
     @Override
-    public void save(User data) {
+    public void save(Map<String, String> data) {
         try {
             userRepository.save(convert(data));
         } catch (Exception e) {
@@ -32,29 +34,31 @@ public class UserTransaction implements ITransaction<User, UserDao> {
     }
 
     @Override
-    public void delete(User data) {
+    public void delete(Map<String, String> data) {
 
     }
 
     @Override
-    public UserDao convert(User rawData) throws Exception {
-        String encrypted = utils.encrypt(rawData.getPassword());
-        UserDao userDao = new UserDao(UUID.randomUUID(), rawData.getUsername(), encrypted, rawData.getEmail());
+    public UserDao convert(Map<String, String> rawData) throws Exception {
+        String encrypted = utils.encrypt(rawData.get(Constant.USER_PASSWORD));
+        UserDao userDao = new UserDao();
+        userDao.setEmail(rawData.get(Constant.USER_EMAIL));
+        userDao.setPassword(encrypted);
         return userDao;
     }
 
-    public boolean findUser(User rawData) {
-        List<UserDao> users = userRepository.findUserByUserName(rawData.getUsername());
+    public boolean findUser(Map<String, String> rawData) {
+        List<Map<String, Object>> users = userRepository.findByUserEmail(rawData.get(Constant.USER_EMAIL));
         if (users.size() < 1)
             return  false;
         else {
             String encrypted = "";
             try {
-                encrypted = utils.encrypt(rawData.getPassword());
+                encrypted = utils.encrypt(rawData.get(Constant.USER_PASSWORD));
             } catch (Exception e){
                 log.error(e.getMessage());
             } finally {
-                if (encrypted.equals(users.get(0).getPassword())) {
+                if (encrypted.equals(users.get(0).get("Password"))) {
                     return true;
                 } else {
                     return false;
@@ -63,8 +67,8 @@ public class UserTransaction implements ITransaction<User, UserDao> {
         }
     }
 
-    public boolean userExists(User rawData) {
-        List<UserDao> users = userRepository.findUserByUserName(rawData.getUsername());
+    public boolean userExists(Map<String, String> rawData) {
+        List<Map<String, Object>> users = userRepository.findByUserEmail(rawData.get(Constant.USER_EMAIL));
         return users.size() == 1;
     }
 

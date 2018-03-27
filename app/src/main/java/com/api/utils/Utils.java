@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.xml.bind.DatatypeConverter;
 
 
 @Component
@@ -33,8 +32,7 @@ public class Utils {
     }
 
     private Cipher getMutual() throws Exception {
-        Cipher cipher = Cipher.getInstance("AES");
-        return cipher;
+        return Cipher.getInstance("AES");
     }
 
     public String encrypt(String text) throws Exception {
@@ -50,12 +48,12 @@ public class Utils {
         return new String(cipher.doFinal(encrypted.getBytes()));
     }
 
-    public static String executeScript(String script, String options, String [] params) {
+    public static String executeScript(String script, String flag, String urlImage) {
         List<String> commands = new ArrayList<>();
         commands.add(Constant.PYTHON_CMD);
         commands.add(Constant.SCRIPTS_PATH + script);
-        commands.add(options);
-        commands.addAll(Arrays.asList(params));
+        commands.add(flag);
+        commands.add("\"" + urlImage + "\"");
 
         String execCmd = commands.stream().map(i -> i.toString()).collect(Collectors.joining(" "));
         StringBuffer output = new StringBuffer();
@@ -64,7 +62,7 @@ public class Utils {
             p = Runtime.getRuntime().exec(execCmd);
             p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = "";
+            String line;
             while ((line = reader.readLine()) != null) {
                 output.append(line);
             }
@@ -80,7 +78,7 @@ public class Utils {
     public static String saveIncomingImage(String id, String data) {
         try {
             byte[] decodedImg = Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8));
-            String filename = id + ".jpg";
+            String filename = id + ".jpeg";
             Path destinationFile = Paths.get(Constant.IMAGE_PATH, filename);
             Files.write(destinationFile, decodedImg);
             return destinationFile.toString();

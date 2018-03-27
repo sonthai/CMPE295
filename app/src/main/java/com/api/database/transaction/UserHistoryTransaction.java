@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class UserHistoryTransaction implements ITransaction<UserRequest,UserHistoryDao> {
     private static final Logger log = LoggerFactory.getLogger(UserHistoryTransaction.class);
@@ -32,7 +30,9 @@ public class UserHistoryTransaction implements ITransaction<UserRequest,UserHist
 
     @Override
     public UserHistoryDao convert(UserRequest rawData) throws Exception {
-        UserHistoryDao userHistoryDao = new UserHistoryDao(UUID.randomUUID(), rawData.getUserId(), rawData.getImagePath());
+        UserHistoryDao userHistoryDao = new UserHistoryDao();
+        userHistoryDao.setUserEmail(rawData.getUserEmail());
+        userHistoryDao.setProduct(rawData.getImagePath());
         return userHistoryDao;
     }
 }

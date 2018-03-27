@@ -1,11 +1,10 @@
 package com.api.services;
 
 
+import com.api.constant.Constant;
 import com.api.constant.Constant.*;
 import com.api.database.transaction.UserTransaction;
 import com.api.model.ResponseMessage;
-import com.api.model.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +22,14 @@ public class UserService implements IUserService {
     @Override
     public ResponseMessage register(Map<String, String> data) {
         log.info("Registration service is called");
-        ObjectMapper mapper = new ObjectMapper();
-        User u = mapper.convertValue(data, User.class);
-        String msg = "";
+        String msg;
         ResponseStatus status = ResponseStatus.OK;
-        if (userTransaction.userExists(u)) {
+        if (userTransaction.userExists(data)) {
             msg = "User already exists";
             status = ResponseStatus.FAIL;
         } else {
-            userTransaction.save(u);
-            msg = u.getUsername() + " successfully registered";
+            userTransaction.save(data);
+            msg = data.get(Constant.USER_EMAIL) + " successfully registered";
         }
 
         ResponseMessage response = new ResponseMessage();
@@ -44,16 +41,14 @@ public class UserService implements IUserService {
     @Override
     public ResponseMessage logIn(Map<String, String> data) {
         log.info("Login service is called");
-        ObjectMapper mapper = new ObjectMapper();
-        User u = mapper.convertValue(data, User.class);
-        boolean found = userTransaction.findUser(u);
+        boolean found = userTransaction.findUser(data);
         ResponseMessage response = new ResponseMessage();
-        String msg = "";
+        String msg;
         ResponseStatus status = ResponseStatus.OK;
         if (found) {
-            msg = u.getUsername() + " logged in successfully.";
+            msg = data.get(Constant.USER_EMAIL) + " logged in successfully.";
         } else {
-            msg = u.getUsername() + " failed to login.";
+            msg = data.get(Constant.USER_EMAIL) + " failed to login.";
             status = ResponseStatus.FAIL;
         }
         response.setResponseMsg(msg);

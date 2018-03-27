@@ -2,15 +2,12 @@ package com.api.controller;
 
 import com.api.constant.Constant;
 import com.api.model.ResponseMessage;
-import com.api.services.RecommendationService;
 import com.api.services.UserService;
-import org.apache.kafka.common.protocol.types.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -25,8 +22,7 @@ public class UserController {
     public ResponseMessage register(@RequestBody Map<String, String> bodyRequest) {
         log.info("Register API");
 
-        ResponseMessage responseMessage =  userService.register(bodyRequest);
-        return responseMessage;
+        return userService.register(bodyRequest);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/login", consumes = "application/json", produces = "application/json")
