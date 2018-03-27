@@ -6,7 +6,8 @@ echo "Root $ROOT"
 echo "******************************************"
 
 echo "Installing maven, git, curl, and java8 ..."
-sudo apt-get -y install maven git curl, awscli
+sudo apt-get -y install git curl
+sudo apt -y install maven  awscli
 sudo apt-get install -y default-jdk
 
 echo "Installing python and package dependency ..."
