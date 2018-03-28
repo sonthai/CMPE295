@@ -19,7 +19,7 @@ public class ProductDao {
     }
 
     @DynamoDBAttribute(attributeName = "Name")
-    public String getProduct_name() {
+    public String getProductName() {
         return product_name;
     }
 
@@ -43,7 +43,7 @@ public class ProductDao {
         this.id = id;
     }
 
-    public void setProduct_name(String product_name) {
+    public void setProductName(String product_name) {
         this.product_name = product_name;
     }
 

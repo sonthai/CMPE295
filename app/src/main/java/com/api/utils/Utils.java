@@ -1,15 +1,14 @@
 package com.api.utils;
 
 import com.api.constant.Constant;
+import com.api.database.domain.ProductDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -86,6 +85,38 @@ public class Utils {
             log.error("Failed to save image file  {}", ex);
             return Constant.UPLOAD_FAILED;
         }
+    }
 
+    public static List<ProductDao> createProductList(String filePath) {
+        List<ProductDao> products = new ArrayList<>();
+        BufferedReader br = null;
+        String line = "";
+        String csvSplitBy = ",";
+        try {
+            br = new BufferedReader(new FileReader(filePath));
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(csvSplitBy);
+                ProductDao product = new ProductDao();
+                product.setId(Integer.valueOf(parts[0]));
+                product.setProductName(parts[1]);
+                product.setBrand(parts[2]);
+                product.setPrice(Double.valueOf(parts[3]));
+                product.setImage(parts[4]);
+                products.add(product);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return products;
+        }
     }
 }

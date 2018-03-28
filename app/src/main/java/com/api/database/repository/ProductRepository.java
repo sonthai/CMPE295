@@ -17,7 +17,7 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
 
         // Modified image url
         for (Map<String, Object> item: results) {
-            StringBuilder image_url = new StringBuilder(Constant.S3_URL).append("/").append(item.get("Image"));
+            StringBuilder image_url = new StringBuilder(Constant.S3_URL).append(item.get("Image"));
             item.put("Image", image_url.toString());
         }
 
@@ -32,7 +32,7 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
 
         // Modified image url
         for (Map<String, Object> item: results) {
-            StringBuilder image_url = new StringBuilder(Constant.S3_URL).append("/").append(item.get("Image"));
+            StringBuilder image_url = new StringBuilder(Constant.S3_URL).append(item.get("Image"));
             item.put("Image", image_url.toString());
         }
 

@@ -11,6 +11,7 @@ import com.amazonaws.services.dynamodbv2.util.TableUtils;
 import com.api.database.domain.ProductDao;
 import com.api.database.domain.UserDao;
 import com.api.database.domain.UserHistoryDao;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
@@ -20,20 +21,19 @@ import java.util.List;
 
 @Configuration
 public class DynamoDBConfig {
-    //@Value("${amazon.dynamodb.endpoint}")
-    //private String amazonDynamoDBEndpoint;
+    @Value("${amazon.dynamodb.endpoint}")
+    private String amazonDynamoDBEndpoint;
 
-    //@Value("${amazon.aws.accesskey}")
-    //private String amazonAWSAccessKey;
+    @Value("${amazon.aws.accesskey}")
+    private String amazonAWSAccessKey;
 
-    //@Value("${amazon.aws.secretkey}")
-    //private String amazonAWSSecretKey;
+    @Value("${amazon.aws.secretkey}")
+    private String amazonAWSSecretKey;
 
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
         AmazonDynamoDB amazonDynamoDB
                 = new AmazonDynamoDBClient(amazonAWSCredentials());
-        String amazonDynamoDBEndpoint = "http://dynamodb.us-west-2.amazonaws.com"; //System.getenv("")
         if (!StringUtils.isEmpty(amazonDynamoDBEndpoint)) {
             amazonDynamoDB.setEndpoint(amazonDynamoDBEndpoint);
         }
@@ -43,8 +43,6 @@ public class DynamoDBConfig {
 
     @Bean
     public AWSCredentials amazonAWSCredentials() {
-        String amazonAWSAccessKey = System.getenv("AWS_ACCESS_KEY_ID");
-        String amazonAWSSecretKey = System.getenv("AWS_SECRET_ACCESS_KEY");
         return new BasicAWSCredentials(
                 amazonAWSAccessKey, amazonAWSSecretKey);
     }

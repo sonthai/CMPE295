@@ -18,6 +18,6 @@ public class Constant {
     public static String PRODUCT_TABLE = "product";
     public static String USER_HISTORY_TABLE = "user_history";
 
-    public static String S3_URL = "need to update the link";
+    public static String S3_URL = "https://s3-us-west-2.amazonaws.com/app-product-image/";
 
 }

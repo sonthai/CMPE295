@@ -3,7 +3,6 @@ package com.api.controller;
 import com.api.constant.Constant;
 import com.api.model.ResponseMessage;
 import com.api.services.DataProcessingService;
-import com.sun.corba.se.spi.ior.ObjectKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+
 
 @RestController
 @RequestMapping("/customer")
@@ -64,6 +64,19 @@ public class DataProcessingController {
         responseMessage.setResponseMsg(output);
         responseMessage.setResponseCode(Constant.ResponseStatus.OK);
         return responseMessage;
+    }
+
+    // Load data from csv to Dynamodb
+    @RequestMapping(method = RequestMethod.GET, value = "/load_products")
+    public ResponseMessage uploadProductsToDB() {
+        log.info("Test load product API");
+        String filePath = "C:\\Users\\sjsu\\Downloads\\product.csv";
+        int totalAddedProduct = dataProcessingService.addedProducts(filePath);
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setResponseMsg("Total added products: " + String.valueOf(totalAddedProduct));
+        responseMessage.setResponseCode(Constant.ResponseStatus.OK);
+        return responseMessage;
+
     }
 
 }

@@ -38,4 +38,11 @@ public class BasicAWSDynamoOps<T> {
 
         return results;
     }
+
+    public int saveItemsInBatch(List<T> items) {
+        DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDB);
+        List<DynamoDBMapper.FailedBatch> failedBatch  = mapper.batchSave(items);
+
+        return items.size() - failedBatch.size();
+    }
 }
