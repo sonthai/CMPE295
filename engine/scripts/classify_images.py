@@ -291,6 +291,7 @@ def find_similar_images(image_file):
       'similarity': rounded_similarity
     })
 
+  print(named_nearest_neighbors)
   with open('nearest_neighbors/' + image_file.split('.')[0] + '.json', 'w') as out:
     json.dump(named_nearest_neighbors, out)
 
