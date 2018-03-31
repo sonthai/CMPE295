@@ -3,6 +3,7 @@ package com.api.database.transaction;
 import com.api.constant.Constant;
 import com.api.database.domain.UserDao;
 import com.api.database.repository.UserRepository;
+import com.api.model.ResponseMessage;
 import com.api.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,11 +48,15 @@ public class UserTransaction implements ITransaction<Map<String, String>, UserDa
         return userDao;
     }
 
-    public boolean findUser(Map<String, String> rawData) {
+    public ResponseMessage findUser(Map<String, String> rawData) {
         List<Map<String, Object>> users = userRepository.findByUserEmail(rawData.get(Constant.USER_EMAIL));
-        if (users.size() < 1)
-            return  false;
-        else {
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setResponseCode(Constant.ResponseStatus.OK);
+        String msg;
+        if (users.size() < 1) {
+            responseMessage.setResponseCode(Constant.ResponseStatus.FAIL);
+            msg = rawData.get(Constant.USER_EMAIL) + " does not exist.";
+        } else {
             String encrypted = "";
             try {
                 encrypted = utils.encrypt(rawData.get(Constant.USER_PASSWORD));
@@ -59,12 +64,16 @@ public class UserTransaction implements ITransaction<Map<String, String>, UserDa
                 log.error(e.getMessage());
             } finally {
                 if (encrypted.equals(users.get(0).get("Password"))) {
-                    return true;
+                    msg = rawData.get(Constant.USER_EMAIL) + " logged in successfully.";
                 } else {
-                    return false;
+                    responseMessage.setResponseCode(Constant.ResponseStatus.FAIL);
+                    msg = rawData.get(Constant.USER_EMAIL) + " failed to login.";
                 }
             }
         }
+        responseMessage.setResponseMsg(msg);
+
+        return responseMessage;
     }
 
     public boolean userExists(Map<String, String> rawData) {

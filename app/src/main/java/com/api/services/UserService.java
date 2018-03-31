@@ -41,18 +41,6 @@ public class UserService implements IUserService {
     @Override
     public ResponseMessage logIn(Map<String, String> data) {
         log.info("Login service is called");
-        boolean found = userTransaction.findUser(data);
-        ResponseMessage response = new ResponseMessage();
-        String msg;
-        ResponseStatus status = ResponseStatus.OK;
-        if (found) {
-            msg = data.get(Constant.USER_EMAIL) + " logged in successfully.";
-        } else {
-            msg = data.get(Constant.USER_EMAIL) + " failed to login.";
-            status = ResponseStatus.FAIL;
-        }
-        response.setResponseMsg(msg);
-        response.setResponseCode(status);
-        return response;
+        return userTransaction.findUser(data);
     }
 }

@@ -31,6 +31,7 @@ public class UserController {
         return userService.logIn(bodyRequest);
     }
 
+    // The following is used to test only
     @RequestMapping(method = RequestMethod.GET, value = "/test", produces = "application/json")
     public ResponseMessage testApi() {
         log.info("Test Rest API");

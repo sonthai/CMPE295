@@ -43,19 +43,8 @@ public class DataProcessingController {
         return responseMessage;
     }
 
-    /*
-    @RequestMapping(method = RequestMethod.GET, value="/getProducts")
-    public ResponseMessage getRecommendation() {
-        log.info("Get recommendation for all the products API");
-        dataProcessingService.getRecommendation(bodyRequest);
 
-        ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setResponseMsg("Retrieve result from engine");
-        responseMessage.setResponseCode(Constant.ResponseStatus.OK);
-        return responseMessage;
-    }*/
-
-    // Testing API for same image
+    // Testing API for uploading image
     @RequestMapping(method = RequestMethod.POST, value = "/upload", produces = "application/json")
     public ResponseMessage upload(@RequestBody Map<String, String> bodyRequest) {
         log.info("Test Upload API");
@@ -65,18 +54,4 @@ public class DataProcessingController {
         responseMessage.setResponseCode(Constant.ResponseStatus.OK);
         return responseMessage;
     }
-
-    // Load data from csv to Dynamodb
-    @RequestMapping(method = RequestMethod.GET, value = "/load_products")
-    public ResponseMessage uploadProductsToDB() {
-        log.info("Test load product API");
-        String filePath = "C:\\Users\\sjsu\\Downloads\\product.csv";
-        int totalAddedProduct = dataProcessingService.addedProducts(filePath);
-        ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setResponseMsg("Total added products: " + String.valueOf(totalAddedProduct));
-        responseMessage.setResponseCode(Constant.ResponseStatus.OK);
-        return responseMessage;
-
-    }
-
 }
