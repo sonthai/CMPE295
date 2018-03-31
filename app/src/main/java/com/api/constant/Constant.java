@@ -19,5 +19,5 @@ public class Constant {
     public static String USER_HISTORY_TABLE = "user_history";
 
     public static String S3_URL = "https://s3-us-west-2.amazonaws.com/app-product-image/";
-
+    public static String IMAGE_URL = "https://dln7rdaxtcw3b.cloudfront.net/";
 }

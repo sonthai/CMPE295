@@ -8,6 +8,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.util.TableUtils;
+import com.api.database.domain.BrandDao;
 import com.api.database.domain.ProductDao;
 import com.api.database.domain.UserDao;
 import com.api.database.domain.UserHistoryDao;
@@ -62,10 +63,15 @@ public class DynamoDBConfig {
                 .generateCreateTableRequest(UserHistoryDao.class);
         userHistoryTable.setProvisionedThroughput(
                 new ProvisionedThroughput(1L, 1L));
+        CreateTableRequest brandTable = dynamoDBMapper
+                .generateCreateTableRequest(BrandDao.class);
+        brandTable.setProvisionedThroughput(
+                new ProvisionedThroughput(1L, 1L));
 
         requests.add(userTable);
         requests.add(productTable);
         requests.add(userHistoryTable);
+        requests.add(brandTable);
 
         requests.forEach(table -> TableUtils.createTableIfNotExists(amazonDynamoDB, table));
     }

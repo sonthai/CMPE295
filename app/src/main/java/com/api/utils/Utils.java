@@ -99,7 +99,7 @@ public class Utils {
                 ProductDao product = new ProductDao();
                 product.setId(Integer.valueOf(parts[0]));
                 product.setProductName(parts[1]);
-                product.setBrand(parts[2]);
+                product.setBrand(Integer.valueOf(parts[2]));
                 product.setPrice(Double.valueOf(parts[3]));
                 product.setImage(parts[4]);
                 products.add(product);
