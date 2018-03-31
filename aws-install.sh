@@ -6,8 +6,9 @@ echo "Root $ROOT"
 echo "******************************************"
 
 echo "Installing maven, git, curl, and java8 ..."
-sudo apt-get -y install git curl
-sudo apt -y install maven  awscli
+#sudo apt-get -y install git curl
+sudo apt -y install maven  
+sudo apt -y install awscli
 sudo apt-get install -y default-jdk
 
 echo "Installing python and package dependency ..."
@@ -28,9 +29,12 @@ echo "Downloading kafka jar file ...."
 curl -O http://mirrors.advancedhosters.com/apache/kafka/1.0.0/kafka_2.11-1.0.0.tgz
 mkdir $ROOT/kafka
 tar -xvf kafka_2.11-1.0.0.tgz -C $ROOT/kafka
-rm kafka_2.11-1.0.0.tgz
-echo "export KAFKA_HEAP_OPTS=\"-Xms500m -Xmx500m\"" >> $ROOT/.bashrc
-source $ROOT/.bashrc
+rm $CMPE295/kafka_2.11-1.0.0.tgz
+#echo "export KAFKA_HEAP_OPTS=\"-Xms500m -Xmx500m\"" >> $ROOT/.bashrc
+#source $ROOT/.bashrc
+echo "KAFKA HEAP OPTS: $KAFKA_HEAP_OPTS. Sleep 10s"
+sleep 10
+
 echo "Starting zookeeper server..."
 nohup $ROOT/kafka/kafka_2.11-1.0.0/bin/zookeeper-server-start.sh $ROOT/kafka/kafka_2.11-1.0.0/config/zookeeper.properties > $ROOT/kafka/zookeeper.log 2>&1 &
 echo "Waiting 10s for zookeeper to start..."
