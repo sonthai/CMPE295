@@ -17,7 +17,7 @@ public class ProductDao {
         return id;
     }
 
-    @DynamoDBAttribute(attributeName = "Name")
+    @DynamoDBAttribute(attributeName = "Product")
     public String getProductName() {
         return product_name;
     }

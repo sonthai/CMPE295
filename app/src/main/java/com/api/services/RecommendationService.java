@@ -52,6 +52,6 @@ public class RecommendationService implements IRecommendationService {
     public List<Map<String, Object>> recommend(int quantity) {
         // To Do Retrieve message based on the id from Message store
         List<String> imageList = NonCustomerResponseService.getMessageStoreInstance().getImages(quantity);
-        return productRepository.findAllProducts(imageList);
+        return productRepository.findProducts(imageList);
     }
 }

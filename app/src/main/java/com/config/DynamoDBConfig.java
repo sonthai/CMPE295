@@ -1,9 +1,9 @@
 package com.config;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
@@ -22,30 +22,14 @@ import java.util.List;
 
 @Configuration
 public class DynamoDBConfig {
-    @Value("${amazon.dynamodb.endpoint}")
-    private String amazonDynamoDBEndpoint;
-
-    @Value("${amazon.aws.accesskey}")
-    private String amazonAWSAccessKey;
-
-    @Value("${amazon.aws.secretkey}")
-    private String amazonAWSSecretKey;
-
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
-        AmazonDynamoDB amazonDynamoDB
-                = new AmazonDynamoDBClient(amazonAWSCredentials());
-        if (!StringUtils.isEmpty(amazonDynamoDBEndpoint)) {
-            amazonDynamoDB.setEndpoint(amazonDynamoDBEndpoint);
-        }
+        AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder.standard()
+                .withRegion(Regions.US_WEST_2)
+                .withCredentials(new ProfileCredentialsProvider("default"))
+                .build();
         preloadDatabaseTable(amazonDynamoDB);
         return amazonDynamoDB;
-    }
-
-    @Bean
-    public AWSCredentials amazonAWSCredentials() {
-        return new BasicAWSCredentials(
-                amazonAWSAccessKey, amazonAWSSecretKey);
     }
 
     public void preloadDatabaseTable(AmazonDynamoDB amazonDynamoDB) {

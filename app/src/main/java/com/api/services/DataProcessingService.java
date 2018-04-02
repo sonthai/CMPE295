@@ -24,9 +24,6 @@ public class DataProcessingService {
     @Autowired
     RecommendationService recommendationService;
 
-    @Autowired
-    ProductRepository productRepository;
-
     public String processData(Map<String, String> data) {
         String imagePath = Utils.saveIncomingImage(data.get("id"), data.get("image"));
 
@@ -46,9 +43,4 @@ public class DataProcessingService {
     public String saveImageToServer(Map<String, String> data) {
         return Utils.saveIncomingImage(data.get("id"), data.get("image"));
     }
-
-    public int addedProducts(String filePath) {
-        return productRepository.saveItemsInBatch(Utils.createProductList(filePath));
-    }
-
 }
