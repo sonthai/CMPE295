@@ -19,6 +19,12 @@ POST /user/login
 POST /user/register
 
 	Body: {"email": "", "password": ""}
+	
+- Update password
+
+POST /user/update_password
+
+	Body: {"email": "", "old_password": "", "new_password": ""}
   
 - Process recommendation: 
 
