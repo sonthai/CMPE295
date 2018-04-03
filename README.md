@@ -8,6 +8,8 @@
 
 
 ### Available Rest APIs
+
+#### User API
 - Login 
 
 POST /user/login
@@ -25,7 +27,25 @@ POST /user/register
 POST /user/update_password
 
 	Body: {"email": "", "old_password": "", "new_password": ""}
-  
+	
+#### Product API
+- Get info of one product by name
+
+POST /product/info
+
+	Body: {"name": ""}
+	
+where name is the image name of one product
+
+- Get info of multiple products
+
+POST /product/list
+
+	Body: {"name": ""}
+	
+where name is the comma separated image names of products
+
+#### Data Processing API  
 - Process recommendation: 
 
 POST /customer/processData
