@@ -3,7 +3,6 @@ package com.api.database.transaction;
 import com.api.constant.Constant;
 import com.api.database.domain.UserDao;
 import com.api.database.repository.UserRepository;
-import com.api.model.ResponseMessage;
 import com.api.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,37 +47,24 @@ public class UserTransaction implements ITransaction<Map<String, String>, UserDa
         return userDao;
     }
 
-    public ResponseMessage findUser(Map<String, String> rawData) {
-        List<Map<String, Object>> users = userRepository.findByUserEmail(rawData.get(Constant.USER_EMAIL));
-        ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setResponseCode(Constant.ResponseStatus.OK);
-        String msg;
-        if (users.size() < 1) {
-            responseMessage.setResponseCode(Constant.ResponseStatus.FAIL);
-            msg = rawData.get(Constant.USER_EMAIL) + " does not exist.";
-        } else {
-            String encrypted = "";
-            try {
-                encrypted = utils.encrypt(rawData.get(Constant.USER_PASSWORD));
-            } catch (Exception e){
-                log.error(e.getMessage());
-            } finally {
-                if (encrypted.equals(users.get(0).get("Password"))) {
-                    msg = rawData.get(Constant.USER_EMAIL) + " logged in successfully.";
-                } else {
-                    responseMessage.setResponseCode(Constant.ResponseStatus.FAIL);
-                    msg = rawData.get(Constant.USER_EMAIL) + " failed to login.";
-                }
-            }
+    public boolean isPasswordMatch(Map<String, Object> userMap, String userPwdInput) {
+        String encrypted = "";
+        try {
+            encrypted = utils.encrypt(userPwdInput);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            return encrypted.equals(userMap.get("Password"));
         }
-        responseMessage.setResponseMsg(msg);
 
-        return responseMessage;
     }
 
-    public boolean userExists(Map<String, String> rawData) {
-        List<Map<String, Object>> users = userRepository.findByUserEmail(rawData.get(Constant.USER_EMAIL));
-        return users.size() == 1;
+    public List getUsers(Map<String, String> rawData) {
+        return userRepository.findByUserEmail(rawData.get(Constant.USER_EMAIL));
+    }
+
+    public void updatePassword(Map<String, String> userMap) {
+        save(userMap);
     }
 
 }

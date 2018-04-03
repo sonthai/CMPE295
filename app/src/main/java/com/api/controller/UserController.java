@@ -31,6 +31,13 @@ public class UserController {
         return userService.logIn(bodyRequest);
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/update_password", consumes = "application/json", produces = "application/json")
+    public ResponseMessage updatePassword(@RequestBody Map<String, String> bodyRequest) {
+        log.info("Update password API");
+        return userService.updatePassword(bodyRequest);
+    }
+
+
     // The following is used to test only
     @RequestMapping(method = RequestMethod.GET, value = "/test", produces = "application/json")
     public ResponseMessage testApi() {
