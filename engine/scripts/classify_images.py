@@ -265,7 +265,7 @@ def find_similar_images(image_file):
   t = AnnoyIndex(dims)
   for file_index, i in enumerate(infiles):
     file_vector = np.loadtxt(i)
-    file_name = os.path.basename(i).split('.')[0]
+    file_name = os.path.basename(i).split('.')[0] +'.' + os.path.basename(i).split('.')[1]
     file_index_to_file_name[file_index] = file_name
     file_index_to_file_vector[file_index] = file_vector
     file_name_to_file_index[file_name] = file_index
