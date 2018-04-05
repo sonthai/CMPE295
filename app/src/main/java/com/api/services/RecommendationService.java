@@ -31,7 +31,7 @@ public class RecommendationService implements IRecommendationService {
     @Override
     public ResponseMessage processRecommendation(UserRequest userRequest) {
         String imageName = Utils.executeScript("classify_images.py", "--image_file", userRequest.getImagePath());
-        imageName = "aero_womentop_1.jpg";
+        //imageName = "aero_womentop_1.jpg";
         if (!StringUtils.isEmpty(imageName)) {
             // Remove the upload image
             String msg = Utils.removeImage(userRequest.getImagePath());
