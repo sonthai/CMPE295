@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -30,11 +31,12 @@ public class RecommendationService implements IRecommendationService {
 
     @Override
     public ResponseMessage processRecommendation(UserRequest userRequest) {
-        String imageName = Utils.executeScript("classify_images.py", "--image_file", userRequest.getImagePath());
+        String imageName = Utils.executeScript("classify_images.py", "--image_file", getImagePath(userRequest.getImagePath()));
+        // Add logic to check if <imageId>.json exists then parse json file
         //imageName = "aero_womentop_1.jpg";
         if (!StringUtils.isEmpty(imageName)) {
             // Remove the upload image
-            String msg = Utils.removeImage(userRequest.getImagePath());
+            String msg = Utils.removeImage(getImagePath(userRequest.getImagePath()));
             log.info(msg);
         }
 
@@ -106,5 +108,9 @@ public class RecommendationService implements IRecommendationService {
         }
 
         return results;
+    }
+
+    private String getImagePath(String imageId) {
+        return Paths.get(Constant.IMAGE_PATH, imageId + ".jpeg").toString();
     }
 }

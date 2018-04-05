@@ -97,7 +97,7 @@ public class Utils {
             String filename = id + ".jpeg";
             Path destinationFile = Paths.get(Constant.IMAGE_PATH, filename);
             Files.write(destinationFile, decodedImg);
-            return destinationFile.toString();
+            return filename;
         } catch (IOException ex) {
             log.error("Failed to save image file  {}", ex);
             return Constant.UPLOAD_FAILED;

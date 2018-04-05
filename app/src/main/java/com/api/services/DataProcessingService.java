@@ -23,15 +23,15 @@ public class DataProcessingService {
     RecommendationService recommendationService;
 
     public String processData(Map<String, String> data) {
-        String imagePath = Utils.saveIncomingImage(data.get("id"), data.get("image"));
+        String imageName = Utils.saveIncomingImage(data.get("id"), data.get("image"));
 
-        if (!StringUtils.isEmpty(imagePath)) {
-            UserRequest userRequest = new UserRequest(data.getOrDefault(Constant.USER_EMAIL, ""), imagePath);
+        if (!StringUtils.isEmpty(imageName)) {
+            UserRequest userRequest = new UserRequest(data.getOrDefault(Constant.USER_EMAIL, ""), data.get("id"));
             userRequest.setKeepImage(Boolean.valueOf(data.getOrDefault("keepImage", "false")));
             producer.send(userRequest);
         }
 
-        return imagePath;
+        return imageName;
     }
 
     public List<Map<String, Object>> getRecommendation(Map<String, Object> data) {
