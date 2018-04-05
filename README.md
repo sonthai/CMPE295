@@ -59,9 +59,39 @@ POST /customer/processData
 
 GET /customer/recommend
 
-  	Body {"quantity": (number)}
+  	Body {"quantity": (number), "email": "" (for mobile case)}
 	
-where quantity will indicate how many result return.
+where quantity will indicate how many result returned. If it is not specified, it will return 5 results by default.
 If the quantity is higher than the available images, it will return all the available products
-else it will return the number products requested
+else it will return the number of products being requested
+
+	Response: 
+
+	      {
+		    "responseCode": "OK",
+		    
+		    "responseMsg": "Retrieve result from engine",
+		    
+		    "data": [
+		    
+			{
+			    "id": 251,
+			    "image": "aero_womentop_1.jpg",
+			    "brand": 12,
+			    "price": 12,
+			    "productName": "Long Sleeve Heathered Henley "
+			},
+			
+			{
+			    "id": 154,
+			    "image": "levi_slim_fit_v-neck_tees.jpg",
+			    "brand": 19,
+			    "price": 10,
+			    "productName": "Slim Fit V-neck Tees"
+			}
+			
+		    ]
+		    
+		}
+	
 		   
