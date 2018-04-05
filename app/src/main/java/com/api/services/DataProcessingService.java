@@ -1,7 +1,6 @@
 package com.api.services;
 
 import com.api.constant.Constant;
-import com.api.database.repository.ProductRepository;
 import com.api.model.UserRequest;
 import com.api.utils.Utils;
 import org.slf4j.Logger;
@@ -12,7 +11,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class DataProcessingService {
@@ -29,6 +27,7 @@ public class DataProcessingService {
 
         if (!StringUtils.isEmpty(imagePath)) {
             UserRequest userRequest = new UserRequest(data.getOrDefault(Constant.USER_EMAIL, ""), imagePath);
+            userRequest.setKeepImage(Boolean.valueOf(data.getOrDefault("keepImage", "false")));
             producer.send(userRequest);
         }
 

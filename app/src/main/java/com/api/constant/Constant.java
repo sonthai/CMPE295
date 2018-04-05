@@ -12,6 +12,7 @@ public class Constant {
 
     public static String USER_PASSWORD = "password";
     public static String USER_EMAIL ="email";
+    public static String PRODUCT_ID = "product";
 
     // Table
     public static String USER_TABLE = "user";

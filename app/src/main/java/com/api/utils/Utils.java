@@ -10,9 +10,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,6 +69,25 @@ public class Utils {
             e.printStackTrace();
         } finally {
             return output.toString();
+        }
+    }
+
+    public static String removeImage(String imagePath) {
+        String msg = "";
+        try {
+            Path filePath = Paths.get(imagePath);
+            Files.deleteIfExists(filePath);
+            msg = imagePath + " was removed successfully";
+        } catch (NoSuchFileException e) {
+            msg = "No such file/directory exists";
+        }
+        catch(DirectoryNotEmptyException e) {
+            msg = "Directory is not empty.";
+        }
+        catch(IOException e) {
+            msg = "Invalid permissions.";
+        } finally {
+            return msg;
         }
     }
 

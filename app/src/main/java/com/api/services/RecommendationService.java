@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,16 +30,27 @@ public class RecommendationService implements IRecommendationService {
     @Override
     public ResponseMessage processRecommendation(UserRequest userRequest) {
         String imageName = Utils.executeScript("classify_images", "--image_file", userRequest.getImagePath());
-        List<Map<String, Object>> productList = null;
+        if (!StringUtils.isEmpty(imageName)) {
+            // Remove the upload image
+            String msg = Utils.removeImage(imageName);
+            log.info(msg);
+        }
+
+        List<Map<String, Object>> productList = new ArrayList<>();
         if (!StringUtils.isEmpty(userRequest.getUserEmail())) {
-            userHistoryTransaction.save(userRequest);
             productList = productRepository.findProductByImageName(imageName);
+
+            // Save the user email and recommended product in user request history table
+            Map<String, Object> request = new HashMap<>();
+            request.put(Constant.USER_EMAIL, userRequest.getUserEmail());
+            request.put(Constant.PRODUCT_ID, productList.get(0).get("Id"));
+            userHistoryTransaction.save(request);
         } else {
             // Store result in in-memory MessageStore for non member users
             NonCustomerResponseService instance = NonCustomerResponseService.getMessageStoreInstance();
             instance.addImages(imageName);
 
-            //List<Integer> productIds = productRepostory.findUserByUserName(new String[] {imageName});
+            //List<Integer> productIds = productRepository.findUserByUserName(new String[] {imageName});
             //instance.addUserId(userRequest.getUserId(), productIds.get(0));
         }
 

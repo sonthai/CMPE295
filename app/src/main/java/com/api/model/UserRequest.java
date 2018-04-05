@@ -28,9 +28,19 @@ public class UserRequest {
             this.userEmail = userEmail;
         }
         this.imagePath = imagePath;
+        this.keepImage = false;
+    }
+
+    public boolean isKeepImage() {
+        return keepImage;
+    }
+
+    public void setKeepImage(boolean keepImage) {
+        this.keepImage = keepImage;
     }
 
     private String userEmail;
     private String imagePath;
+    private boolean keepImage;
 
 }
