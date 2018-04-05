@@ -6,6 +6,7 @@ import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.api.constant.Constant;
 import com.api.database.domain.ProductDao;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,5 +56,22 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
         });
 
         return results;
+    }
+
+    public List<Map<String, Object>> findProductsForMember() {
+        DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDB);
+
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+        List<ProductDao> scanResult = mapper.scan(ProductDao.class, scanExpression);
+
+        List<Map<String, Object>> results = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        scanResult.forEach(productDao -> results.add(objectMapper.convertValue(productDao, Map.class)));
+
+        return results;
+
+
+
+
     }
 }

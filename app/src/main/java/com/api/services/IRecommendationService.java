@@ -8,5 +8,5 @@ import java.util.Map;
 
 public interface IRecommendationService {
     public ResponseMessage processRecommendation(UserRequest userRequest);
-    public List<Map<String, Object>> recommend(int quantity);
+    public List<Map<String, Object>> recommend(Map<String, Object> requestBody);
 }

@@ -31,8 +31,8 @@ public class DataProcessingController {
         return responseMessage;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value="/recommend", consumes = "application/json")
-    public ResponseMessage getRecommendation(@RequestBody Map<String, String> bodyRequest) {
+    @RequestMapping(method = RequestMethod.POST, value="/recommend", consumes = "application/json")
+    public ResponseMessage getRecommendation(@RequestBody Map<String, Object> bodyRequest) {
         log.info("Get recommendation API");
         List<Map<String, Object>> results =  dataProcessingService.getRecommendation(bodyRequest);
 

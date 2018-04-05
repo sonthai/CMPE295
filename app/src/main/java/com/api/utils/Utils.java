@@ -48,7 +48,7 @@ public class Utils {
     public static String executeScript(String script, String flag, String urlImage) {
         List<String> commands = new ArrayList<>();
         commands.add(Constant.PYTHON_CMD);
-        commands.add(Constant.SCRIPTS_PATH + script);
+        commands.add(Paths.get(Constant.SCRIPTS_PATH, script).toString());
         commands.add(flag);
         commands.add("\"" + urlImage + "\"");
 

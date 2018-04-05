@@ -21,4 +21,6 @@ public class Constant {
 
     public static String S3_URL = "https://s3-us-west-2.amazonaws.com/app-product-image/";
     public static String IMAGE_URL = "https://dln7rdaxtcw3b.cloudfront.net/";
+
+    public static int NUMBER_PRODUCTS_RECOMMENDED = 5;
 }

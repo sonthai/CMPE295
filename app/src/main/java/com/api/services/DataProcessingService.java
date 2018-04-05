@@ -34,8 +34,8 @@ public class DataProcessingService {
         return imagePath;
     }
 
-    public List<Map<String, Object>> getRecommendation(Map<String, String> data) {
-        return recommendationService.recommend(Integer.valueOf(data.get("quantity")));
+    public List<Map<String, Object>> getRecommendation(Map<String, Object> data) {
+        return recommendationService.recommend(data);
     }
 
     // Support Test method

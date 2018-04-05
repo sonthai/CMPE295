@@ -33,8 +33,8 @@ public class UserHistoryTransaction implements ITransaction<Map<String, Object>,
     @Override
     public UserHistoryDao convert(Map<String, Object> rawData) throws Exception {
         UserHistoryDao userHistoryDao = new UserHistoryDao();
-        userHistoryDao.setUserEmail((String) rawData.get(Constant.USER_EMAIL));
-        userHistoryDao.setProduct((int) rawData.get(Constant.PRODUCT_ID));
+        userHistoryDao.setUserEmail(rawData.get(Constant.USER_EMAIL).toString());
+        userHistoryDao.setProduct(Integer.valueOf(rawData.get(Constant.PRODUCT_ID).toString()));
         return userHistoryDao;
     }
 
