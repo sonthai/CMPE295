@@ -1,5 +1,7 @@
 package com.api.database.transaction;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.UpdateItemRequest;
 import com.api.constant.Constant;
 import com.api.database.domain.UserDao;
 import com.api.database.repository.UserRepository;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,8 +66,14 @@ public class UserTransaction implements ITransaction<Map<String, String>, UserDa
         return userRepository.findByUserEmail(rawData.get(Constant.USER_EMAIL));
     }
 
-    public void updatePassword(Map<String, String> userMap) {
-        save(userMap);
+    public boolean updatePassword(Map<String, String> userMap) {
+        try {
+            userMap.put(Constant.USER_PASSWORD, utils.encrypt(userMap.get(Constant.USER_PASSWORD)));
+            return userRepository.updatePassword(userMap);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
     }
 
 }

@@ -5,6 +5,7 @@ import com.api.constant.Constant;
 import com.api.constant.Constant.*;
 import com.api.database.transaction.UserTransaction;
 import com.api.model.ResponseMessage;
+import com.api.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,11 +80,16 @@ public class UserService implements IUserService {
 
         if (userTransaction.isPasswordMatch(users.get(0), data.get("old_password"))) {
             userMap.put(Constant.USER_PASSWORD, data.get("new_password"));
-            userTransaction.updatePassword(userMap);
-            msg = data.get(Constant.USER_EMAIL) + " updated password successfully.";
+            userMap.put("Id", users.get(0).get("Id").toString());
+            if (userTransaction.updatePassword(userMap)) {
+                msg = data.get(Constant.USER_EMAIL) + " updated password successfully.";
+            } else {
+                status = ResponseStatus.FAIL;
+                msg = data.get(Constant.USER_EMAIL) + " failed to update password.";
+            }
         } else {
             status = ResponseStatus.FAIL;
-            msg = data.get(Constant.USER_EMAIL) + " failed to update password.";
+            msg = "Original password is incorrect";
         }
 
         ResponseMessage response = new ResponseMessage();
