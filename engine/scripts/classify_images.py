@@ -80,7 +80,7 @@ tf.app.flags.DEFINE_string(
     """imagenet_2012_challenge_label_map_proto.pbtxt.""")
 tf.app.flags.DEFINE_string('image_file', '',
                            """Absolute path to image file.""")
-tf.app.flags.DEFINE_integer('num_top_predictions', 5,
+tf.app.flags.DEFINE_integer('top_k', 10,
                             """Display this many predictions.""")
 tf.app.flags.DEFINE_string('construct', '',
                             """Construct vectors file from specified directory""")
@@ -257,7 +257,8 @@ def find_similar_images(image_file):
 
   # config
   dims = 2048
-  n_nearest_neighbors = 10
+
+  n_nearest_neighbors = FLAGS.top_k
   trees = 10000
   infiles = glob.glob('image_vectors/*.npz')
 
@@ -265,7 +266,7 @@ def find_similar_images(image_file):
   t = AnnoyIndex(dims)
   for file_index, i in enumerate(infiles):
     file_vector = np.loadtxt(i)
-    file_name = os.path.basename(i).split('.')[0]
+    file_name = os.path.basename(i).split('.')[0] +'.' + os.path.basename(i).split('.')[1]
     file_index_to_file_name[file_index] = file_name
     file_index_to_file_vector[file_index] = file_vector
     file_name_to_file_index[file_name] = file_index
