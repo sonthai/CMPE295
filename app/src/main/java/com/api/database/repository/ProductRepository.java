@@ -6,7 +6,6 @@ import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
-import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.api.constant.Constant;
 import com.api.database.domain.ProductDao;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,20 +33,31 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
     }
 
     public List<Map<String, Object>> findProducts(List<String> items) {
-        DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDB);
         List<AttributeValue> attributeValues = items.stream()
                 .map(item -> new AttributeValue().withS(item))
                 .collect(Collectors.toList());
 
-        List<Map<String, Object>> results = new ArrayList<>();
-
-        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+        /*DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
         scanExpression.addFilterCondition("Image",
+                new Condition()
+                        .withComparisonOperator(ComparisonOperator.IN)
+                        .withAttributeValueList(attributeValues));*/
+
+        return getProductsWithFilter("Image", attributeValues);
+
+    }
+
+    public List<Map<String, Object>> getProductsWithFilter(String filterCondition,  List<AttributeValue> attributeValues) {
+        DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDB);
+        List<Map<String, Object>> results = new ArrayList<>();
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+        scanExpression.addFilterCondition(filterCondition,
                 new Condition()
                         .withComparisonOperator(ComparisonOperator.IN)
                         .withAttributeValueList(attributeValues));
 
-        List<ProductDao> scanResult = mapper.scan(ProductDao.class, scanExpression);
+        List<ProductDao> scanResult =  mapper.scan(ProductDao.class, scanExpression);
+
         ObjectMapper objectMapper = new ObjectMapper();
         scanResult.forEach((ProductDao productDao) -> {
             String imageUrl = Constant.IMAGE_URL + productDao.getImage();

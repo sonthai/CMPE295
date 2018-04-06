@@ -55,8 +55,6 @@ public class BasicAWSDynamoOps<T> {
                 .withUpdateExpression(updateExpression)
                 .withExpressionAttributeValues(attributeValues)
                 .withReturnValues(ReturnValue.UPDATED_NEW);
-
         return amazonDynamoDB.updateItem(updateItemRequest);
-
     }
 }
