@@ -2,6 +2,8 @@ package com.api.utils;
 
 import com.api.constant.Constant;
 import com.api.database.domain.ProductDao;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -45,7 +47,7 @@ public class Utils {
         return new String(cipher.doFinal(encrypted.getBytes()));
     }
 
-    public static String executeScript(String script, String flag, String urlImage) {
+    public static void executeScript(String script, String flag, String urlImage) {
         List<String> commands = new ArrayList<>();
         commands.add(Constant.PYTHON_CMD);
         commands.add(Paths.get(Constant.SCRIPTS_PATH, script).toString());
@@ -58,18 +60,18 @@ public class Utils {
         try {
             p = Runtime.getRuntime().exec(execCmd);
             p.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line);
-            }
+            //BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            //String line;
+            //while ((line = reader.readLine()) != null) {
+              //  output.append(line);
+            //}
         } catch (Exception e) {
             output.setLength(0);
             output.append("Failed to execute script: " + execCmd);
             e.printStackTrace();
-        } finally {
+        } /*finally {
             return output.toString();
-        }
+        }*/
     }
 
     public static String removeImage(String imagePath) {
@@ -135,5 +137,47 @@ public class Utils {
             }
             return products;
         }
+    }
+
+    public static List<String> getSimilarProducts(String file) {
+        List<String> productImageList = new ArrayList<>();
+        try {
+            byte[] jsonData = Files.readAllBytes(getProductJsonFilePath(file));
+            ObjectMapper mapper = new ObjectMapper();
+            TypeReference<List<SimilarProduct>> mapType = new TypeReference<List<SimilarProduct>>() {};
+            List<SimilarProduct> similarProducts = mapper.readValue(jsonData, mapType);
+            productImageList = similarProducts.stream()
+                        .map(p -> p.getFilename()).collect(Collectors.toList());
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+        return  productImageList;
+    }
+
+    public static Path getProductJsonFilePath(String file) {
+        return Paths.get(Constant.SCRIPTS_PATH, "nearest_neighbors", file + ".json");
+    }
+
+    private static class SimilarProduct {
+        public String getFilename() {
+            return filename;
+        }
+
+        public void setFilename(String fileName) {
+            this.filename = fileName;
+        }
+
+        public double getSimilarity() {
+            return similarity;
+        }
+
+        public void setSimilarity(double similarity) {
+            this.similarity = similarity;
+        }
+
+        public SimilarProduct(){}
+
+        private String filename;
+        private double similarity;
     }
 }

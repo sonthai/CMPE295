@@ -39,5 +39,12 @@ public class UserHistoryDao {
         this.product = product;
     }
 
+    public UserHistoryDao(String userEmail, int productId) {
+        this.userEmail = userEmail;
+        this.product = productId;
+    }
+
+    public UserHistoryDao(){}
+
 }
 

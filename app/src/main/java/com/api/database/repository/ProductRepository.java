@@ -37,11 +37,6 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
                 .map(item -> new AttributeValue().withS(item))
                 .collect(Collectors.toList());
 
-        /*DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-        scanExpression.addFilterCondition("Image",
-                new Condition()
-                        .withComparisonOperator(ComparisonOperator.IN)
-                        .withAttributeValueList(attributeValues));*/
 
         return getProductsWithFilter("Image", attributeValues);
 

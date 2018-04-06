@@ -1,7 +1,5 @@
 package com.api.database.transaction;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.UpdateItemRequest;
 import com.api.constant.Constant;
 import com.api.database.domain.UserDao;
 import com.api.database.repository.UserRepository;
@@ -11,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

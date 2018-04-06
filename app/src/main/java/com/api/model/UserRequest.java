@@ -23,12 +23,13 @@ public class UserRequest {
         this.userEmail = userEmail;
     }
 
-    public UserRequest(String userEmail, String imagePath) {
+    public UserRequest(String requestId, String userEmail, String imagePath) {
         if (!StringUtils.isEmpty(userEmail)) {
             this.userEmail = userEmail;
         }
         this.imagePath = imagePath;
         this.keepImage = false;
+        this.requestId = requestId;
     }
 
     public boolean isKeepImage() {
@@ -39,8 +40,17 @@ public class UserRequest {
         this.keepImage = keepImage;
     }
 
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
     private String userEmail;
     private String imagePath;
     private boolean keepImage;
+    private String requestId;
 
 }

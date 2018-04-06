@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -36,6 +37,14 @@ public class UserHistoryTransaction implements ITransaction<Map<String, Object>,
         userHistoryDao.setUserEmail(rawData.get(Constant.USER_EMAIL).toString());
         userHistoryDao.setProduct(Integer.valueOf(rawData.get(Constant.PRODUCT_ID).toString()));
         return userHistoryDao;
+    }
+
+    public int saveUserHistoryInBatch(List<UserHistoryDao> userHistoryDaoList) {
+        return userHistoryRepository.saveItemsInBatch(userHistoryDaoList);
+    }
+
+    public List<Map<String, Object>> findProductByUserEmail(String userEmail) {
+        return userHistoryRepository.findProductByUserEmail(userEmail);
     }
 
 }

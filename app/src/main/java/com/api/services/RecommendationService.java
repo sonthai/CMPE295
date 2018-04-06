@@ -1,6 +1,7 @@
 package com.api.services;
 
 import com.api.constant.Constant;
+import com.api.database.domain.UserHistoryDao;
 import com.api.database.repository.ProductRepository;
 import com.api.database.repository.UserHistoryRepository;
 import com.api.database.transaction.UserHistoryTransaction;
@@ -13,8 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RecommendationService implements IRecommendationService {
@@ -31,28 +35,35 @@ public class RecommendationService implements IRecommendationService {
 
     @Override
     public ResponseMessage processRecommendation(UserRequest userRequest) {
-        String imageName = Utils.executeScript("classify_images.py", "--image_file", getImagePath(userRequest.getImagePath()));
+        Utils.executeScript("classify_images.py", "--image_file", getImagePath(userRequest.getImagePath()));
         // Add logic to check if <imageId>.json exists then parse json file
-        //imageName = "aero_womentop_1.jpg";
-        if (!StringUtils.isEmpty(imageName)) {
+        Path jsonResultFilePath =  Utils.getProductJsonFilePath(userRequest.getRequestId());
+        if (Files.exists(jsonResultFilePath)) {
             // Remove the upload image
             String msg = Utils.removeImage(getImagePath(userRequest.getImagePath()));
             log.info(msg);
         }
 
         List<Map<String, Object>> productList = new ArrayList<>();
+        List<String> images = Utils.getSimilarProducts(userRequest.getRequestId());
         if (!StringUtils.isEmpty(userRequest.getUserEmail())) {
-            productList = productRepository.findProductByImageName(imageName);
+            productList = productRepository.findProducts(images);
 
             // Save the user email and recommended product in user request history table
-            Map<String, Object> request = new HashMap<>();
-            request.put(Constant.USER_EMAIL, userRequest.getUserEmail());
-            request.put(Constant.PRODUCT_ID, productList.get(0).get("Id"));
-            userHistoryTransaction.save(request);
+            List<UserHistoryDao> userHistoryDaoList = new ArrayList<>();
+            productList.forEach(p-> {
+                UserHistoryDao uhd = new UserHistoryDao(userRequest.getUserEmail(), Integer.valueOf(p.get("Id").toString()));
+                userHistoryDaoList.add(uhd);
+            });
+            //Map<String, Object> request = new HashMap<>();
+            //request.put(Constant.USER_EMAIL, userRequest.getUserEmail());
+            //request.put(Constant.PRODUCT_ID, productList.get(0).get("Id"));
+            //userHistoryTransaction.save(request);
+            userHistoryTransaction.saveUserHistoryInBatch(userHistoryDaoList);
         } else {
             // Store result in in-memory MessageStore for non member users
             NonCustomerResponseService instance = NonCustomerResponseService.getMessageStoreInstance();
-            instance.addImages(imageName);
+            images.forEach(image ->instance.addImages(image));
 
             //List<Integer> productIds = productRepository.findUserByUserName(new String[] {imageName});
             //instance.addUserId(userRequest.getUserId(), productIds.get(0));
@@ -60,7 +71,7 @@ public class RecommendationService implements IRecommendationService {
 
         ResponseMessage response = new ResponseMessage();
         response.setResponseCode(Constant.ResponseStatus.OK);
-        response.setResponseMsg(imageName);
+        response.setResponseMsg("List of recommended products");
         response.setData(productList);
         return response;
     }
@@ -90,7 +101,7 @@ public class RecommendationService implements IRecommendationService {
         List<Map<String, Object>> products = new ArrayList<>();
 
         // Check if there are any data in user history table
-        products  = userHistoryRepository.findProductByUserEmail(email);
+        products  = userHistoryTransaction.findProductByUserEmail(email);
 
         if (products.size() == 0) {
             products = productRepository.findProductsForMember();

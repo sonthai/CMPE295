@@ -4,14 +4,13 @@ import com.api.constant.Constant;
 import com.api.database.repository.UserHistoryRepository;
 import com.api.model.ResponseMessage;
 import com.api.services.ProductService;
+import com.api.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/product")
@@ -82,6 +81,19 @@ public class ProductController {
         responseMessage.setData(result);
         return responseMessage;
     }
+
+    @RequestMapping(method = RequestMethod.POST, value="/getRecommendedProducts", consumes = "application/json", produces = "application/json")
+    public ResponseMessage readProductsFromJson(@RequestBody Map<String, String> bodyRequest) {
+        String file =  bodyRequest.get("file");
+        List<String> products = Utils.getSimilarProducts(file);
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setResponseMsg("Recommended product in json file");
+        responseMessage.setResponseCode(Constant.ResponseStatus.OK);
+        return responseMessage;
+
+    }
+
+
 
 
 }
