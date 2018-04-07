@@ -82,6 +82,8 @@ tf.app.flags.DEFINE_string('image_file', '',
                            """Absolute path to image file.""")
 tf.app.flags.DEFINE_integer('top_k', 10,
                             """Display this many predictions.""")
+tf.app.flags.DEFINE_string('vector_path', 'image_vectors/',
+                           """Absolute path to vector files.""")
 tf.app.flags.DEFINE_string('construct', '',
                             """Construct vectors file from specified directory""")
 
@@ -260,7 +262,7 @@ def find_similar_images(image_file):
 
   n_nearest_neighbors = FLAGS.top_k
   trees = 10000
-  infiles = glob.glob('image_vectors/*.npz')
+  infiles = glob.glob(FLAGS.vector_path + "*.npz")
 
   # build ann index
   t = AnnoyIndex(dims)
