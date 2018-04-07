@@ -16,7 +16,7 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics="${kafka.topic}")
     public void receive(UserRequest userRequest) {
-        log.info("received content = " + userRequest.getImagePath());
+        log.info("received content = " + userRequest.getImage());
         recommendationService.processRecommendation(userRequest);
     }
 }

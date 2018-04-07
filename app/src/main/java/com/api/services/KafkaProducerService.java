@@ -23,7 +23,7 @@ public class KafkaProducerService {
     RecommendationService recommendationService;
 
     public ResponseMessage send(UserRequest userRequest) {
-        log.info("sending data=" + userRequest.getImagePath());
+        log.info("sending data=" + userRequest.getImage());
 
         // User Request sent from mobile
         if (!StringUtils.isEmpty(userRequest.getUserEmail())) {

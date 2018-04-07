@@ -26,7 +26,7 @@ public class DataProcessingService {
         String imageName = Utils.saveIncomingImage(data.get("id"), data.get("image"));
 
         if (!StringUtils.isEmpty(imageName)) {
-            UserRequest userRequest = new UserRequest(data.get("id"), data.getOrDefault(Constant.USER_EMAIL, ""), data.get("id"));
+            UserRequest userRequest = new UserRequest(data.get("id"), data.getOrDefault(Constant.USER_EMAIL, ""), data.get("id"), Integer.valueOf(data.getOrDefault("quantity", "10")));
             userRequest.setKeepImage(Boolean.valueOf(data.getOrDefault("keepImage", "false")));
             producer.send(userRequest);
         }

@@ -17,6 +17,7 @@ import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -46,12 +47,14 @@ public class Utils {
         return new String(cipher.doFinal(encrypted.getBytes()));
     }
 
-    public static void executeScript(String script, String flag, String urlImage) {
+    public static void executeScript(String script, Map<String, Object> params) {
         List<String> commands = new ArrayList<>();
         commands.add(Constant.PYTHON_CMD);
         commands.add(Paths.get(Constant.SCRIPTS_PATH, script).toString());
-        commands.add(flag);
-        commands.add("\"" + urlImage + "\"");
+        commands.add(Constant.TOP_K_FLAG);
+        commands.add(params.get(Constant.TOP_K_FLAG).toString());
+        commands.add(Constant.IMAGE_FILE_FLAG);
+        commands.add("\"" + params.get(Constant.IMAGE_FILE_FLAG) + "\"");
 
         String execCmd = commands.stream().map(i -> i.toString()).collect(Collectors.joining(" "));
         StringBuffer output = new StringBuffer();
@@ -94,12 +97,12 @@ public class Utils {
 
     public static String saveIncomingImage(String id, String data) {
         try {
-            //byte[] decodedImg = Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8));
-            String filename = id + ".jpeg";
-            Path destinationFile = Paths.get(Constant.IMAGE_PATH, filename);
-            //Files.write(destinationFile, decodedImg);
+            // byte[] decodedImg = Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8));
+            // Files.write(destinationFile, decodedImg);
+            String imageFilename = id + ".jpeg";
+            Path destinationFile = Paths.get(Constant.IMAGE_PATH, imageFilename);
             Base64.decodeToFile(data, destinationFile.toString());
-            return filename;
+            return imageFilename;
         } catch (IOException ex) {
             log.error("Failed to save image file  {}", ex);
             return Constant.UPLOAD_FAILED;

@@ -7,12 +7,12 @@ import java.util.UUID;
 
 public class UserRequest {
 
-    public String getImagePath() {
-        return imagePath;
+    public String getImage() {
+        return image;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getUserEmail() {
@@ -23,13 +23,14 @@ public class UserRequest {
         this.userEmail = userEmail;
     }
 
-    public UserRequest(String requestId, String userEmail, String imagePath) {
+    public UserRequest(String requestId, String userEmail, String image, int quantity) {
         if (!StringUtils.isEmpty(userEmail)) {
             this.userEmail = userEmail;
         }
-        this.imagePath = imagePath;
+        this.image = image;
         this.keepImage = false;
         this.requestId = requestId;
+        this.quantity = quantity;
     }
 
     public boolean isKeepImage() {
@@ -48,9 +49,18 @@ public class UserRequest {
         this.requestId = requestId;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     private String userEmail;
-    private String imagePath;
+    private String image;
     private boolean keepImage;
     private String requestId;
+    private int quantity;
 
 }

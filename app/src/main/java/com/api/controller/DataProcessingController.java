@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +21,8 @@ public class DataProcessingController {
 
     @RequestMapping(method = RequestMethod.POST, value="/processData", consumes = "application/json")
     public ResponseMessage processUserData(@RequestBody Map<String, String> bodyRequest) {
-        // Json {"id": "", "image" : ""} where data is base64ImgStr, and id is unique value for image name
+        // Json {"id": "", "image" : "", "quantity": <value>} where data is base64ImgStr, and id is unique value for image name
+        // for mobile user, need to pass email in the body request
         log.info("Process data from IoT device  and mobile API via Kafka");
         String output = dataProcessingService.processData(bodyRequest);
         ResponseMessage responseMessage = new ResponseMessage();
@@ -54,4 +54,9 @@ public class DataProcessingController {
         responseMessage.setResponseCode(Constant.ResponseStatus.OK);
         return responseMessage;
     }
+
+   /* @RequestMapping(method = RequestMethod.POST, value = "/uploadImage")
+    public void uploadImage(@RequestParam("file") MultipartFile file) throws Exception {
+
+    }*/
 }

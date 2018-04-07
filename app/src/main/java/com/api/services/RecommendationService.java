@@ -35,40 +35,44 @@ public class RecommendationService implements IRecommendationService {
 
     @Override
     public ResponseMessage processRecommendation(UserRequest userRequest) {
-        Utils.executeScript("classify_images.py", "--image_file", getImagePath(userRequest.getImagePath()));
+        Map<String, Object> params =  new HashMap<>();
+        params.put("--top_k", userRequest.getQuantity());
+        params.put("--image_file", getImagePath(userRequest.getImage()));
+        //Utils.executeScript("classify_images.py", "--image_file", getImagePath(userRequest.getImagePath()));
+        Utils.executeScript("classify_images.py", params);
         // Add logic to check if <imageId>.json exists then parse json file
         Path jsonResultFilePath =  Utils.getProductJsonFilePath(userRequest.getRequestId());
+        List<Map<String, Object>> productList = new ArrayList<>();
         if (Files.exists(jsonResultFilePath)) {
             // Remove the upload image
-            String msg = Utils.removeImage(getImagePath(userRequest.getImagePath()));
+            String msg = Utils.removeImage(getImagePath(userRequest.getImage()));
             log.info(msg);
+
+            //List<Map<String, Object>> productList = new ArrayList<>();
+            List<String> images = Utils.getSimilarProducts(userRequest.getRequestId());
+            if (!StringUtils.isEmpty(userRequest.getUserEmail())) {
+                productList = productRepository.findProducts(images);
+
+                // Save the user email and recommended product in user request history table
+                List<UserHistoryDao> userHistoryDaoList = new ArrayList<>();
+                productList.forEach(p -> {
+                    UserHistoryDao uhd = new UserHistoryDao(userRequest.getUserEmail(), Integer.valueOf(p.get("Id").toString()));
+                    userHistoryDaoList.add(uhd);
+                });
+                //Map<String, Object> request = new HashMap<>();
+                //request.put(Constant.USER_EMAIL, userRequest.getUserEmail());
+                //request.put(Constant.PRODUCT_ID, productList.get(0).get("Id"));
+                //userHistoryTransaction.save(request);
+                userHistoryTransaction.saveUserHistoryInBatch(userHistoryDaoList);
+            } else {
+                // Store result in in-memory MessageStore for non member users
+                NonCustomerResponseService instance = NonCustomerResponseService.getMessageStoreInstance();
+                images.forEach(image -> instance.addImages(image));
+
+                //List<Integer> productIds = productRepository.findUserByUserName(new String[] {imageName});
+                //instance.addUserId(userRequest.getUserId(), productIds.get(0));
+            }
         }
-
-        List<Map<String, Object>> productList = new ArrayList<>();
-        List<String> images = Utils.getSimilarProducts(userRequest.getRequestId());
-        if (!StringUtils.isEmpty(userRequest.getUserEmail())) {
-            productList = productRepository.findProducts(images);
-
-            // Save the user email and recommended product in user request history table
-            List<UserHistoryDao> userHistoryDaoList = new ArrayList<>();
-            productList.forEach(p-> {
-                UserHistoryDao uhd = new UserHistoryDao(userRequest.getUserEmail(), Integer.valueOf(p.get("Id").toString()));
-                userHistoryDaoList.add(uhd);
-            });
-            //Map<String, Object> request = new HashMap<>();
-            //request.put(Constant.USER_EMAIL, userRequest.getUserEmail());
-            //request.put(Constant.PRODUCT_ID, productList.get(0).get("Id"));
-            //userHistoryTransaction.save(request);
-            userHistoryTransaction.saveUserHistoryInBatch(userHistoryDaoList);
-        } else {
-            // Store result in in-memory MessageStore for non member users
-            NonCustomerResponseService instance = NonCustomerResponseService.getMessageStoreInstance();
-            images.forEach(image ->instance.addImages(image));
-
-            //List<Integer> productIds = productRepository.findUserByUserName(new String[] {imageName});
-            //instance.addUserId(userRequest.getUserId(), productIds.get(0));
-        }
-
         ResponseMessage response = new ResponseMessage();
         response.setResponseCode(Constant.ResponseStatus.OK);
         response.setResponseMsg("List of recommended products");
