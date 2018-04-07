@@ -53,11 +53,14 @@ public class Utils {
         commands.add(Paths.get(Constant.SCRIPTS_PATH, script).toString());
         commands.add(Constant.TOP_K_FLAG);
         commands.add(params.get(Constant.TOP_K_FLAG).toString());
+        commands.add(Constant.VECTOR_PATH_PLAG);
+        String vectorPath = Paths.get(Constant.SCRIPTS_PATH, "image_vectors").toString();
+        commands.add("\"" + vectorPath + "\"");
         commands.add(Constant.IMAGE_FILE_FLAG);
         commands.add("\"" + params.get(Constant.IMAGE_FILE_FLAG) + "\"");
 
         String execCmd = commands.stream().map(i -> i.toString()).collect(Collectors.joining(" "));
-        StringBuffer output = new StringBuffer();
+        //StringBuffer output = new StringBuffer();
         Process p = null;
         try {
             p = Runtime.getRuntime().exec(execCmd);
@@ -68,8 +71,8 @@ public class Utils {
               //  output.append(line);
             //}
         } catch (Exception e) {
-            output.setLength(0);
-            output.append("Failed to execute script: " + execCmd);
+            //output.setLength(0);
+            //output.append("Failed to execute script: " + execCmd);
             e.printStackTrace();
         } /*finally {
             return output.toString();
