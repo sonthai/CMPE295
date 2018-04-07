@@ -4,6 +4,7 @@ import com.api.constant.Constant;
 import com.api.database.domain.ProductDao;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.iharder.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -11,12 +12,10 @@ import org.springframework.stereotype.Component;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,10 +94,11 @@ public class Utils {
 
     public static String saveIncomingImage(String id, String data) {
         try {
-            byte[] decodedImg = Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8));
+            //byte[] decodedImg = Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8));
             String filename = id + ".jpeg";
             Path destinationFile = Paths.get(Constant.IMAGE_PATH, filename);
-            Files.write(destinationFile, decodedImg);
+            //Files.write(destinationFile, decodedImg);
+            Base64.decodeToFile(data, destinationFile.toString());
             return filename;
         } catch (IOException ex) {
             log.error("Failed to save image file  {}", ex);
