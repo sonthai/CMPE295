@@ -69,6 +69,9 @@ public class Utils {
         try {
             //p = Runtime.getRuntime().exec(execCmd);
             ProcessBuilder builder = new ProcessBuilder(commands);
+            Map<String, String> envs = builder.environment();
+            envs.put("PATH", System.getenv("PATH"));
+            envs.put("HOME", System.getenv("HOME"));
             builder.redirectOutput(out);
             builder.redirectError(err);
             p = builder.start();
