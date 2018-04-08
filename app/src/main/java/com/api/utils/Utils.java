@@ -54,29 +54,37 @@ public class Utils {
         commands.add(Constant.TOP_K_FLAG);
         commands.add(params.get(Constant.TOP_K_FLAG).toString());
         commands.add(Constant.VECTOR_PATH_PLAG);
-        String vectorPath = Paths.get(Constant.SCRIPTS_PATH, "image_vectors").toString();
-        commands.add("\"" + vectorPath + "\"");
+        //String vectorPath = Paths.get(Constant.SCRIPTS_PATH, "image_vectors").toString();
+        //commands.add("\"" + vectorPath + "\"");
+        commands.add(Paths.get(Constant.SCRIPTS_PATH, "image_vectors").toString() + "/");
         commands.add(Constant.IMAGE_FILE_FLAG);
-        commands.add("\"" + params.get(Constant.IMAGE_FILE_FLAG) + "\"");
+        //commands.add("\"" + params.get(Constant.IMAGE_FILE_FLAG) + "\"");
+        commands.add(params.get(Constant.IMAGE_FILE_FLAG).toString());
 
-        String execCmd = commands.stream().map(i -> i.toString()).collect(Collectors.joining(" "));
-        //StringBuffer output = new StringBuffer();
+        //String execCmd = commands.stream().map(i -> i.toString()).collect(Collectors.joining(" "));
+        StringBuffer output = new StringBuffer();
+        File out = new File(Paths.get(Constant.SCRIPTS_PATH, "out.txt").toString());
+        File err = new File(Paths.get(Constant.SCRIPTS_PATH, "err.txt").toString());
         Process p = null;
         try {
-            p = Runtime.getRuntime().exec(execCmd);
+            //p = Runtime.getRuntime().exec(execCmd);
+            ProcessBuilder builder = new ProcessBuilder(commands);
+            builder.redirectOutput(out);
+            builder.redirectError(err);
+            p = builder.start();
             p.waitFor();
-            //BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            //String line;
-            //while ((line = reader.readLine()) != null) {
-              //  output.append(line);
-            //}
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line);
+            }
         } catch (Exception e) {
-            //output.setLength(0);
-            //output.append("Failed to execute script: " + execCmd);
+            output.setLength(0);
+            output.append("Failed to execute script: " + commands.toString());
             e.printStackTrace();
-        } /*finally {
-            return output.toString();
-        }*/
+        } finally {
+            log.info(output.toString());
+        }
     }
 
     public static String removeImage(String imagePath) {
