@@ -13,11 +13,12 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.file.*;
+import java.nio.file.attribute.GroupPrincipal;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
 import java.security.Key;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -113,9 +114,25 @@ public class Utils {
         try {
             // byte[] decodedImg = Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8));
             // Files.write(destinationFile, decodedImg);
-            String imageFilename = id + ".jpeg";
+            String imageFilename = id + ".jpg";
             Path destinationFile = Paths.get(Constant.IMAGE_PATH, imageFilename);
             Base64.decodeToFile(data, destinationFile.toString());
+            if (Files.exists(destinationFile)) {
+                GroupPrincipal group = destinationFile.getFileSystem()
+                                .getUserPrincipalLookupService()
+                                .lookupPrincipalByGroupName("ubuntu");
+                Files.getFileAttributeView(destinationFile, PosixFileAttributeView.class).setGroup(group);
+                Set<PosixFilePermission> perms = Files.readAttributes(destinationFile,PosixFileAttributes.class).permissions();
+                perms.add(PosixFilePermission.OWNER_READ);
+                perms.add(PosixFilePermission.OWNER_WRITE);
+                perms.add(PosixFilePermission.OWNER_EXECUTE);
+                perms.add(PosixFilePermission.GROUP_READ);
+                perms.add(PosixFilePermission.GROUP_WRITE);
+                perms.add(PosixFilePermission.GROUP_EXECUTE);
+                perms.add(PosixFilePermission.OTHERS_READ);
+                perms.add(PosixFilePermission.OTHERS_EXECUTE);
+                Files.setPosixFilePermissions(destinationFile, perms);
+            }
             return imageFilename;
         } catch (IOException ex) {
             log.error("Failed to save image file  {}", ex);
