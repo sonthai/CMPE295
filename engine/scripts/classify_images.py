@@ -276,10 +276,12 @@ def find_similar_images(image_file):
   t.build(trees)
 
   # create a nearest neighbors json file for each input
-  if not os.path.exists('nearest_neighbors'):
-    os.makedirs('nearest_neighbors')
+  outdir = '/home/ubuntu/CMPE295/engine/scripts/nearest_neighbors' 
+  if not os.path.exists(outdir):
+    os.makedirs(outdir)
 
   named_nearest_neighbors = []
+
   input_npz = create_vector(image_file)
   nearest_neighbors = t.get_nns_by_vector(input_npz, n_nearest_neighbors)
   for j in nearest_neighbors:
@@ -295,7 +297,7 @@ def find_similar_images(image_file):
     })
 
   print(named_nearest_neighbors)
-  with open('nearest_neighbors/' + os.path.basename(image_file) +'.json', 'w') as out:  
+  with open(outdir + '/' + os.path.basename(image_file) +'.json', 'w') as out:  
     json.dump(named_nearest_neighbors, out)
 
 
@@ -337,7 +339,7 @@ def create_vector(image_file):
         print(feature_vector)
         return feature_vector
     except:
-      print('could not process image index','image', image)
+      print('could not process image index','image', image_file)
 
 
 def maybe_download_and_extract():

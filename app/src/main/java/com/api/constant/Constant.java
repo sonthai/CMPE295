@@ -3,7 +3,7 @@ package com.api.constant;
 public class Constant {
     public enum ResponseStatus { OK, FAIL }
 
-    public static String PYTHON_CMD = "python3";
+    public static String PYTHON_CMD = "/usr/bin/python3";
     public static String SCRIPTS_PATH = "/home/ubuntu/CMPE295/engine/scripts/";
     public static String IMAGE_PATH = "/home/ubuntu/CMPE295/engine/uploads/";
 

@@ -126,6 +126,6 @@ public class RecommendationService implements IRecommendationService {
     }
 
     private String getImagePath(String imageId) {
-        return Paths.get(Constant.IMAGE_PATH, imageId + ".jpeg").toString();
+        return Paths.get(Constant.IMAGE_PATH, imageId + ".jpg").toString();
     }
 }

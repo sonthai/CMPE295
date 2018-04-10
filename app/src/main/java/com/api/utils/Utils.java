@@ -50,39 +50,25 @@ public class Utils {
 
     public static void executeScript(String script, Map<String, Object> params) {
         List<String> commands = new ArrayList<>();
-        commands.add(Constant.PYTHON_CMD);
+	commands.add(Constant.PYTHON_CMD);
         commands.add(Paths.get(Constant.SCRIPTS_PATH, script).toString());
         commands.add(Constant.TOP_K_FLAG);
         commands.add(params.get(Constant.TOP_K_FLAG).toString());
         commands.add(Constant.VECTOR_PATH_PLAG);
         String vectorPath = Paths.get(Constant.SCRIPTS_PATH, "image_vectors").toString() + "/";
         commands.add("\"" + vectorPath + "\"");
-        //commands.add(Paths.get(Constant.SCRIPTS_PATH, "image_vectors").toString() + "/");
         commands.add(Constant.IMAGE_FILE_FLAG);
-        //commands.add("\"" + params.get(Constant.IMAGE_FILE_FLAG) + "\"");
         commands.add("\"" + params.get(Constant.IMAGE_FILE_FLAG).toString() + "\"");
 
-        //String execCmd = commands.stream().map(i -> i.toString()).collect(Collectors.joining(" "));
+        String execCmd = commands.stream().map(i -> i.toString()).collect(Collectors.joining(" "));
         StringBuffer output = new StringBuffer();
         File out = new File(Paths.get(Constant.SCRIPTS_PATH, "out.txt").toString());
         File err = new File(Paths.get(Constant.SCRIPTS_PATH, "err.txt").toString());
         Process p = null;
         try {
-            //p = Runtime.getRuntime().exec(execCmd);
-            //ProcessBuilder builder = new ProcessBuilder(Arrays.asList(Constant.PYTHON_CMD,Paths.get(Constant.SCRIPTS_PATH, "tftest.py").toString()));
-            //Map<String, String> envs = builder.environment();
-	    //log.info("PATH " + System.getenv("PATH"));
-            //log.info("HOME " + System.getenv("HOME"));
-	    //String path = "/home/ubuntu/bin:/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib:/home/ubuntu/.local/lib:/usr/local/lib"; 
-            //envs.put("PATH", path);
-            //envs.put("HOME", "/home/ubuntu");
-	    //envs.put("PYTHONPATH","/home/ubuntu/.local/lib/python3.5/site-packages/");
-	    //for (String key: envs.keySet()) {
-	//	log.info("Key: " + key + " value:" + envs.get(key));
-	  //  }
-	    log.info("Cmd {}", commands.toString());
-	    ProcessBuilder builder = new ProcessBuilder(commands);
-            builder.redirectOutput(out);
+	    log.info("Cmd {}", execCmd);
+	    ProcessBuilder builder = new ProcessBuilder(new String[] {"sudo", "su", "ubuntu", "-c", execCmd});
+	    builder.redirectOutput(out);
             builder.redirectError(err);
             p = builder.start();
             p.waitFor();
