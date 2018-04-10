@@ -13,10 +13,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.file.*;
-import java.nio.file.attribute.GroupPrincipal;
-import java.nio.file.attribute.PosixFileAttributeView;
-import java.nio.file.attribute.PosixFileAttributes;
-import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.*;
 import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,26 +46,22 @@ public class Utils {
     }
 
     public static void executeScript(String script, Map<String, Object> params) {
-        List<String> commands = new ArrayList<>();
-	commands.add(Constant.PYTHON_CMD);
-        commands.add(Paths.get(Constant.SCRIPTS_PATH, script).toString());
-        commands.add(Constant.TOP_K_FLAG);
-        commands.add(params.get(Constant.TOP_K_FLAG).toString());
-        commands.add(Constant.VECTOR_PATH_PLAG);
-        String vectorPath = Paths.get(Constant.SCRIPTS_PATH, "image_vectors").toString() + "/";
-        commands.add("\"" + vectorPath + "\"");
-        commands.add(Constant.IMAGE_FILE_FLAG);
-        commands.add("\"" + params.get(Constant.IMAGE_FILE_FLAG).toString() + "\"");
-
-        String execCmd = commands.stream().map(i -> i.toString()).collect(Collectors.joining(" "));
         StringBuffer output = new StringBuffer();
-        File out = new File(Paths.get(Constant.SCRIPTS_PATH, "out.txt").toString());
-        File err = new File(Paths.get(Constant.SCRIPTS_PATH, "err.txt").toString());
-        Process p = null;
+        String execCmd = "";
         try {
-	    log.info("Cmd {}", execCmd);
-	    ProcessBuilder builder = new ProcessBuilder(new String[] {"sudo", "su", "ubuntu", "-c", execCmd});
-	    builder.redirectOutput(out);
+            execCmd = getPythonCmd(script, params);
+
+            Path scriptLog = Paths.get(Constant.SCRIPTS_PATH, "logs");
+            if (!Files.exists(scriptLog)) {
+                Files.createDirectory(scriptLog);
+            }
+
+            File out = new File(Paths.get(Constant.SCRIPTS_PATH, "logs", "out.txt").toString());
+            File err = new File(Paths.get(Constant.SCRIPTS_PATH, "logs", "err.txt").toString());
+            Process p = null;
+            log.info("Cmd {}", execCmd);
+            ProcessBuilder builder = new ProcessBuilder(new String[] {"sudo", "su", "ubuntu", "-c", execCmd});
+            builder.redirectOutput(out);
             builder.redirectError(err);
             p = builder.start();
             p.waitFor();
@@ -79,7 +72,7 @@ public class Utils {
             }
         } catch (Exception e) {
             output.setLength(0);
-            output.append("Failed to execute script: " + commands.toString());
+            output.append("Failed to execute script: " + execCmd);
             e.printStackTrace();
         } finally {
             log.info(output.toString());
@@ -166,6 +159,21 @@ public class Utils {
             }
             return products;
         }
+    }
+
+    private static String getPythonCmd(String script, Map<String, Object> params) {
+        List<String> commands = new ArrayList<>();
+        commands.add(Constant.PYTHON_CMD);
+        commands.add(Paths.get(Constant.SCRIPTS_PATH, script).toString());
+        commands.add(Constant.TOP_K_FLAG);
+        commands.add(params.get(Constant.TOP_K_FLAG).toString());
+        commands.add(Constant.VECTOR_PATH_PLAG);
+        String vectorPath = Paths.get(Constant.SCRIPTS_PATH, "image_vectors").toString() + "/";
+        commands.add("\"" + vectorPath + "\"");
+        commands.add(Constant.IMAGE_FILE_FLAG);
+        commands.add("\"" + params.get(Constant.IMAGE_FILE_FLAG).toString() + "\"");
+
+        return  commands.stream().map(i -> i.toString()).collect(Collectors.joining(" "));
     }
 
     public static List<String> getSimilarProducts(String file) {
