@@ -38,8 +38,8 @@ public class RecommendationService implements IRecommendationService {
         Map<String, Object> params =  new HashMap<>();
         params.put("--top_k", userRequest.getQuantity());
         params.put("--image_file", getImagePath(userRequest.getImage()));
-        //Utils.executeScript("classify_images.py", "--image_file", getImagePath(userRequest.getImagePath()));
-        Utils.executeScript("classify_images.py", params);
+
+	Utils.executeScript("classify_images.py", params);
         // Add logic to check if <imageId>.json exists then parse json file
         Path jsonResultFilePath =  Utils.getProductJsonFilePath(userRequest.getRequestId());
         List<Map<String, Object>> productList = new ArrayList<>();
@@ -56,7 +56,7 @@ public class RecommendationService implements IRecommendationService {
                 // Save the user email and recommended product in user request history table
                 List<UserHistoryDao> userHistoryDaoList = new ArrayList<>();
                 productList.forEach(p -> {
-                    UserHistoryDao uhd = new UserHistoryDao(userRequest.getUserEmail(), Integer.valueOf(p.get("Id").toString()));
+                    UserHistoryDao uhd = new UserHistoryDao(userRequest.getUserEmail(), Integer.valueOf(p.get("id").toString()));
                     userHistoryDaoList.add(uhd);
                 });
                 //Map<String, Object> request = new HashMap<>();

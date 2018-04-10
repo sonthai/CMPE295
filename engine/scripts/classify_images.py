@@ -297,7 +297,8 @@ def find_similar_images(image_file):
     })
 
   print(named_nearest_neighbors)
-  with open(outdir + '/' + os.path.basename(image_file) +'.json', 'w') as out:  
+  filename = image_file.split('.')[0]
+  with open(outdir + '/' + os.path.basename(filename) +'.json', 'w') as out:
     json.dump(named_nearest_neighbors, out)
 
 
