@@ -4,34 +4,23 @@ echo "Root $ROOT"
 echo "******************************************"
 
 echo "Installing maven, git, curl, and java8 ..."
-sudo apt-get -y install maven git curl
+sudo apt-get -y install maven git curl, awscli
 sudo apt-get install -y default-jdk
 
 echo "Installing python and package dependency ..."
 python3 -V
 sudo apt-get -y update
-#sudo apt-get install cuda-9.0
 sudo apt-get install -y python3-pip python3-dev
 pip3 install tensorflow
-#pip3 install tensorflow-gpu
 pip3 install psutil
 pip3 install annoy 
 pip3 install scipy 
 pip3 install nltk
-#pip3 install --upgrade tensorflow
 
 echo "Installing tomcat8..."
 sudo echo "export CATALINA_OPTS=\"-Xms512m -Xmx1024m\"" >> $ROOT/.bashrc
 sudo apt-get -y install tomcat8 tomcat8-docs tomcat8-examples tomcat8-admin
 
-echo "Installing Apache Cassandra..."
-echo "deb http://www.apache.org/dist/cassandra/debian 311x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
-curl https://www.apache.org/dist/cassandra/KEYS | sudo apt-key add -
-sudo apt-key adv --keyserver pool.sks-keyservers.net --recv-key A278B781FE4B2BDA
-sudo apt-get update
-sudo apt-get install -y cassandra
-echo "Starting Apache Cassandra..."
-sudo sudo service cassandra start
 
 echo "Install Zookepper..."
 sudo apt-get install -y zookeeperd

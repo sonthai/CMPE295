@@ -1,12 +1,21 @@
 package com.api.controller;
 
+import com.amazonaws.util.Base64;
 import com.api.constant.Constant;
 import com.api.model.ResponseMessage;
 import com.api.services.DataProcessingService;
+import com.api.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.nio.ch.IOUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,11 +33,7 @@ public class DataProcessingController {
         // Json {"id": "", "image" : "", "quantity": <value>} where data is base64ImgStr, and id is unique value for image name
         // for mobile user, need to pass email in the body request
         log.info("Process data from IoT device  and mobile API via Kafka");
-        String output = dataProcessingService.processData(bodyRequest);
-        ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setResponseMsg(output);
-        responseMessage.setResponseCode(Constant.ResponseStatus.OK);
-        return responseMessage;
+        return dataProcessingService.processData(bodyRequest);
     }
 
     @RequestMapping(method = RequestMethod.POST, value="/recommend", consumes = "application/json")
@@ -55,8 +60,15 @@ public class DataProcessingController {
         return responseMessage;
     }
 
-   /* @RequestMapping(method = RequestMethod.POST, value = "/uploadImage")
-    public void uploadImage(@RequestParam("file") MultipartFile file) throws Exception {
-
-    }*/
+    @RequestMapping(method = RequestMethod.POST, value = "/testScript")
+    public void uploadImage(@RequestBody Map<String, String> map) throws IOException {
+        String image_file = map.get("image");
+        //File imageFile = new File(image_file);
+        //byte[] bytes = Files.readAllBytes(imageFile.toPath());
+        //String encoded = Base64.encodeAsString(bytes);
+        Map<String, Object> params =  new HashMap<>();
+        params.put("--top_k", "10");
+        params.put("--image_file", Paths.get(Constant.IMAGE_PATH,  image_file).toString());
+        Utils.executeScript("classify_images.py", params);
+    }
 }

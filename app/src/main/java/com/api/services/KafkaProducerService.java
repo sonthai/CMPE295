@@ -10,6 +10,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class KafkaProducerService {
     private static final Logger log = LoggerFactory.getLogger(KafkaProducerService.class);
@@ -22,7 +25,7 @@ public class KafkaProducerService {
     @Autowired
     RecommendationService recommendationService;
 
-    public ResponseMessage send(UserRequest userRequest) {
+    public List<Map<String, Object>> send(UserRequest userRequest) {
         log.info("sending data=" + userRequest.getImage());
 
         // User Request sent from mobile

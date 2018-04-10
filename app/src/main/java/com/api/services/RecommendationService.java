@@ -34,12 +34,11 @@ public class RecommendationService implements IRecommendationService {
     UserHistoryRepository userHistoryRepository;
 
     @Override
-    public ResponseMessage processRecommendation(UserRequest userRequest) {
+    public List<Map<String, Object>> processRecommendation(UserRequest userRequest) {
         Map<String, Object> params =  new HashMap<>();
         params.put("--top_k", userRequest.getQuantity());
         params.put("--image_file", getImagePath(userRequest.getImage()));
-
-	Utils.executeScript("classify_images.py", params);
+        Utils.executeScript("classify_images.py", params);
         // Add logic to check if <imageId>.json exists then parse json file
         Path jsonResultFilePath =  Utils.getProductJsonFilePath(userRequest.getRequestId());
         List<Map<String, Object>> productList = new ArrayList<>();
@@ -73,11 +72,8 @@ public class RecommendationService implements IRecommendationService {
                 //instance.addUserId(userRequest.getUserId(), productIds.get(0));
             }
         }
-        ResponseMessage response = new ResponseMessage();
-        response.setResponseCode(Constant.ResponseStatus.OK);
-        response.setResponseMsg("List of recommended products");
-        response.setData(productList);
-        return response;
+
+        return productList;
     }
 
     @Override

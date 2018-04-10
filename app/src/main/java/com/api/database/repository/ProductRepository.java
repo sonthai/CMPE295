@@ -38,6 +38,7 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
                 .collect(Collectors.toList());
         List<Map<String, Object>> results = new ArrayList<>();
 
+
         if (attributeValues.size() > 0) {
             results = getProductsWithFilter("Image", attributeValues);
         }

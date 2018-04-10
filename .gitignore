@@ -8,3 +8,4 @@ target/
 .idea/
 .eclipse
 .DS_Store
+app/src/main/resources/application.properties
