@@ -337,7 +337,7 @@ def create_vector(image_file):
         print(feature_vector)
         return feature_vector
     except:
-      print('could not process image index','image', image)
+      print('could not process image index','image', image_file)
 
 
 def maybe_download_and_extract():
