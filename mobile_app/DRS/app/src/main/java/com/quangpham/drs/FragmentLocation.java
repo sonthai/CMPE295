@@ -25,10 +25,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.Calendar;
 
 /**
  * Created by quangpham on 4/4/18.
@@ -41,6 +44,7 @@ public class FragmentLocation extends Fragment implements OnMapReadyCallback, Lo
     public AddressResultReceiver mResultReceiver;
     private Location currentBestLocation = null;
     static final int WAIT_TIME = 1000 * 60 * 2;
+    public TextView mallName;
 
     public static Fragment newInstance() {
         return new FragmentLocation();
@@ -62,6 +66,19 @@ public class FragmentLocation extends Fragment implements OnMapReadyCallback, Lo
         TextView memberSince = rootView.findViewById(R.id.member_since);
         memberSince.setText("Member since " + MainActivity.user.getYearJoined());
 
+        TextView hour = rootView.findViewById(R.id.hour);
+        hour.setText("Hour today: " + AppConstant.STORE_HOUR_1[Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1]);
+
+        mallName = rootView.findViewById(R.id.mall_name);
+
+        TextView userName = rootView.findViewById(R.id.location_username);
+        String fullName = MainActivity.user.getFullName();
+        if (fullName != null && !fullName.equals("")) {
+            userName.setText(fullName);
+        } else {
+            userName.setText(MainActivity.user.getEmail().split("@")[0]);
+        }
+
         return rootView;
     }
 
@@ -76,9 +93,26 @@ public class FragmentLocation extends Fragment implements OnMapReadyCallback, Lo
             Location location = getLastBestLocation();
             if (location != null) {
                 LatLng geo = new LatLng(location.getLatitude(), location.getLongitude());
-
-                mMap.addMarker(new MarkerOptions().position(geo).title(MainActivity.user.getEmail()));
-
+                float d = 0;
+                int pos = 0;
+                for (int i = 0; i < AppConstant.STORES.length; i++) {
+                    float[] dis = new float[1];
+                    Location.distanceBetween(geo.latitude, geo.longitude,
+                            AppConstant.STORES[i].getGeoLocation().latitude,
+                            AppConstant.STORES[i].getGeoLocation().longitude, dis);
+                    if (i == 0) { d = dis[0]; }
+                    else if (d > dis[0]) {
+                        d = dis[0];
+                        pos = i;
+                    }
+                }
+                mallName.setText(AppConstant.STORES[pos].getStoreName());
+                //user location
+                mMap.addMarker(new MarkerOptions().position(geo).icon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).title(MainActivity.user.getEmail()));
+                //mall location
+                mMap.addMarker(new MarkerOptions().position(AppConstant.STORES[pos].getGeoLocation()).icon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_RED)).title(AppConstant.STORES[pos].getStoreName()));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(geo, 10));
             }
 
@@ -98,15 +132,15 @@ public class FragmentLocation extends Fragment implements OnMapReadyCallback, Lo
         }
 
         long GPSLocationTime = 0;
-        if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
+        if (locationGPS != null) { GPSLocationTime = locationGPS.getTime(); }
 
         long NetLocationTime = 0;
 
-        if (null != locationNet) {
+        if (locationNet != null) {
             NetLocationTime = locationNet.getTime();
         }
 
-        if ( 0 < GPSLocationTime - NetLocationTime ) {
+        if ( GPSLocationTime - NetLocationTime > 0) {
             return locationGPS;
         }
         else {

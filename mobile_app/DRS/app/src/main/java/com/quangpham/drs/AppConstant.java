@@ -1,5 +1,9 @@
 package com.quangpham.drs;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+
 /**
  * Created by quangpham on 3/31/18.
  */
@@ -30,4 +34,16 @@ public final class AppConstant {
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    //stores supported info
+    public static final String STORE_HOUR_1[] = {"9AM - 7PM", "9AM - 9PM", "9AM - 9PM", "9AM - 9PM", "9AM - 9PM", "9AM - 9PM", "9AM - 7PM"};
+    public static final StoreInfo STORES[] = {
+            new StoreInfo("Westfield Valley Fair Mall", new LatLng(37.3257904, -121.9457041), STORE_HOUR_1),
+            new StoreInfo("Westfield Oakridge Mall", new LatLng(37.2520341, -121.8631498), STORE_HOUR_1),
+            new StoreInfo("Great Mall Outlet", new LatLng(37.415738, -121.897412), STORE_HOUR_1),
+    };
+
+
+
+
 }

@@ -99,7 +99,7 @@ public class FragmentProfile extends Fragment {
         mProgressUserInfoView = rootView.findViewById(R.id.user_info_progress);
 
         imageProfile = rootView.findViewById(R.id.profile_image);
-        if (!MainActivity.user.getAvatar().equals("")) {
+        if (MainActivity.user.getAvatar() != null && !MainActivity.user.getAvatar().equals("")) {
             imageProfile.setImageBitmap(ProductInfo.covertBase64ToBitmap(MainActivity.user.getAvatar()));
         }
         imageProfile.setOnClickListener(new OnClickListener() {
@@ -483,7 +483,9 @@ public class FragmentProfile extends Fragment {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            MainActivity.user = userInfo;
+            MainActivity.user.setFullName(userInfo.getFullName());
+            MainActivity.user.setGender(userInfo.getGender());
+            MainActivity.user.setBirthDate(userInfo.getBirthDate());
             if(MainActivity.isExistInDB) {
                 MainActivity.mDBHelper.updateUserEntryByID(userInfo);
             } else {

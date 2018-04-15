@@ -70,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
                     android:textStyle="bold"
-                    android:text="Quang Pham"/>
+                    android:text=""/>
                 <TextView
                     android:id="@+id/member_since"
                     android:layout_width="wrap_content"
@@ -95,7 +95,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:text="Westfield Valley Fair Mall"/>
+            android:text=""/>
         <TextView
             android:id="@+id/hour"
             android:layout_width="match_parent"
