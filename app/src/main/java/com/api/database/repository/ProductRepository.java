@@ -8,9 +8,7 @@ import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.api.constant.Constant;
 import com.api.database.domain.ProductDao;
-import com.api.database.transaction.ProductTransaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tomcat.util.bcel.Const;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -35,8 +33,9 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
 
             // Modified image url
             for (Map<String, Object> item : results) {
-                StringBuilder image_url = new StringBuilder(Constant.IMAGE_URL).append(item.get("Image"));
-                item.put("Image", URLEncoder.encode(image_url.toString(), StandardCharsets.UTF_8.name()));
+                String encodedImageName = URLEncoder.encode(item.get("Image").toString(), StandardCharsets.UTF_8.name());
+                //String imagePath = Constant.IMAGE_URL + item.get("Image");
+                item.put("Image", Constant.IMAGE_URL + encodedImageName);
             }
         } catch (UnsupportedEncodingException e) {
             log.error(e.getMessage());
@@ -75,10 +74,9 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
         ObjectMapper objectMapper = new ObjectMapper();
         scanResult.forEach((ProductDao productDao) -> {
             try {
-                StringBuilder sb = new StringBuilder(Constant.IMAGE_URL).append(productDao.getImage());
-                //sb.append(URLEncoder.encode(productDao.getImage(), StandardCharsets.UTF_8.name()));
-                //String imageUrl = Constant.IMAGE_URL +;
-                productDao.setImage(URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8.name()));
+                String encodedImageName = URLEncoder.encode(productDao.getImage(), StandardCharsets.UTF_8.name());
+                //String imagePath = Constant.IMAGE_URL + productDao.getImage();
+                productDao.setImage(Constant.IMAGE_URL + encodedImageName);
                 results.add(objectMapper.convertValue(productDao, Map.class));
             } catch (UnsupportedEncodingException e) {
 
