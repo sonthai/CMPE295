@@ -148,7 +148,7 @@ public class FragmentProfile extends Fragment {
             MainActivity.user.setAvatar(ProductInfo.getBitmapBase64(imageBitmap));
 
             //update into db
-            MainActivity.mDBHelper.updateAvatarByID(MainActivity.user);
+            LoginActivity.mDBHelper.updateAvatarByID(MainActivity.user);
         }
     }
 
@@ -487,9 +487,9 @@ public class FragmentProfile extends Fragment {
             MainActivity.user.setGender(userInfo.getGender());
             MainActivity.user.setBirthDate(userInfo.getBirthDate());
             if(MainActivity.isExistInDB) {
-                MainActivity.mDBHelper.updateUserEntryByID(userInfo);
+                LoginActivity.mDBHelper.updateUserEntryByID(userInfo);
             } else {
-                SQLiteDatabase db = MainActivity.mDBHelper.getWritableDatabase();
+                SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
                 ContentValues values = new ContentValues();
                 values.put(UserInfo.FeedEntry.COLUMN_NAME_EMAIL, userInfo.getEmail());
                 values.put(UserInfo.FeedEntry.COLUMN_NAME_FULLNAME, userInfo.getFullName());

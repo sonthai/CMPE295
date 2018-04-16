@@ -18,25 +18,28 @@ public class ProductInfo {
     private String productPrice;
     private Bitmap productImage;
     private boolean favorite;
+    private String email;
 
     public ProductInfo() {
     }
 
-    public ProductInfo(String productName, String productImageName, String productPrice, Bitmap productImage) {
+    public ProductInfo(String productName, String productImageName, String productPrice, Bitmap productImage, String email) {
         this.productName = productName;
         this.productImageName = productImageName;
         this.productPrice = productPrice;
         this.productImage = productImage;
         this.favorite = false;
+        this.email = email;
     }
 
     //this is for loading for favorite list from DB
-    public ProductInfo(String productName, String productImageName, String productPrice, String base64String) {
+    public ProductInfo(String productName, String productImageName, String productPrice, String base64String, String email) {
         this.productName = productName;
         this.productImageName = productImageName;
         this.productPrice = productPrice;
         this.productImage = covertBase64ToBitmap(base64String);
         this.favorite = true;
+        this.email = email;
     }
 
 
@@ -74,6 +77,14 @@ public class ProductInfo {
     public static Bitmap covertBase64ToBitmap(String base64String) {
         byte[] decodedByte = Base64.decode(base64String,  Base64.NO_WRAP);
         return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void toggleFavorite() {
@@ -114,6 +125,7 @@ public class ProductInfo {
         public static final String COLUMN_NAME_IMAGE_NAME = "image_name";
         public static final String COLUMN_NAME_PRICE = "price";
         public static final String COLUMN_NAME_IMAGE_BASE64 = "image_base64";
+        public static final String COLUMN_NAME_USER_EMAIL = "user_email";
     }
 
     public static final String SQL_CREATE_ENTRIES =
@@ -121,7 +133,8 @@ public class ProductInfo {
                     FeedEntry.COLUMN_NAME_IMAGE_NAME + " TEXT PRIMARY KEY," +
                     FeedEntry.COLUMN_NAME_NAME + " TEXT," +
                     FeedEntry.COLUMN_NAME_PRICE + " TEXT," +
-                    FeedEntry.COLUMN_NAME_IMAGE_BASE64 + " TEXT)";
+                    FeedEntry.COLUMN_NAME_IMAGE_BASE64 + " TEXT," +
+                    FeedEntry.COLUMN_NAME_USER_EMAIL + " TEXT)";
 
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME;

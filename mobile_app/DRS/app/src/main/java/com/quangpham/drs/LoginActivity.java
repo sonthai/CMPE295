@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public boolean isSuccessLogin = false;
     public boolean isSuccessRegister = false;
 
-
+    public static FeedReaderDBHelper mDBHelper;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -88,6 +88,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mDBHelper = new FeedReaderDBHelper(this);
+
+
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -452,7 +456,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     MainActivity.user.setYearJoined(String.valueOf(year));
 
                     //write into local db
-                    SQLiteDatabase db = MainActivity.mDBHelper.getWritableDatabase();
+                    SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
                     values.put(UserInfo.FeedEntry.COLUMN_NAME_EMAIL, mEmail);
                     values.put(UserInfo.FeedEntry.COLUMN_NAME_FULLNAME, "");
