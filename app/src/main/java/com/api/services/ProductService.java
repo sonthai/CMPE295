@@ -1,7 +1,6 @@
 package com.api.services;
 
-import com.api.database.repository.ProductRepository;
-import com.api.utils.Utils;
+import com.api.database.transaction.ProductTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +14,17 @@ public class ProductService {
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
     @Autowired
-    ProductRepository productRepository;
+    ProductTransaction productTransaction;
 
     public int addedProducts(String filePath) {
-        return productRepository.saveItemsInBatch(Utils.createProductList(filePath));
+        return productTransaction.addedProducts(filePath);
     }
 
     public List<Map<String, Object>> getProduct(String product) {
-        return productRepository.findProductByImageName(product);
+        return productTransaction.getProduct(product);
     }
 
     public List<Map<String, Object>> getProducts(List<String> products) {
-        return productRepository.findProducts(products);
+        return productTransaction.findProducts(products);
     }
 }

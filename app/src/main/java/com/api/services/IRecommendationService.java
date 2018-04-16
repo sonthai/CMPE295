@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface IRecommendationService {
-    public List<Map<String, Object>> processRecommendation(UserRequest userRequest);
-    public List<Map<String, Object>> recommend(Map<String, Object> requestBody);
+    List<Map<String, Object>> processRecommendation(UserRequest userRequest);
+    List<Map<String, Object>> recommend(Map<String, Object> requestBody);
 }

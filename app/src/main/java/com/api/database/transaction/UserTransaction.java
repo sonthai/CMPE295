@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 @Component
-public class UserTransaction implements ITransaction<Map<String, String>, UserDao> {
+public class UserTransaction extends DataTransactionManager<Map<String, String>, UserDao> { //implements ITransaction<Map<String, String>, UserDao> {
     private static final Logger log = LoggerFactory.getLogger(UserTransaction.class);
 
 
@@ -33,10 +33,6 @@ public class UserTransaction implements ITransaction<Map<String, String>, UserDa
         }
     }
 
-    @Override
-    public void delete(Map<String, String> data) {
-
-    }
 
     @Override
     public UserDao convert(Map<String, String> rawData) throws Exception {
