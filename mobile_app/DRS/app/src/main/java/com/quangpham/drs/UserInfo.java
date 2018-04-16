@@ -14,6 +14,8 @@ public class UserInfo {
     private String avatarBase64;
     private String yearJoined;
 
+    public UserInfo() {}
+
     public UserInfo(String mEmail, String year) {
         email = mEmail;
         fullName = gender = birthDate = avatarBase64 = null;

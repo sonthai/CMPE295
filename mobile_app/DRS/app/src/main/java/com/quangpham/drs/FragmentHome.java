@@ -60,8 +60,8 @@ public class FragmentHome extends Fragment {
         super.onCreate(bundle);
 
         //load data from DB into vector list
-        SQLiteDatabase db = MainActivity.mDBHelper.getWritableDatabase();
-        Cursor dbList = MainActivity.mDBHelper.getUserEntryByEmail(db, MainActivity.user.getEmail());
+        SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
+        Cursor dbList = LoginActivity.mDBHelper.getUserEntryByEmail(db, MainActivity.user.getEmail());
         if (dbList != null && dbList.moveToFirst()) {
             MainActivity.isExistInDB = true;
             MainActivity.user.setFullName(dbList.getString(dbList.getColumnIndexOrThrow(UserInfo.FeedEntry.COLUMN_NAME_FULLNAME)));
@@ -103,10 +103,10 @@ public class FragmentHome extends Fragment {
                         MainActivity.favoritedProductsInfo.add(productInfo);
 
                         //save into database
-                        SQLiteDatabase db = MainActivity.mDBHelper.getWritableDatabase();
-                        Cursor cursor = MainActivity.mDBHelper.getProductEntry(db, productInfo);
+                        SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
+                        Cursor cursor = LoginActivity.mDBHelper.getProductEntry(db, productInfo);
                         if (!(cursor != null && cursor.moveToFirst())) {
-                            MainActivity.mDBHelper.insertProductEntry(productInfo);
+                            LoginActivity.mDBHelper.insertProductEntry(productInfo);
                         }
 
                         db.close();
@@ -117,7 +117,7 @@ public class FragmentHome extends Fragment {
                         MainActivity.favoritedProductsInfo.remove(index);
 
                         //delete from database
-                        MainActivity.mDBHelper.removeProductEntry(productInfo);
+                        LoginActivity.mDBHelper.removeProductEntry(productInfo);
                     }
                 }
 
@@ -220,7 +220,7 @@ public class FragmentHome extends Fragment {
                             }
 
                             if (image != null) {
-                                lsProduct.add(new ProductInfo(productName, imageName, String.valueOf(price), image));
+                                lsProduct.add(new ProductInfo(productName, imageName, String.valueOf(price), image, MainActivity.user.getEmail()));
                             }
                         }
                     } else {

@@ -38,14 +38,15 @@ public class FragmentHistory extends Fragment {
 
         //load from the DB into favorite list
         if (MainActivity.favoritedProductsInfo.size() == 0) {
-            SQLiteDatabase db = MainActivity.mDBHelper.getWritableDatabase();
-            Cursor cursor = MainActivity.mDBHelper.getAllProductEntry(db);
+            SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
+            Cursor cursor = LoginActivity.mDBHelper.getAllProductEntryByEmail(db, MainActivity.user.getEmail());
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     ProductInfo productInfo = new ProductInfo(cursor.getString(cursor.getColumnIndexOrThrow(ProductInfo.FeedEntry.COLUMN_NAME_NAME)),
                             cursor.getString(cursor.getColumnIndexOrThrow(ProductInfo.FeedEntry.COLUMN_NAME_IMAGE_NAME)),
                             cursor.getString(cursor.getColumnIndexOrThrow(ProductInfo.FeedEntry.COLUMN_NAME_PRICE)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(ProductInfo.FeedEntry.COLUMN_NAME_IMAGE_BASE64)));
+                            cursor.getString(cursor.getColumnIndexOrThrow(ProductInfo.FeedEntry.COLUMN_NAME_IMAGE_BASE64)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(ProductInfo.FeedEntry.COLUMN_NAME_USER_EMAIL)));
 
                     MainActivity.favoritedProductsInfo.add(productInfo);
                 } while (cursor.moveToNext());
@@ -76,7 +77,7 @@ public class FragmentHistory extends Fragment {
                 ProductInfo productInfo = MainActivity.favoritedProductsInfo.get(position);
                 if (MainActivity.favoritedProductsInfo.remove(productInfo)) {
                     //remove from database
-                    MainActivity.mDBHelper.removeProductEntry(productInfo);
+                    LoginActivity.mDBHelper.removeProductEntry(productInfo);
 
                     //disable star from home tab
                     int index = MainActivity.getIndexEntryFavoritedList(FragmentHome.lsProduct, productInfo);

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -37,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
     public static Toolbar toolbar;
-    public static UserInfo user = new UserInfo("xuanquangpham@yahoo.com", "2018");
-    public static FeedReaderDBHelper mDBHelper;
+    public static UserInfo user = new UserInfo();
+    //public static UserInfo user = new UserInfo("xuanquangpham@yahoo.com", "2018");
     public static MainActivity mainActivity;
     public static boolean isExistInDB = false;
 
@@ -58,17 +59,20 @@ public class MainActivity extends AppCompatActivity {
 
         //Add toolbar
         toolbar = findViewById(R.id.toolbar);
-        mDBHelper = new FeedReaderDBHelper(this);
 
-        FeedReaderDBHelper.resetTable(mDBHelper.getWritableDatabase());
+        FeedReaderDBHelper.resetTable(LoginActivity.mDBHelper.getWritableDatabase());
 
-        SQLiteDatabase db = mDBHelper.getWritableDatabase();
-        Cursor dbList = MainActivity.mDBHelper.getAllUserEntry(db);
+        SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
+        Cursor dbList = LoginActivity.mDBHelper.getAllUserEntry(db);
         String user = MainActivity.user.getEmail().split("@")[0];
         if (dbList == null || !dbList.moveToFirst()) toolbar.setTitle("Welcome " + user + "!");
         else { //get Name
             String name = dbList.getString(dbList.getColumnIndexOrThrow(UserInfo.FeedEntry.COLUMN_NAME_FULLNAME));
-            toolbar.setTitle("Welcome back, " + name.split(" ")[0] + "!");
+            if (!name.equals(""))
+                toolbar.setTitle("Welcome back, " + name.split(" ")[0] + "!");
+            else {
+                toolbar.setTitle("Welcome back " + user + "!");
+            }
         }
         dbList.close();
         db.close();
@@ -127,7 +131,32 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("- CMPE295 MASTER PROJECT -");
+            builder.setMessage(" \n\n" +
+                    "DYNAMIC RECOMMENDATION SYSTEM\n\n" +
+                    "Advisor: Rex Tsou\n\n" +
+                    "Team Members:\n" +
+                    "- Nguyen Ngo\n" +
+                    "- Quang Pham\n" +
+                    "- Son Thai\n" +
+                    "- Andrew Wong\n");
+
+            // add a button
+            builder.setPositiveButton("Close", null);
+
+            // create and show the alert dialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return true;
+        }
+
+        if (id == R.id.action_sign_out) {
+            MainActivity.user = new UserInfo();
+            //move to LoginActivity
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -188,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        mDBHelper.close();
         super.onDestroy();
     }
 }

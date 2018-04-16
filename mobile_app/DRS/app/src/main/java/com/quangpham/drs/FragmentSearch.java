@@ -98,10 +98,10 @@ public class FragmentSearch extends Fragment {
                         MainActivity.favoritedProductsInfo.add(productInfo);
 
                         //save into database
-                        SQLiteDatabase db = MainActivity.mDBHelper.getWritableDatabase();
-                        Cursor cursor = MainActivity.mDBHelper.getProductEntry(db, productInfo);
+                        SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
+                        Cursor cursor = LoginActivity.mDBHelper.getProductEntry(db, productInfo);
                         if (!(cursor != null && cursor.moveToFirst())) {
-                            MainActivity.mDBHelper.insertProductEntry(productInfo);
+                            LoginActivity.mDBHelper.insertProductEntry(productInfo);
                         }
 
                         db.close();
@@ -112,7 +112,7 @@ public class FragmentSearch extends Fragment {
                         MainActivity.favoritedProductsInfo.remove(index);
 
                         //delete from database
-                        MainActivity.mDBHelper.removeProductEntry(productInfo);
+                        LoginActivity.mDBHelper.removeProductEntry(productInfo);
                     }
                 }
             }
@@ -288,7 +288,7 @@ public class FragmentSearch extends Fragment {
                                         }
 
                                         if (image != null) {
-                                            lsProduct.add(new ProductInfo(productName, imageName, String.valueOf(price), image));
+                                            lsProduct.add(new ProductInfo(productName, imageName, String.valueOf(price), image, MainActivity.user.getEmail()));
                                         }
                                     }
 

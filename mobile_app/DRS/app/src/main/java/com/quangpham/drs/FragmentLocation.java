@@ -59,7 +59,7 @@ public class FragmentLocation extends Fragment implements OnMapReadyCallback, Lo
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ImageView avatar = rootView.findViewById(R.id.profile_image_location);
-        if (MainActivity.user.getAvatar() != null) {
+        if (MainActivity.user.getAvatar() != null && !MainActivity.user.getAvatar().equals("")) {
             avatar.setImageBitmap(ProductInfo.covertBase64ToBitmap(MainActivity.user.getAvatar()));
         }
 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public final class AppConstant {
 
     //for REST API CALLS
-    public final static String URL_BASE_REST_API = "http://54.186.160.52:8080/app-1";
+    public final static String URL_BASE_REST_API = "http://34.216.224.185:8080/app-1";
     public final static String URL_REST_API_LOGIN = "/user/login";
     public final static String URL_REST_API_REGISTER = "/user/register";
     public final static String URL_REST_API_UPDATE_PROFILE = "/user/update_password";
@@ -19,8 +19,8 @@ public final class AppConstant {
     public final static String URL_REST_API_UPLOAD_IMAGE = "/customer/upload";
     public final static String URL_REST_API_PROCESS_RECOMMENDATION = "/customer/recommend";
     public final static String URL_CLOUD_FRONT_IMAGE = "https://dln7rdaxtcw3b.cloudfront.net/";
-    public final static int NUMBER_IMAGES_HOME_TAB = 6;
-    public final static int NUMBER_IMAGES_SEARCH_TAB = 6;
+    public final static int NUMBER_IMAGES_HOME_TAB = 20;
+    public final static int NUMBER_IMAGES_SEARCH_TAB = 20;
     public final static String CAMERA_FILE_NAME = "pxq";
     public final static String IMAGE_DIR = "MyImages";
 
@@ -42,8 +42,4 @@ public final class AppConstant {
             new StoreInfo("Westfield Oakridge Mall", new LatLng(37.2520341, -121.8631498), STORE_HOUR_1),
             new StoreInfo("Great Mall Outlet", new LatLng(37.415738, -121.897412), STORE_HOUR_1),
     };
-
-
-
-
 }

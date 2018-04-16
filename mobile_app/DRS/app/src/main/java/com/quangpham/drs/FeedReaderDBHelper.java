@@ -56,15 +56,18 @@ public class FeedReaderDBHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public Cursor getAllProductEntry(SQLiteDatabase db) {
-        Cursor result = db.rawQuery("SELECT * FROM " + ProductInfo.FeedEntry.TABLE_NAME, null);
+    public Cursor getAllProductEntryByEmail(SQLiteDatabase db, String email) {
+        Cursor result = db.rawQuery("SELECT * FROM " + ProductInfo.FeedEntry.TABLE_NAME + " " +
+                "WHERE " + ProductInfo.FeedEntry.COLUMN_NAME_USER_EMAIL + " = '" + email + "'", null);
         return result;
     }
 
     public Cursor getProductEntry(SQLiteDatabase db, ProductInfo productInfo) {
         Cursor result = db.rawQuery("SELECT * FROM " + ProductInfo.FeedEntry.TABLE_NAME +
                                     " WHERE " + ProductInfo.FeedEntry.COLUMN_NAME_IMAGE_NAME + "='" +
-                                    productInfo.getProductImageName() + "'", null);
+                                    productInfo.getProductImageName()+ "' AND " +
+                                    ProductInfo.FeedEntry.COLUMN_NAME_USER_EMAIL + "='" +
+                                    productInfo.getEmail() + "'", null);
         return result;
     }
 
@@ -76,7 +79,8 @@ public class FeedReaderDBHelper extends SQLiteOpenHelper {
                         " VALUES('" + productInfo.getProductImageName() + "','" +
                                 productInfo.getProductName() + "','" +
                                 productInfo.getProductPrice() + "','" +
-                                productInfo.getBitmapBase64() + "')");
+                                productInfo.getBitmapBase64() + "','" +
+                                productInfo.getEmail() + "')");
             flag = true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -91,7 +95,9 @@ public class FeedReaderDBHelper extends SQLiteOpenHelper {
         try {
             db.execSQL("DELETE FROM " + ProductInfo.FeedEntry.TABLE_NAME +
                     " WHERE " + ProductInfo.FeedEntry.COLUMN_NAME_IMAGE_NAME + "='" +
-                    productInfo.getProductImageName() + "'");
+                    productInfo.getProductImageName() + "' AND " +
+                    ProductInfo.FeedEntry.COLUMN_NAME_USER_EMAIL + "='" +
+                    productInfo.getEmail() + "'");
             flag = true;
         } catch (SQLException e) {
             e.printStackTrace();
