@@ -1,0 +1,7 @@
+No Mileage Credit, Full Fare Economy, Business, Business, No Mileage Credit, No Mileage Credit, No Mileage Credit, Discount Economy, No Mileage Credit, Business, Premium Economy, Premium Economy, Economy, No Mileage Credit, No Mileage Credit, Economy, Deep Discount Economy, No Mileage Credit, Deep Discount Economy, Premium Economy, No Mileage Credit, No Mileage Credit, Deep Discount Economy, No Mileage Credit, Full Fare Economy, No Mileage Credit,
+
+0%, 100%, 125%, 125%, 0%, 0%, 0%, 50%, 0%, 125%, 100%, 100%, 75%, 0%, 0%, 50%, 50%, 0%, 50%, 100%, 0%, 0%, 50%, 0%, 100%, 0%,
+
+0%, 100%, 100%, 100%, 0%, 0%, 0%, 50%, 0%, 100%, 100%, 100%, 75%, 0%, 0%, 50%, 50%, 0%, 50%, 100%, 0%, 0%, 50%, 0%, 100%, 0%,
+
+0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,

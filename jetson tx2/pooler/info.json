@@ -1,0 +1,42 @@
+{
+  "status": "OK",
+  "payload": {
+    "customer_name": "Jennifer",
+    "store_pick_up_items_count": 1,
+    "store_pick_up_items_locations": ["Customer Service, Level 2 - Women's Jacket Section"],
+    "today_specials": [{
+      "product_name" : "x1", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x2", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x3", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x4", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    }],
+    "clothing_recommended": [{
+      "product_name" : "x5", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x6", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x7", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x8", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x9", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x10", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x11", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x12", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x13", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x14", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x15", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    },{
+      "product_name" : "x16", "product_image": "https://anf.scene7.com/is/image/anf/hol_197069_02_life1?$product-hol-v1$&wid=1900&hei=2375", "product_retail_price": "49.99", "product_on_sale_price": "34.75"
+    }]
+  }
+}
