@@ -23,6 +23,7 @@ public class UserRequest {
         this.userEmail = userEmail;
     }
 
+    public UserRequest() {}
     public UserRequest(String requestId, String userEmail, String image, int quantity) {
         if (!StringUtils.isEmpty(userEmail)) {
             this.userEmail = userEmail;
