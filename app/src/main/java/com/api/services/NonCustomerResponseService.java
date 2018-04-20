@@ -27,8 +27,8 @@ public class NonCustomerResponseService {
     public List<String> getImages(int limit) {
         List<String> requests;
         if (limit < imageList.size()) {
-            requests = imageList.subList(0, imageList.size());
-            imageList.clear();
+            requests = imageList.subList(0, limit);
+            imageList = imageList.subList(limit, imageList.size());
         } else {
             requests =  imageList.subList(0, limit);
             imageList = imageList.subList(limit, imageList.size());
