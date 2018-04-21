@@ -1,5 +1,7 @@
 package com.api.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -7,6 +9,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class NonCustomerResponseService {
+    private static final Logger log = LoggerFactory.getLogger(NonCustomerResponseService.class);
+
     private static NonCustomerResponseService nonCustomerResponseService;
     //Map<UUID, Integer> userIdMapProductId;
     List<String> imageList;
@@ -22,7 +26,10 @@ public class NonCustomerResponseService {
         return nonCustomerResponseService;
     }
 
-    public void addImages(String image) {imageList.add(image);}
+    public void addImages(String image) {
+        imageList.add(image);
+        log.info("Available products for NonCustomerMember {}", imageList.size());
+    }
 
     public List<String> getImages(int limit) {
         List<String> requests;
@@ -33,6 +40,8 @@ public class NonCustomerResponseService {
             requests =  imageList.subList(0, limit);
             imageList = imageList.subList(limit, imageList.size());
         }
+
+        log.info("Retrieved: {}, available products left: {}", requests.size(), imageList.size());
 
         return requests;
     }
