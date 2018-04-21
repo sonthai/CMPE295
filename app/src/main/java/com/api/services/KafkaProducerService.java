@@ -36,15 +36,15 @@ public class KafkaProducerService {
             return recommendationService.processRecommendation(userRequest);
         } else {
             // User Request sent from Jetson Tx2
-            /*ExecutorService executorService = Executors.newFixedThreadPool(10);
+            ExecutorService executorService = Executors.newFixedThreadPool(5);
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
                     kafkaTemplate.send(kafkaTopic, userRequest);
                 }
-            });*/
-            kafkaTemplate.send(kafkaTopic, userRequest);
-            //executorService.shutdown();
+            });
+            //kafkaTemplate.send(kafkaTopic, userRequest);
+            executorService.shutdown();
             return null;
         }
 
