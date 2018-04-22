@@ -32,16 +32,20 @@ public class NonCustomerResponseService {
     }
 
     public List<String> getImages(int limit) {
-        List<String> requests;
-        if (limit >= imageList.size()) {
-            requests = imageList.subList(0, imageList.size());
-            imageList.clear();
-        } else {
-            requests =  imageList.subList(0, limit);
-            imageList = imageList.subList(limit, imageList.size());
-        }
+        List<String> requests = new ArrayList<>();
+        if (imageList.size() > 0) {
+            if (limit >= imageList.size()) {
+                requests = imageList.subList(0, imageList.size());
+                imageList.clear();
+            } else {
+                requests = imageList.subList(0, limit);
+                imageList = imageList.subList(limit, imageList.size());
+            }
 
-        log.info("Retrieved: {}, available products left: {}", requests.size(), imageList.size());
+            log.info("Retrieved: {}, available products left: {}", requests.size(), imageList.size());
+        } else {
+            log.info("No recommended products are available");
+        }
 
         return requests;
     }
