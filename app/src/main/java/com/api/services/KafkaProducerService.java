@@ -12,6 +12,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class KafkaProducerService {
@@ -25,6 +27,7 @@ public class KafkaProducerService {
     @Autowired
     RecommendationService recommendationService;
 
+
     public List<Map<String, Object>> send(UserRequest userRequest) {
         log.info("sending data=" + userRequest.getImage());
 
@@ -33,7 +36,15 @@ public class KafkaProducerService {
             return recommendationService.processRecommendation(userRequest);
         } else {
             // User Request sent from Jetson Tx2
-            kafkaTemplate.send(kafkaTopic, userRequest);
+            ExecutorService executorService = Executors.newFixedThreadPool(5);
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    kafkaTemplate.send(kafkaTopic, userRequest);
+                }
+            });
+            //kafkaTemplate.send(kafkaTopic, userRequest);
+            executorService.shutdown();
             return null;
         }
 

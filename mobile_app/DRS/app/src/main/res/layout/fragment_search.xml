@@ -1,0 +1,63 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_search"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="com.quangpham.drs.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_gravity="top">
+        <TextView
+            android:id="@+id/search_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WHAT ARE YOU LOOKING FOR?"
+            android:layout_marginTop="10dp"
+            android:textSize="20dp"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TAKE A PICTURE"
+            android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/search_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/camera"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/camera"
+        android:visibility="gone" />
+
+    <GridView
+        android:id="@+id/search_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="24dp"
+        android:numColumns="2"
+        android:stretchMode="columnWidth" />
+
+</LinearLayout>

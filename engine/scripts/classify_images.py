@@ -262,7 +262,7 @@ def find_similar_images(image_file):
 
   n_nearest_neighbors = FLAGS.top_k
   trees = 10000
-  infiles = glob.glob(FLAGS.vector_path + "*.npz")
+  infiles = glob.glob(FLAGS.vector_path + "**/*.npz")
 
   # build ann index
   t = AnnoyIndex(dims)

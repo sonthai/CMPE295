@@ -2,8 +2,10 @@ package com.api.controller;
 
 import com.api.constant.Constant;
 import com.api.database.repository.UserHistoryRepository;
+import com.api.database.transaction.UserHistoryTransaction;
 import com.api.model.ResponseMessage;
 import com.api.services.ProductService;
+import com.api.services.UserHistoryService;
 import com.api.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,9 @@ public class ProductController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    UserHistoryService userHistoryService;
 
     // Load data from csv to Dynamodb
     @RequestMapping(method = RequestMethod.POST, value = "/load_products")
@@ -67,13 +72,10 @@ public class ProductController {
         return responseMessage;
     }
 
-    @Autowired
-    UserHistoryRepository userHistoryRepository;
-
     @RequestMapping(method = RequestMethod.POST, value="/userHistory", consumes = "application/json", produces = "application/json")
     public ResponseMessage getUserHistory(@RequestBody Map<String, String> productMap) {
         String email = productMap.get("email");
-        List<Map<String, Object>> result = userHistoryRepository.findProductByUserEmail(email);
+        List<Map<String, Object>> result = userHistoryService.findProductByUserEmail(email);
 
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setResponseMsg("Recommendation History");

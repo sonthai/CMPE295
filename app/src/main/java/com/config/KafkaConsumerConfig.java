@@ -38,7 +38,7 @@ public class KafkaConsumerConfig {
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaConsumerGrpId);
         // automatically reset the offset to the earliest offset
-        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
 
         return properties;
     }

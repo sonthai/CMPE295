@@ -2,10 +2,8 @@ package com.api.services;
 
 import com.api.constant.Constant;
 import com.api.database.domain.UserHistoryDao;
-import com.api.database.repository.ProductRepository;
-import com.api.database.repository.UserHistoryRepository;
+import com.api.database.transaction.ProductTransaction;
 import com.api.database.transaction.UserHistoryTransaction;
-import com.api.model.ResponseMessage;
 import com.api.model.UserRequest;
 import com.api.utils.Utils;
 import org.slf4j.Logger;
@@ -18,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class RecommendationService implements IRecommendationService {
@@ -28,10 +25,8 @@ public class RecommendationService implements IRecommendationService {
     UserHistoryTransaction userHistoryTransaction;
 
     @Autowired
-    ProductRepository productRepository;
+    ProductTransaction productTransaction;
 
-    @Autowired
-    UserHistoryRepository userHistoryRepository;
 
     @Override
     public List<Map<String, Object>> processRecommendation(UserRequest userRequest) {
@@ -50,7 +45,7 @@ public class RecommendationService implements IRecommendationService {
             //List<Map<String, Object>> productList = new ArrayList<>();
             List<String> images = Utils.getSimilarProducts(userRequest.getRequestId());
             if (!StringUtils.isEmpty(userRequest.getUserEmail())) {
-                productList = productRepository.findProducts(images);
+                productList = productTransaction.findProducts(images);
 
                 // Save the user email and recommended product in user request history table
                 List<UserHistoryDao> userHistoryDaoList = new ArrayList<>();
@@ -94,7 +89,7 @@ public class RecommendationService implements IRecommendationService {
     private List<Map<String, Object>> getRecommendationForNonMemmber(int quantity) {
         // To Do Retrieve message based on the id from Message store
         List<String> imageList = NonCustomerResponseService.getMessageStoreInstance().getImages(quantity);
-        return productRepository.findProducts(imageList);
+        return productTransaction.findProducts(imageList);
     }
 
     private List<Map<String, Object>> getRecommendationForMember(String email, int quantity) {
@@ -104,7 +99,7 @@ public class RecommendationService implements IRecommendationService {
         products  = userHistoryTransaction.findProductByUserEmail(email);
 
         if (products.size() == 0) {
-            products = productRepository.findProductsForMember();
+            products = productTransaction.findProductsForMember();
         }
 
         List<Map<String, Object>> results =  new ArrayList<>();

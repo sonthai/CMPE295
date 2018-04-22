@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class UserHistoryTransaction implements ITransaction<Map<String, Object>,UserHistoryDao> {
+public class UserHistoryTransaction extends DataTransactionManager<Map<String, Object>,UserHistoryDao> { //implements ITransaction<Map<String, Object>,UserHistoryDao> {
     private static final Logger log = LoggerFactory.getLogger(UserHistoryTransaction.class);
     @Autowired
     UserHistoryRepository userHistoryRepository;
@@ -24,11 +24,6 @@ public class UserHistoryTransaction implements ITransaction<Map<String, Object>,
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-    }
-
-    @Override
-    public void delete(Map<String, Object> data) {
-
     }
 
     @Override
@@ -46,5 +41,4 @@ public class UserHistoryTransaction implements ITransaction<Map<String, Object>,
     public List<Map<String, Object>> findProductByUserEmail(String userEmail) {
         return userHistoryRepository.findProductByUserEmail(userEmail);
     }
-
 }
