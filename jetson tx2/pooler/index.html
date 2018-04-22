@@ -64,7 +64,7 @@
     function pooling_1(){
       console.log("pooling called.");
       var xobj = new XMLHttpRequest();
-          xobj.overrideMimeType("application/json");
+          //xobj.overrideMimeType("application/json");
           xobj.open('POST', url, true);
           xobj.onreadystatechange = function() {
               if (xobj.readyState == 4 && xobj.status == "200") {
@@ -153,8 +153,12 @@
                 alert("SON! Fix the kafak!");
               }
           }
-          var send_data = JSON.stringify({quantity: 12});
-          xobj.send(send_data);
+
+          xobj.setRequestHeader("Accept","*");
+          xobj.setRequestHeader("Access-Control-Allow-Origin", "*");
+          xobj.setRequestHeader("Content-type", "application/json");
+          xobj.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+          xobj.send({"quantity": 5});
     };
     function pooling_2(){
       $.ajax({

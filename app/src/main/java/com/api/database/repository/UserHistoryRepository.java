@@ -4,20 +4,18 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
-import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.api.constant.Constant;
-import com.api.database.domain.ProductDao;
+import com.api.database.domain.UserHistoryDao;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserHistoryRepository<UserHistoryDao> extends BasicAWSDynamoOps<UserHistoryDao> {
+public class UserHistoryRepository extends BasicAWSDynamoOps<UserHistoryDao> {
     @Autowired
     ProductRepository productRepository;
 
@@ -36,4 +34,36 @@ public class UserHistoryRepository<UserHistoryDao> extends BasicAWSDynamoOps<Use
 
         return results;
     }
+
+    public List<UserHistoryDao> findUserHistoryFromProductIdAndEmail(List<String> productIds, String email) {
+        Map<String, List<AttributeValue>> filterConditionMap = new HashMap<>();
+
+        List<AttributeValue> prodAttributeValues = productIds.stream()
+                .map(item -> new AttributeValue().withN(item))
+                .collect(Collectors.toList());
+        List<AttributeValue> emailAttributeValues = Arrays.asList(new AttributeValue().withS(email));
+
+        filterConditionMap.put("Product", prodAttributeValues);
+        filterConditionMap.put("Email", emailAttributeValues);
+
+        List<UserHistoryDao> results = new ArrayList<>();
+
+        if (filterConditionMap.keySet().size() > 0) {
+            results = getProductsWithFilter(filterConditionMap);
+        }
+
+        return results;
+    }
+
+    public List<UserHistoryDao> getProductsWithFilter(Map<String, List<AttributeValue>> filterConditionMap) {
+        Map<Integer, UserHistoryDao> productMapResult = new HashMap<>();
+        DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDB);
+        DynamoDBScanExpression scanExpression = getScanExpression(filterConditionMap);
+        List<UserHistoryDao> scanResult = mapper.scan(UserHistoryDao.class, scanExpression);
+        return scanResult;
+    }
+
+
+
+
 }

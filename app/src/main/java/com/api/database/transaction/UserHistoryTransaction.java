@@ -1,5 +1,6 @@
 package com.api.database.transaction;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.api.constant.Constant;
 import com.api.database.domain.UserHistoryDao;
 import com.api.database.repository.UserHistoryRepository;
@@ -40,5 +41,13 @@ public class UserHistoryTransaction extends DataTransactionManager<Map<String, O
 
     public List<Map<String, Object>> findProductByUserEmail(String userEmail) {
         return userHistoryRepository.findProductByUserEmail(userEmail);
+    }
+    
+    public List<UserHistoryDao> findUserHistoryFromProductIds(List<String> productIds, String email) {
+        return userHistoryRepository.findUserHistoryFromProductIdAndEmail(productIds, email);
+    }
+
+    public void updateProductHistoryFrequency(String tableName, List<Map<String, AttributeValue>> keys, Map<String, String> updateExpressionMap, Map<String, Map<String, AttributeValue>> attributeValuesMap) {
+        userHistoryRepository.updateBatchRequestItems(tableName, keys, updateExpressionMap, attributeValuesMap);
     }
 }

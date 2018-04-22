@@ -1,6 +1,5 @@
 package com.api.controller;
 
-import com.amazonaws.util.Base64;
 import com.api.constant.Constant;
 import com.api.model.ResponseMessage;
 import com.api.services.DataProcessingService;
@@ -9,15 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.nio.ch.IOUtil;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -47,7 +41,6 @@ public class DataProcessingController {
         responseMessage.setData(results);
         return responseMessage;
     }
-
 
     // Testing API for uploading image
     @RequestMapping(method = RequestMethod.POST, value = "/upload", produces = "application/json")

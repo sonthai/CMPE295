@@ -43,7 +43,6 @@ public class KafkaProducerService {
                     kafkaTemplate.send(kafkaTopic, userRequest);
                 }
             });
-            //kafkaTemplate.send(kafkaTopic, userRequest);
             executorService.shutdown();
             return null;
         }
