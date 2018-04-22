@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Repository
@@ -85,7 +86,7 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
         return results;
     }
 
-    public List<Map<String, Object>> findProductsForMember() {
+    public List<Map<String, Object>> retrieveVendorProducts() {
         DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDB);
 
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
@@ -94,6 +95,19 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
         List<Map<String, Object>> results = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         scanResult.forEach(productDao -> results.add(objectMapper.convertValue(productDao, Map.class)));
+
+        return results;
+    }
+
+    public List<Map<String, Object>> findRandomProducts(int quantity) {
+        List<Map<String, Object>> products = retrieveVendorProducts();
+
+        List<Map<String, Object>> results =  new ArrayList<>();
+
+        while (results.size() < quantity) {
+            int index = new Random().nextInt(quantity);
+            results.add(products.remove(index));
+        }
 
         return results;
     }

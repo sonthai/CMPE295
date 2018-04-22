@@ -84,7 +84,11 @@ public class RecommendationService implements IRecommendationService {
     private List<Map<String, Object>> getRecommendationForNonMember(int quantity) {
         // To Do Retrieve message based on the id from Message store
         List<String> imageList = NonCustomerResponseService.getMessageStoreInstance().getImages(quantity);
-        return productTransaction.findProducts(imageList);
+        if (imageList.size() > 0) {
+            return productTransaction.findProducts(imageList);
+        } else {
+            return productTransaction.findProductsForNonMember(quantity);
+        }
     }
 
     private List<Map<String, Object>> getRecommendationForMember(String email, int quantity) {
@@ -95,9 +99,9 @@ public class RecommendationService implements IRecommendationService {
 
         if (products.size() == 0) {
             products = productTransaction.findProductsForMember();
-        } else {
-
-        }
+        } /* else {
+            // Perform recommendation
+        }*/
 
         List<Map<String, Object>> results =  new ArrayList<>();
 

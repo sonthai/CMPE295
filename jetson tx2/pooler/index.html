@@ -158,7 +158,7 @@
           xobj.setRequestHeader("Access-Control-Allow-Origin", "*");
           xobj.setRequestHeader("Content-type", "application/json");
           xobj.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-          xobj.send({"quantity": 5});
+          xobj.send(JSON.stringify({"quantity": 5}));
     };
     function pooling_2(){
       $.ajax({
@@ -223,7 +223,7 @@
         }
     });
     }
-    var interval_1 = setInterval(pooling_1, 1000);
+    var interval_1 = setInterval(pooling_1, 2000);
     // var interval_2 = setInterval(pooling_2, 1000);
     // clearInterval(interval);
 
