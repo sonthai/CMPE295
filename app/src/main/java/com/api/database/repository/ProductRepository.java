@@ -76,12 +76,9 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
         scanResult.forEach((ProductDao productDao) -> {
             try {
                 String encodedImageName = URLEncoder.encode(productDao.getImage(), StandardCharsets.UTF_8.name());
-                //String imagePath = Constant.IMAGE_URL + productDao.getImage();
                 productDao.setImage(Constant.IMAGE_URL + encodedImageName);
                 results.add(objectMapper.convertValue(productDao, Map.class));
-            } catch (UnsupportedEncodingException e) {
-
-            }
+            } catch (UnsupportedEncodingException e) {}
         });
         return results;
     }
@@ -94,7 +91,13 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
 
         List<Map<String, Object>> results = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
-        scanResult.forEach(productDao -> results.add(objectMapper.convertValue(productDao, Map.class)));
+        scanResult.forEach(productDao -> {
+            try {
+                String encodedImageName = URLEncoder.encode(productDao.getImage(), StandardCharsets.UTF_8.name());
+                productDao.setImage(Constant.IMAGE_URL + encodedImageName);
+                results.add(objectMapper.convertValue(productDao, Map.class));
+            } catch (UnsupportedEncodingException ex) {};
+        });
 
         return results;
     }

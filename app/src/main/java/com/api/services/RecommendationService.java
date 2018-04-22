@@ -87,7 +87,7 @@ public class RecommendationService implements IRecommendationService {
         if (imageList.size() > 0) {
             return productTransaction.findProducts(imageList);
         } else {
-            return productTransaction.findProductsForNonMember(quantity);
+            return productTransaction.findRandomProducts(quantity);
         }
     }
 

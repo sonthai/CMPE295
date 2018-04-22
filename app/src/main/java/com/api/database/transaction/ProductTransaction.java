@@ -26,7 +26,7 @@ public class ProductTransaction extends DataTransactionManager<Map<String, Objec
         return productRepository.retrieveVendorProducts();
     }
 
-    public List<Map<String, Object>> findProductsForNonMember(int quantity) {
+    public List<Map<String, Object>> findRandomProducts(int quantity) {
         return productRepository.findRandomProducts(quantity);
     }
 
