@@ -10,6 +10,7 @@ public class Constant {
     public static String IMAGE_FILE_FLAG = "--image_file";
     public static String TOP_K_FLAG = "--top_k";
     public static String VECTOR_PATH_PLAG = "--vector_path";
+    public static String GENDER = "gender";
 
     //public static String PYTHON_CMD = "C:\\Users\\sjsu\\Desktop\\CMPE295\\engine\\scripts\\python\\python.exe";
     //public static String SCRIPTS_PATH = "C:\\Users\\sjsu\\Desktop\\CMPE295\\engine\\scripts";

@@ -37,6 +37,7 @@ public class RecommendationService implements IRecommendationService {
         Map<String, Object> params =  new HashMap<>();
         params.put("--top_k", userRequest.getQuantity());
         params.put("--image_file", getImagePath(userRequest.getImage()));
+        params.put(Constant.GENDER, userRequest.getGender());
         Utils.executeScript("classify_images.py", params);
         // Add logic to check if <imageId>.json exists then parse json file
         Path jsonResultFilePath =  Utils.getProductJsonFilePath(userRequest.getRequestId());

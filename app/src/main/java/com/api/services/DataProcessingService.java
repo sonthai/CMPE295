@@ -32,6 +32,7 @@ public class DataProcessingService {
         if (!StringUtils.isEmpty(imageName)) {
             UserRequest userRequest = new UserRequest(data.get("id"), data.getOrDefault(Constant.USER_EMAIL, ""), data.get("id"), Integer.valueOf(data.getOrDefault("quantity", "10")));
             userRequest.setKeepImage(Boolean.valueOf(data.getOrDefault("keepImage", "false")));
+            userRequest.setGender(data.getOrDefault(Constant.GENDER, ""));
             productList = producer.send(userRequest);
         }
 

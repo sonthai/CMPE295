@@ -58,10 +58,19 @@ public class UserRequest {
         this.quantity = quantity;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     private String userEmail;
     private String image;
     private boolean keepImage;
     private String requestId;
     private int quantity;
+    private String gender;
 
 }

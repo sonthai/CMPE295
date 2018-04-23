@@ -8,6 +8,7 @@ import net.iharder.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -168,7 +169,12 @@ public class Utils {
         commands.add(Constant.TOP_K_FLAG);
         commands.add(params.get(Constant.TOP_K_FLAG).toString());
         commands.add(Constant.VECTOR_PATH_PLAG);
-        String vectorPath = Paths.get(Constant.SCRIPTS_PATH, "image_vectors").toString() + "/";
+        String vectorPath = "";
+        if (StringUtils.isEmpty(params.get(Constant.GENDER))) {
+            vectorPath = Paths.get(Constant.SCRIPTS_PATH, "image_vectors").toString() + "/";
+        } else {
+            vectorPath = Paths.get(Constant.SCRIPTS_PATH, "image_vectors", params.get(Constant.GENDER).toString()).toString();
+        }
         commands.add("\"" + vectorPath + "\"");
         commands.add(Constant.IMAGE_FILE_FLAG);
         commands.add("\"" + params.get(Constant.IMAGE_FILE_FLAG).toString() + "\"");
