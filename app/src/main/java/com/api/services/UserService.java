@@ -95,4 +95,16 @@ public class UserService implements IUserService {
         response.setResponseMsg(msg);
         return response;
     }
+
+    @Override
+    public ResponseMessage updateProfile(Map<String, String> data) {
+        log.info("Update password service is called");
+
+        List<Map<String, Object>> users = userTransaction.getUsers(data);
+        if (users.size() == 1) {
+
+        }
+
+        return null;
+    }
 }

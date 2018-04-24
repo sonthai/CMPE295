@@ -8,4 +8,5 @@ interface IUserService {
     ResponseMessage register(Map<String, String> bodyRequest);
     ResponseMessage logIn(Map<String, String> bodyRequest);
     ResponseMessage updatePassword(Map<String, String> bodyRequest);
+    ResponseMessage updateProfile(Map<String, String> bodyRequest);
 }
