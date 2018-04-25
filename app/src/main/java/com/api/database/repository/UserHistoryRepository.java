@@ -6,10 +6,8 @@ import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.api.constant.Constant;
 import com.api.database.domain.UserHistoryDao;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,11 +54,28 @@ public class UserHistoryRepository extends BasicAWSDynamoOps<UserHistoryDao> {
     }
 
     public List<UserHistoryDao> getProductsWithFilter(Map<String, List<AttributeValue>> filterConditionMap) {
-        Map<Integer, UserHistoryDao> productMapResult = new HashMap<>();
         DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDB);
         DynamoDBScanExpression scanExpression = getScanExpression(filterConditionMap);
         List<UserHistoryDao> scanResult = mapper.scan(UserHistoryDao.class, scanExpression);
         return scanResult;
+    }
+
+    public Map<String, Map<Integer, Double>> queryAllUserHistoryData () {
+        DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDB);
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+        List<UserHistoryDao> userHistoryRows = mapper.scan(UserHistoryDao.class, scanExpression);
+
+        Map<String, Map<Integer, Double>> userHistoryData = new HashMap<>();
+
+        for (UserHistoryDao uhd: userHistoryRows) {
+            if (!userHistoryData.containsKey(uhd.getUserEmail())) {
+                userHistoryData.put(uhd.getUserEmail(), new HashMap<>());
+            }
+            userHistoryData.get(uhd.getUserEmail()).put(uhd.getProduct(), Double.valueOf(uhd.getFrequency()));
+        }
+
+
+        return userHistoryData;
     }
 
 

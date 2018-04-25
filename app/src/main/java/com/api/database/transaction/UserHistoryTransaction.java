@@ -50,4 +50,8 @@ public class UserHistoryTransaction extends DataTransactionManager<Map<String, O
     public void updateProductHistoryFrequency(String tableName, List<Map<String, AttributeValue>> keys, Map<String, String> updateExpressionMap, Map<String, Map<String, AttributeValue>> attributeValuesMap) {
         userHistoryRepository.updateBatchRequestItems(tableName, keys, updateExpressionMap, attributeValuesMap);
     }
+
+    public Map<String, Map<Integer, Double>> getUserHistoryData() {
+        return userHistoryRepository.queryAllUserHistoryData();
+    }
 }

@@ -69,4 +69,7 @@ public class UserTransaction extends DataTransactionManager<Map<String, String>,
         }
     }
 
+    public boolean updateProfile(Map<String, String> userMap) {
+        return userRepository.updateProfile(userMap);
+    }
 }

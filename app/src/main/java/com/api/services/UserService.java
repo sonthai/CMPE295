@@ -98,13 +98,29 @@ public class UserService implements IUserService {
 
     @Override
     public ResponseMessage updateProfile(Map<String, String> data) {
-        log.info("Update password service is called");
+        log.info("Update profile service is called");
 
         List<Map<String, Object>> users = userTransaction.getUsers(data);
+        ResponseStatus status = ResponseStatus.FAIL;
         if (users.size() == 1) {
+            data.put("Id", users.get(0).get("Id").toString());
+            boolean updateStatus = userTransaction.updateProfile(data);
 
+            if (updateStatus) {
+                status = ResponseStatus.OK;
+            }
         }
 
-        return null;
+        ResponseMessage response = new ResponseMessage();
+        response.setResponseCode(status);
+        String msg = "";
+        if (status == ResponseStatus.OK) {
+            msg = "Profile updated successfully";
+        } else {
+            msg = "Profile failed to update";
+        }
+
+        response.setResponseMsg(msg);
+        return response;
     }
 }
