@@ -23,7 +23,8 @@ public class UserRepository<UserDao> extends BasicAWSDynamoOps<UserDao> {
 
     public List<Map<String, Object>> findByUserEmail(String userEmail) {
         Map<String, Object> valueMap = new ValueMap().withString(":email", userEmail);
-        return scan(Constant.USER_TABLE, "Id, Email, Password", "Email = :email", valueMap);
+        return scan(Constant.USER_TABLE, "Id, Email, Password, FullName, Gender, BirthDate, YearJoined, Avatar",
+                "Email = :email", valueMap);
     }
 
     public boolean updatePassword(Map<String, String> dataMap) {

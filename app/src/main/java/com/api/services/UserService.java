@@ -52,9 +52,11 @@ public class UserService implements IUserService {
         } else {
             if (userTransaction.isPasswordMatch(users.get(0), data.get(Constant.USER_PASSWORD))) {
                 msg = data.get(Constant.USER_EMAIL) + " logged in successfully.";
+                users.get(0).remove("Password");
             } else {
                 status = ResponseStatus.FAIL;
                 msg = data.get(Constant.USER_EMAIL) + " failed to login.";
+                users.clear();
             }
 
         }
@@ -62,6 +64,7 @@ public class UserService implements IUserService {
         ResponseMessage response = new ResponseMessage();
         response.setResponseCode(status);
         response.setResponseMsg(msg);
+        response.setData(users);
         return response;
     }
 
