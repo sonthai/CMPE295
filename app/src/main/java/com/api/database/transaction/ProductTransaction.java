@@ -30,6 +30,12 @@ public class ProductTransaction extends DataTransactionManager<Map<String, Objec
         return productRepository.findRandomProducts(quantity);
     }
 
+    public List<Map<String, Object>> findPromotions(int quantity) {
+        List<Map<String, Object>> promotions =  productRepository.findRandomProducts(quantity);
+        productRepository.randomizeDiscount(promotions);
+        return promotions;
+    }
+
     public int addedProducts(String filePath) {
         return productRepository.saveItemsInBatch(Utils.createProductList(filePath));
     }

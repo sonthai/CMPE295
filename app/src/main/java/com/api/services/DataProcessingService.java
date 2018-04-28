@@ -48,6 +48,10 @@ public class DataProcessingService {
         return recommendationService.recommend(data);
     }
 
+    public List<Map<String, Object>> getPromotion(Map<String, Object> data) {
+        return recommendationService.promotions(data);
+    }
+
     // Support Test method
     public String saveImageToServer(Map<String, String> data) {
         return Utils.saveIncomingImage(data.get("id"), data.get("image"));

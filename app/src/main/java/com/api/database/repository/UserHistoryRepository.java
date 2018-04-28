@@ -53,7 +53,7 @@ public class UserHistoryRepository extends BasicAWSDynamoOps<UserHistoryDao> {
         return results;
     }
 
-    public List<UserHistoryDao> getProductsWithFilter(Map<String, List<AttributeValue>> filterConditionMap) {
+    private List<UserHistoryDao> getProductsWithFilter(Map<String, List<AttributeValue>> filterConditionMap) {
         DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDB);
         DynamoDBScanExpression scanExpression = getScanExpression(filterConditionMap);
         List<UserHistoryDao> scanResult = mapper.scan(UserHistoryDao.class, scanExpression);

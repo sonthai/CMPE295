@@ -3,6 +3,7 @@ package com.api.controller;
 import com.api.constant.Constant;
 import com.api.model.ResponseMessage;
 import com.api.services.DataProcessingService;
+import com.api.services.RecommendationService;
 import com.api.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,18 @@ public class DataProcessingController {
         return responseMessage;
     }
 
+    @RequestMapping(method = RequestMethod.POST, value="/promotions", consumes = "application/json")
+    public ResponseMessage getTodaySpecial(@RequestBody Map<String, Object> bodyRequest) {
+        log.info("Get promotion API");
+        List<Map<String, Object>> results =  dataProcessingService.getPromotion(bodyRequest);
+
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setResponseMsg("Special Promotions");
+        responseMessage.setResponseCode(Constant.ResponseStatus.OK);
+        responseMessage.setData(results);
+        return responseMessage;
+    }
+
     // Testing API for uploading image
     @RequestMapping(method = RequestMethod.POST, value = "/upload", produces = "application/json")
     public ResponseMessage upload(@RequestBody Map<String, String> bodyRequest) {
@@ -56,9 +69,6 @@ public class DataProcessingController {
     @RequestMapping(method = RequestMethod.POST, value = "/testScript")
     public void uploadImage(@RequestBody Map<String, String> map) throws IOException {
         String image_file = map.get("image");
-        //File imageFile = new File(image_file);
-        //byte[] bytes = Files.readAllBytes(imageFile.toPath());
-        //String encoded = Base64.encodeAsString(bytes);
         Map<String, Object> params =  new HashMap<>();
         params.put("--top_k", "10");
         params.put("--image_file", Paths.get(Constant.IMAGE_PATH,  image_file).toString());

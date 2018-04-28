@@ -101,8 +101,6 @@ public class Utils {
 
     public static String saveIncomingImage(String id, String data) {
         try {
-            // byte[] decodedImg = Base64.getDecoder().decode(data.getBytes(StandardCharsets.UTF_8));
-            // Files.write(destinationFile, decodedImg);
             String imageFilename = id + ".jpg";
             Path destinationFile = Paths.get(Constant.IMAGE_PATH, imageFilename);
             Base64.decodeToFile(data, destinationFile.toString());
