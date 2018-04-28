@@ -32,6 +32,7 @@ public class DataProcessingController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value="/recommend", consumes = "application/json")
+    @CrossOrigin
     public ResponseMessage getRecommendation(@RequestBody Map<String, Object> bodyRequest) {
         log.info("Get recommendation API");
         List<Map<String, Object>> results =  dataProcessingService.getRecommendation(bodyRequest);
@@ -44,6 +45,7 @@ public class DataProcessingController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value="/promotions", consumes = "application/json")
+    @CrossOrigin
     public ResponseMessage getTodaySpecial(@RequestBody Map<String, Object> bodyRequest) {
         log.info("Get promotion API");
         List<Map<String, Object>> results =  dataProcessingService.getPromotion(bodyRequest);
