@@ -56,9 +56,6 @@ public class RecommendationService implements IRecommendationService {
                 // Store result in in-memory MessageStore for non member users
                 NonCustomerResponseService instance = NonCustomerResponseService.getMessageStoreInstance();
                 images.forEach(image -> instance.addImages(image));
-
-                //List<Integer> productIds = productRepository.findUserByUserName(new String[] {imageName});
-                //instance.addUserId(userRequest.getUserId(), productIds.get(0));
             }
 
             msg = Utils.removeImage(jsonResultFilePath.toString());
@@ -82,6 +79,11 @@ public class RecommendationService implements IRecommendationService {
         return results;
     }
 
+    public List<Map<String, Object>> promotions(Map<String, Object> requestBody) {
+        int quantity = (int) requestBody.getOrDefault("quantity", 4);
+        return productTransaction.findPromotions(quantity);
+    }
+
     private List<Map<String, Object>> getRecommendationForNonMember(int quantity) {
         // To Do Retrieve message based on the id from Message store
         List<String> imageList = NonCustomerResponseService.getMessageStoreInstance().getImages(quantity);
@@ -100,9 +102,7 @@ public class RecommendationService implements IRecommendationService {
 
         if (products.size() == 0) {
             products = productTransaction.findProductsForMember();
-        } /* else {
-            // Perform recommendation
-        }*/
+        }
 
         List<Map<String, Object>> results =  new ArrayList<>();
 
@@ -148,12 +148,4 @@ public class RecommendationService implements IRecommendationService {
 
         return productList;
     }
-
-    // Reserve for recommendation implementation for mobile
-    private List<Map<String, Object>> performRecommendationBasedOnUserHistory () {
-        List<Map<String, Object>> recommendedProduct = new ArrayList<>();
-
-        return recommendedProduct;
-    }
-
 }

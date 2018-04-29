@@ -26,6 +26,10 @@ public class NonCustomerResponseService {
         return nonCustomerResponseService;
     }
 
+    public boolean hasImages() {
+        return imageList.size() > 0;
+    }
+
     public void addImages(String image) {
         imageList.add(image);
         log.info("Available products for NonCustomerMember {}", imageList.size());
@@ -49,31 +53,4 @@ public class NonCustomerResponseService {
 
         return requests;
     }
-
-    /*public void addUserId(UUID userId, int productId) {
-        userIdMapProductId.put(userId, productId);
-    }*/
-
-   /* public String getUserIds() {
-        String users = "";
-        if (userIds.size() > 0) {
-            users = userIds.stream().map(i -> i.toString()).collect(Collectors.joining(","));
-            userIds.clear();
-        }
-        return users;
-    }*/
-
-  /* public String getProductIds() {
-       String productIds = "";
-       if (userIdMapProductId.size() > 0) {
-           productIds = userIdMapProductId.values().stream().map(i -> String.valueOf(i)).collect(Collectors.joining(","));
-           userIdMapProductId.clear();
-
-       }
-       return productIds;
-   }
-
-   public int getProductByUserId(UUID userUuid) {
-       return userIdMapProductId.get(userUuid);
-   }*/
 }

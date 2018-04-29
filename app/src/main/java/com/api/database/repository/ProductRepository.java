@@ -53,8 +53,6 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
             results = getProductsWithFilter("Image", attributeValues);
         }
 
-        randomizeDiscount(results);
-
         return results;
 
     }
@@ -111,32 +109,18 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
             results.add(products.remove(index));
         }
 
-        randomizeDiscount(results);
-
         return results;
     }
 
-    private void randomizeDiscount(List<Map<String, Object>> result) {
-        List<Map<String, Object>> temp = result;
-
+    public void randomizeDiscount(List<Map<String, Object>> result) {
         Random rand = new Random();
 
-        int numItemsDiscounted = rand.nextInt((int) ((temp.size() + 1)/5));
+        int[] percentages = new int[]{5, 10, 15, 20};
 
-        int [] percentages = new int[] {5, 10, 15, 20};
-
-        Set<Integer> indexes = new HashSet<>();
-        for (int i = 0; i <= numItemsDiscounted; i++) {
-            int randomIdx = rand.nextInt(temp.size());
-            temp.remove(temp.get(randomIdx));
-            indexes.add(randomIdx);
-        }
-
-        indexes.forEach(idx -> {
-            int randomDiscount =  percentages[rand.nextInt(percentages.length)];
-            Map<String, Object> data = result.get(idx);
-            double discountPrice = Math.round((double) data.get("price") * (100 - randomDiscount)) / 100;
-            result.get(idx).put("discount_price", String.format("%4.2f", discountPrice));
+        result.forEach(p -> {
+            int randomDiscount = percentages[rand.nextInt(percentages.length)];
+            double discountPrice = Math.round((double) p.get("price") * (100 - randomDiscount)) / 100;
+            p.put("special_price", String.format("%4.2f", discountPrice));
         });
     }
 }
