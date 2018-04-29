@@ -44,8 +44,22 @@ public class DataProcessingService {
         return response;
     }
 
-    public List<Map<String, Object>> getRecommendation(Map<String, Object> data) {
-        return recommendationService.recommend(data);
+    public ResponseMessage getRecommendation(Map<String, Object> data) {
+        List<Map<String, Object>> results = recommendationService.recommend(data);
+        String msg = "";
+
+        if (data.containsKey("email") || NonCustomerResponseService.getMessageStoreInstance().hasImages()) {
+            msg = "Recommended items from engine.";
+        } else {
+            msg = "Randomized items from engine.";
+        }
+
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setResponseMsg(msg);
+        responseMessage.setResponseCode(Constant.ResponseStatus.OK);
+        responseMessage.setData(results);
+
+        return responseMessage;
     }
 
     public List<Map<String, Object>> getPromotion(Map<String, Object> data) {

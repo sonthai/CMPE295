@@ -26,6 +26,10 @@ public class NonCustomerResponseService {
         return nonCustomerResponseService;
     }
 
+    public boolean hasImages() {
+        return imageList.size() > 0;
+    }
+
     public void addImages(String image) {
         imageList.add(image);
         log.info("Available products for NonCustomerMember {}", imageList.size());

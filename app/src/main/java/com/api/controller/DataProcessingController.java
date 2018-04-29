@@ -35,13 +35,7 @@ public class DataProcessingController {
     @CrossOrigin
     public ResponseMessage getRecommendation(@RequestBody Map<String, Object> bodyRequest) {
         log.info("Get recommendation API");
-        List<Map<String, Object>> results =  dataProcessingService.getRecommendation(bodyRequest);
-
-        ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setResponseMsg("Retrieve result from engine");
-        responseMessage.setResponseCode(Constant.ResponseStatus.OK);
-        responseMessage.setData(results);
-        return responseMessage;
+        return dataProcessingService.getRecommendation(bodyRequest);
     }
 
     @RequestMapping(method = RequestMethod.POST, value="/promotions", consumes = "application/json")
