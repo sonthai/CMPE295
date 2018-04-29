@@ -19,10 +19,21 @@
   #right_recommendation_title{text-align: center; font-size: larger;}
   #left_today_specials_table{margin-left: auto; margin-right: auto;}
   #right_recommendation_table{margin-left: auto; margin-right: auto;}
-  #page{border-style: solid;border-width: 10px;border-radius: 20px; border-color: #89CFF0;     font-family: Sans-serif;}
-  .image{width: 70%; display: block; margin-left: auto; margin-right: auto;}
-  .retail_price_label{text-decoration: line-through; top: -20%; position: relative; left: 10%; background-color: rgba(198, 187, 187, 0.3);}
+  #page{border-style: solid;border-width: 10px;border-radius: 20px; border-color: #89CFF0; font-family: Sans-serif;}
+  .recommendation_image{width: 374px; height: 374px; display: block; margin-left: auto; margin-right: auto;}
+  .randomized_image{}
+  .recommended_image{}
+  .today_spceial_image{width: 174px; height: 174px; display: block; margin-left: auto; margin-right: auto;}
+  .retail_price_label:before {content: "USD$";}
+  .retail_price_label{left: 30%;}
+  .brand{left: 40%}
+  .product_name{bottom: 45px; left: 1px;}
+  .item_style{position: relative; background-color: #89CFF0; border-radius: 10px;border: 3px solid #BADA55;border-radius: 10px;}
   .on_sale_price_label{font-size: larger;top: -10%; position: relative; left: 50%; background-color: rgba(242, 14, 191, 0.3);}
+
+  #right_recommendation_table td {position: relative; }
+  #left_today_specials_table td {position: relative; }
+
   </style>
   <script
         src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -60,95 +71,116 @@
     <div id="clearingdiv"></div>
 </div>
   <script>
-    var url = 'http://54.213.163.194:8080/app-1/customer/recommend'
-    function pooling_1(){
-      console.log("pooling called.");
+    const brand_map = {
+      1:"Armani Exchange",
+      2:"Calvin Klein",
+      3:"Express",
+      4:"H&M",
+      5:"Abercrombie&Fitch",
+      6:"Holister",
+      7:"Burberry",
+      8:"Tommy Hilfiger",
+      9:"Uniqlo",
+      10:"Vans",
+      11:"American Eagle",
+      12:"Aeropostale",
+      13:"Old Navy",
+      14:"Guess",
+      15:"DKNY",
+      16:"Ralph Lauren",
+      17:"Columbia",
+      18:"The North Face",
+      19:"Levis",
+      20:"Adidas"
+    }
+    var break_text = function(text){
+      console.log(text);
+      console.log(text.length);
+
+    }
+    var url_today_special = 'http://app-balancer-2089768567.us-west-2.elb.amazonaws.com/app-1/customer/promotions';
+    var url_recommendation = 'http://app-balancer-2089768567.us-west-2.elb.amazonaws.com/app-1/customer/recommend';
+    function pooling_today_special(){
+      console.log("pooling today special called.");
+      var xobj = new XMLHttpRequest();
+        xobj.open('POST', url_today_special, true);
+        xobj.onreadystatechange = function() {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+              var data = JSON.parse(xobj.responseText);
+              /* today_specials create table  */
+              var _table_ = document.getElementById("left_today_specials_table");
+              _table_.innerHTML = '';
+              var today_specials_array = data.data;
+              for (var i = 0 ; i < today_specials_array.length / 2; i++) {
+                var row = _table_.insertRow(0);
+                for( var j = 0; j < 2; ++j){
+                  var col = row.insertCell(j);
+                  console.log("2 * "+i+" + "+j+" = "+(2 * i + j));
+                  console.log(data.data[2 * i + j]);
+                  col.innerHTML = "<img class='today_spceial_image' src='"+data.data[2 * i + j].image+"' />";
+                  col.innerHTML += "<span class='retail_price_label item_style'> "+data.data[2 * i + j].price+"</span>";
+                  col.innerHTML += "<span class='brand item_style'> "+brand_map[data.data[2 * i + j].brand]+"</span>";
+                  col.innerHTML += "<span class='product_name item_style'> "+data.data[2 * i + j].productName+"</span>";
+                  // col1.innerHTML = data.payload.today_specials[2 * i + j].product_name;
+                  // col2.innerHTML = data.payload.today_specials[i + j].product_image;
+                  // col3.innerHTML = data.payload.today_specials[i + j].product_retail_price;
+                  // col4.innerHTML = data.payload.today_specials[i + j].product_on_sale_price;
+                }
+
+            }
+          }
+        }
+        xobj.setRequestHeader("Accept","*");
+        xobj.setRequestHeader("Access-Control-Allow-Origin", "*");
+        xobj.setRequestHeader("Content-type", "application/json");
+        xobj.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        xobj.send(JSON.stringify({"quantity": 4}));
+    }
+    function pooling_recomendation(){
+      console.log("pooling Recommendation called.");
       var xobj = new XMLHttpRequest();
           //xobj.overrideMimeType("application/json");
-          xobj.open('POST', url, true);
+          xobj.open('POST', url_recommendation, true);
           xobj.onreadystatechange = function() {
               if (xobj.readyState == 4 && xobj.status == "200") {
                   var data = JSON.parse(xobj.responseText);
-                  console.log(data);
+                  // console.log(data);
                   /* CUSTOMER_NAME */
-                  var customer_name_text = document.createTextNode(data.payload.customer_name);
-                  var customer_name_placeholder = document.getElementById("customer_name");
-                  customer_name_placeholder.replaceWith(customer_name_text);
+                  // var customer_name_text = document.createTextNode(data.payload.customer_name);
+                  // var customer_name_placeholder = document.getElementById("customer_name");
+                  // customer_name_placeholder.replaceWith(customer_name_text);
 
                   /* store_pick_up_items_count */
-                  var store_pick_up_items_count_text = document.createTextNode(data.payload.store_pick_up_items_count);
-                  var store_pick_up_items_count_placeholder = document.getElementById("store_pick_up_items_count");
-                  store_pick_up_items_count_placeholder.replaceWith(store_pick_up_items_count_text);
+                  // var store_pick_up_items_count_text = document.createTextNode(data.payload.store_pick_up_items_count);
+                  // var store_pick_up_items_count_placeholder = document.getElementById("store_pick_up_items_count");
+                  // store_pick_up_items_count_placeholder.replaceWith(store_pick_up_items_count_text);
 
                   /* store_pick_up_items_locations */
-                  var store_pick_up_items_locations_text = document.createTextNode(data.payload.store_pick_up_items_locations);
-                  var store_pick_up_items_locations_placeholder = document.getElementById("store_pick_up_items_locations");
-                  store_pick_up_items_locations_placeholder.replaceWith(store_pick_up_items_locations_text);
+                  // var store_pick_up_items_locations_text = document.createTextNode(data.payload.store_pick_up_items_locations);
+                  // var store_pick_up_items_locations_placeholder = document.getElementById("store_pick_up_items_locations");
+                  // store_pick_up_items_locations_placeholder.replaceWith(store_pick_up_items_locations_text);
 
 
-                  /* today_specials create table  */
-                  var _table_ = document.getElementById("left_today_specials_table");
-                  for(var i = 0 ; i < _table_.rows.length; i++){
-                  	_table_.deleteRow(0);
-                  }
-                  var today_specials_array = data.payload.today_specials;
-                  for (var i = 0 ; i < today_specials_array.length / 2; i++) {
-                    var row = _table_.insertRow(0);
-                    for( var j = 0; j < 2; ++j){
-                      var col = row.insertCell(j);
-                      col.innerHTML = "<img class='image' src='"+data.payload.today_specials[2 * i + j].product_image+"' />";
-                      col.innerHTML += "<span class='retail_price_label'> "+data.payload.today_specials[2 * i + j].product_retail_price+"</span>";
-                      col.innerHTML += "<span class='on_sale_price_label'> "+data.payload.today_specials[2 * i + j].product_on_sale_price+"</span>";
-
-                      // col1.innerHTML = data.payload.today_specials[2 * i + j].product_name;
-                      // col2.innerHTML = data.payload.today_specials[i + j].product_image;
-                      // col3.innerHTML = data.payload.today_specials[i + j].product_retail_price;
-                      // col4.innerHTML = data.payload.today_specials[i + j].product_on_sale_price;
-                    }
-                  }
-
-                  /* today_specials create table  */
+                  /* recommendation create table  */
                   var _table_ = document.getElementById("right_recommendation_table");
-                  for(var i = 0 ; i < _table_.rows.length; i++){
-                  	_table_.deleteRow(0);
-                  }
-                  var clothing_recommended_array = data.payload.clothing_recommended;
+                  _table_.innerHTML = '';
+                  var clothing_recommended_array = data.data;
                   for (var i = 0 ; i < clothing_recommended_array.length / 4; i++) {
                     var row = _table_.insertRow(0);
                     for( var j = 0; j < 4; ++j){
                       var col = row.insertCell(j);
-                      col.innerHTML = "<img class='image' src='"+data.payload.clothing_recommended[4 * i + j].product_image+"' />";
-                      col.innerHTML += "<span class='retail_price_label'> "+data.payload.clothing_recommended[4 * i + j].product_retail_price+"</span>";
-                      col.innerHTML += "<span class='on_sale_price_label'> "+data.payload.clothing_recommended[4 * i + j].product_on_sale_price+"</span>";
-
+                      // console.log("4 * "+i+" + "+j+" = "+(4 * i + j));
+                      // console.log(data.data[4 * i + j]);
+                      col.innerHTML = "<img class='recommendation_image' src='"+data.data[4 * i + j].image+"' />";
+                      col.innerHTML += "<span class='retail_price_label item_style'> "+data.data[4 * i + j].price+"</span>";
+                      col.innerHTML += "<span class='brand item_style'> "+brand_map[data.data[4 * i + j].brand]+"</span>";
+                      col.innerHTML += "<span class='product_name item_style'> "+data.data[4 * i + j].productName+"</span>";
                       // col1.innerHTML = data.payload.clothing_recommended[4 * i + j].product_name;
                       // col2.innerHTML = data.payload.clothing_recommended[4 * i + j].product_image;
                       // col3.innerHTML = data.payload.clothing_recommended[4 * i + j].product_retail_price;
                       // col4.innerHTML = data.payload.clothing_recommended[4 * i + j].product_on_sale_price;
                     }
                   }
-                  // var today_specials_array = data.payload.today_specials;
-                  // var _table_ = document.getElementById('left_today_specials_table'),
-                  //     _tr_ = document.createElement('tr'),
-                  //     _th_ = document.createElement('th'),
-                  //     _td_ = document.createElement('td');
-                  // var table = _table_.cloneNode(false);
-                  // for (var i = 0, maxi = today_specials_array.length / 2; i < maxi; ++i) {
-                  //   var tr = _tr_.cloneNode(false);
-                  //   for (var j = 0, maxj = 2; j < maxj ; ++j) {
-                  //     var td = _td_.cloneNode(false);
-                  //     td.appendChild(document.createTextNode(data.payload.today_specials[i + j].product_name));
-                  //     td.appendChild(document.createTextNode(data.payload.today_specials[i + j].product_image));
-                  //     td.appendChild(document.createTextNode(data.payload.today_specials[i + j].product_retail_price));
-                  //     td.appendChild(document.createTextNode(data.payload.today_specials[i + j].product_on_sale_price));
-                  //     tr.appendChild(td);
-                  //     console.log(td);
-                  //     console.log(tr);
-                  //   }
-                  //   table.appendChild(tr);
-                  // }
-                  // console.log(table);
-
               }else if(xobj.status == "415"){
                 alert("SON! Fix the kafak!");
               }
@@ -158,72 +190,14 @@
           xobj.setRequestHeader("Access-Control-Allow-Origin", "*");
           xobj.setRequestHeader("Content-type", "application/json");
           xobj.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-          xobj.send(JSON.stringify({"quantity": 5}));
+          xobj.send(JSON.stringify({"quantity": 12}));
     };
-    function pooling_2(){
-      $.ajax({
-        url: "http://54.213.163.194:8080/app-1/customer/recommend",
-        type: "post",
-        jsonp: "callback",
-        dataType: "jsonp",
-        data: JSON.stringify({quantity: 12}),
-        contentType: 'application/json',
-        success: function( data ) {
-          // var data = JSON.parse(xobj.responseText);
-          console.log(data);
-          /* CUSTOMER_NAME */
-          var customer_name_text = document.createTextNode(data.payload.customer_name);
-          var customer_name_placeholder = document.getElementById("customer_name");
-          customer_name_placeholder.replaceWith(customer_name_text);
 
-          /* store_pick_up_items_count */
-          var store_pick_up_items_count_text = document.createTextNode(data.payload.store_pick_up_items_count);
-          var store_pick_up_items_count_placeholder = document.getElementById("store_pick_up_items_count");
-          store_pick_up_items_count_placeholder.replaceWith(store_pick_up_items_count_text);
+    pooling_recomendation();
+    // var interval_1 = setInterval(pooling_recomendation, 10000 * 4);
 
-          /* store_pick_up_items_locations */
-          var store_pick_up_items_locations_text = document.createTextNode(data.payload.store_pick_up_items_locations);
-          var store_pick_up_items_locations_placeholder = document.getElementById("store_pick_up_items_locations");
-          store_pick_up_items_locations_placeholder.replaceWith(store_pick_up_items_locations_text);
-
-
-          /* today_specials create table  */
-          var _table_ = document.getElementById("left_today_specials_table");
-          for(var i = 0 ; i < _table_.rows.length; i++){
-            _table_.deleteRow(0);
-          }
-          var today_specials_array = data.payload.today_specials;
-          for (var i = 0 ; i < today_specials_array.length / 2; i++) {
-            var row = _table_.insertRow(0);
-            for( var j = 0; j < 2; ++j){
-              var col = row.insertCell(j);
-              col.innerHTML = "<img class='image' src='"+data.payload.today_specials[2 * i + j].product_image+"' />";
-              col.innerHTML += "<span class='retail_price_label'> "+data.payload.today_specials[2 * i + j].product_retail_price+"</span>";
-              col.innerHTML += "<span class='on_sale_price_label'> "+data.payload.today_specials[2 * i + j].product_on_sale_price+"</span>";
-            }
-          }
-
-          /* today_specials create table  */
-          var _table_ = document.getElementById("right_recommendation_table");
-          for(var i = 0 ; i < _table_.rows.length; i++){
-            _table_.deleteRow(0);
-          }
-          var clothing_recommended_array = data.payload.clothing_recommended;
-          for (var i = 0 ; i < clothing_recommended_array.length / 4; i++) {
-            var row = _table_.insertRow(0);
-            for( var j = 0; j < 4; ++j){
-              var col = row.insertCell(j);
-              col.innerHTML = "<img class='image' src='"+data.payload.clothing_recommended[4 * i + j].product_image+"' />";
-              col.innerHTML += "<span class='retail_price_label'> "+data.payload.clothing_recommended[4 * i + j].product_retail_price+"</span>";
-              col.innerHTML += "<span class='on_sale_price_label'> "+data.payload.clothing_recommended[4 * i + j].product_on_sale_price+"</span>";
-            }
-
-          }
-
-        }
-    });
-    }
-    var interval_1 = setInterval(pooling_1, 2000);
+    pooling_today_special();
+    // var interval_2 = setInterval(pooling_today_special, 40000 * 4);
     // var interval_2 = setInterval(pooling_2, 1000);
     // clearInterval(interval);
 
