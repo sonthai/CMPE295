@@ -23,7 +23,7 @@ public class ProductTransaction extends DataTransactionManager<Map<String, Objec
     }
 
     public List<Map<String, Object>> findProductsForMember() {
-        return productRepository.retrieveVendorProducts();
+        return productRepository.getProducts();
     }
 
     public List<Map<String, Object>> findRandomProducts(int quantity) {

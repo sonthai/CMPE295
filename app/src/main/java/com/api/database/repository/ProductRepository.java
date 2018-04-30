@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @Repository
 public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
     private static final Logger log = LoggerFactory.getLogger(BasicAWSDynamoOps.class);
+    private static List<Map<String, Object>> products = null;
 
     public List<Map<String, Object>> findProductByImageName(String image) {
         List<Map<String, Object>> results = new ArrayList<>();
@@ -100,16 +101,25 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
     }
 
     public List<Map<String, Object>> findRandomProducts(int quantity) {
-        List<Map<String, Object>> products = retrieveVendorProducts();
+
+        List<Map<String, Object>>  temp = new ArrayList<>(getProducts());
 
         List<Map<String, Object>> results =  new ArrayList<>();
 
         while (results.size() < quantity) {
             int index = new Random().nextInt(quantity);
-            results.add(products.remove(index));
+            results.add(temp.remove(index));
         }
 
         return results;
+    }
+
+    public List<Map<String, Object>> getProducts() {
+        if (products == null) {
+            products = retrieveVendorProducts();
+        }
+
+        return products;
     }
 
     public void randomizeDiscount(List<Map<String, Object>> result) {
