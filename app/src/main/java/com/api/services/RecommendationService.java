@@ -88,7 +88,7 @@ public class RecommendationService implements IRecommendationService {
         // To Do Retrieve message based on the id from Message store
         List<String> imageList = NonCustomerResponseService.getMessageStoreInstance().getImages(quantity);
         if (imageList.size() > 0) {
-            NonCustomerResponseService.getMessageStoreInstance().removeImages(imageList);
+            //NonCustomerResponseService.getMessageStoreInstance().removeImages(imageList);
             return productTransaction.findProducts(imageList);
         } else {
             return productTransaction.findRandomProducts(quantity);
