@@ -48,8 +48,8 @@ public class DataProcessingService {
         List<Map<String, Object>> results = recommendationService.recommend(data);
         String msg = "";
 
-        if (data.containsKey("email") || NonCustomerResponseService.getMessageStoreInstance().isRecommended()) {
-            NonCustomerResponseService.getMessageStoreInstance().resetImageCnt();
+        boolean hasImage = NonCustomerResponseService.getMessageStoreInstance().hasImage();
+        if (data.containsKey("email") || !hasImage) { ;
             msg = "Recommended items from engine.";
         } else {
             msg = "Randomized items from engine.";
