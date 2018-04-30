@@ -8,31 +8,35 @@
   <meta name="description" content="UI DISPLAY">
   <meta name="author" content="Andrew Wong">
   <style>
-  #right_panel { float: right; width: 70%; background-color: #F0F0F0;}
-  #left_panel{float: left;width: 30%;background-color: #CCCCCC;}
+  #right_panel { float: right; width: 75%; background-color: #F0F0F0;}
+  #left_panel{float: left;width: 25%;background-color: #CCCCCC;}
   #clearingdiv {clear: both;}
-  #left_greeting{padding: 30px;}
-  #left_store_up{padding: 20px; background-color: #f08a8a; border-radius: 30px; margin: 10px;}
+  #left_greeting{padding: 30px; font-size: 30px; text-align: center;}
+  #left_business_hour{padding: 20px; background-color: #f08a8a; border-radius: 30px; margin: 10px;font-size: 40px; text-align: center;}
   #left_today_specials{padding: 20px; margin: 10px;border-radius: 20px;border-width: 1px;border-style: solid;}
-  #left_today_specials_title{text-align: center; font-size: larger;}
+  #left_today_specials_title{text-align: center; font-size: larger; font-weight: bold; color: rgb(251, 72, 115); font-size: 40px;}
   #right_recommendation{padding: 20px; margin: 10px;border-radius: 20px;border-width: 1px;border-style: solid;}
-  #right_recommendation_title{text-align: center; font-size: larger;}
+  #right_recommendation_title{text-align: center; font-size: 40px; color: rgb(251, 72, 115); font-weight: bold;}
   #left_today_specials_table{margin-left: auto; margin-right: auto;}
   #right_recommendation_table{margin-left: auto; margin-right: auto;}
   #page{border-style: solid;border-width: 10px;border-radius: 20px; border-color: #89CFF0; font-family: Sans-serif;}
-  .recommendation_image{width: 374px; height: 374px; display: block; margin-left: auto; margin-right: auto;}
+  /* #business_hour{background-color: #89CFF0; border-radius: 10px;border: 3px solid #BADA55;border-radius: 10px;} */
+  .recommendation_image{ display: block; margin-left: auto; margin-right: auto;}
+  .today_spceial_image{ display: block; margin-left: auto; margin-right: auto;}
   .randomized_image{}
   .recommended_image{}
-  .today_spceial_image{width: 174px; height: 174px; display: block; margin-left: auto; margin-right: auto;}
   .retail_price_label:before {content: "USD$";}
-  .retail_price_label{left: 30%;}
-  .brand{left: 40%}
-  .product_name{bottom: 45px; left: 1px;}
-  .item_style{position: relative; background-color: #89CFF0; border-radius: 10px;border: 3px solid #BADA55;border-radius: 10px;}
-  .on_sale_price_label{font-size: larger;top: -10%; position: relative; left: 50%; background-color: rgba(242, 14, 191, 0.3);}
+  .retail_price_label{bottom: 15px; background-color: #F089A2 !important; border: 3px solid #F089A2 !important;}
+  .reguarl_price_label:before {content: "USD$";}
+  .reguarl_price_label{ bottom: 15px; background-color: #CCCCCC !important; border: 3px solid #CCCCCC !important; -webkit-text-decoration-line: line-through; /* Safari */text-decoration-line: line-through; }
+  .special_price_label:before {content: "USD$";}
+  .special_price_label{bottom: 15px; background-color: #F089A2 !important; border: 3px solid #F089A2 !important;}
+  .brand{bottom: 20px;}
+  .product_name{bottom: 20px; text-transform: uppercase;}
+  .item_style{position: relative; background-color: #89CFF0; border-radius: 10px; border: 3px solid #89CFF0;border-radius: 10px; text-align: center;}
 
-  #right_recommendation_table td {position: relative; }
-  #left_today_specials_table td {position: relative; }
+  #right_recommendation_table td {position: relative; text-align: center;}
+  #left_today_specials_table td {position: relative; text-align: center;}
 
   </style>
   <script
@@ -48,14 +52,13 @@
 
   <div id="page">
     <div id="left_panel">
-        <div id="left_greeting">
-          Hello, <span id="customer_name"></span><br>
-          Welcome back to Macy's!<br>
-          We have plenty of perks for you today
+
+        <div id="left_business_hour">
+          9:00AM - 9:00PM Everyday
         </div>
-        <div id="left_store_up">
-          STORE PICK UP: <br>
-          You have <span id="store_pick_up_items_count"></span> order placed and ready to pick up at <span id="store_pick_up_items_locations"></span>
+        <div id="left_greeting">
+          <!-- Hello, <span id="customer_name"></span><br> -->
+          Welcome back to the Department Store at San Jose!<br>
         </div>
         <div id="left_today_specials">
             <div id="left_today_specials_title">TODAY SPECIALS</div>
@@ -64,13 +67,31 @@
     </div>
     <div id="right_panel">
         <div id="right_recommendation">
-          <div id="right_recommendation_title">CLOTHING RECOMMEDED FOR THE SEASON</div>
+          <div id="right_recommendation_title"> The System is off.</div>
           <table id="right_recommendation_table"></table>
         </div>
     </div>
     <div id="clearingdiv"></div>
 </div>
   <script>
+  (function(){
+    var window_height = window.outerHeight;
+    var window_width = window.outerWidth;
+    var div_height = window.outerHeight;
+    var div_width_recommendation = window.outerWidth * .65;
+    var div_width_special = window.outerWidth * .20;
+    var image_height = div_height / 4.2;
+    var image_width_recommendation = div_width_recommendation / 4;
+    var image_width_special = div_width_special / 2;
+    var sheet = document.styleSheets[0];
+    var rules = sheet.cssRules || sheet.rules;
+    // var new_rule_1 = ".recommended_image_size { height: "+image_height+"px; width:"+image_width_recommendation+"px;}";
+    // var new_rule_2 = ".special_image_size { height: "+image_width_special+"px; width:"+image_width_special+"px;}";
+    var new_rule_1 = ".recommended_image_size { height: 280px; width: auto;}";
+    var new_rule_2 = ".special_image_size { height: "+image_width_special+"px; width: auto;}";
+    sheet.insertRule(new_rule_1, 0);
+    sheet.insertRule(new_rule_2, 0);
+  })();
     const brand_map = {
       1:"Armani Exchange",
       2:"Calvin Klein",
@@ -93,11 +114,6 @@
       19:"Levis",
       20:"Adidas"
     }
-    var break_text = function(text){
-      console.log(text);
-      console.log(text.length);
-
-    }
     var url_today_special = 'http://app-balancer-2089768567.us-west-2.elb.amazonaws.com/app-1/customer/promotions';
     var url_recommendation = 'http://app-balancer-2089768567.us-west-2.elb.amazonaws.com/app-1/customer/recommend';
     function pooling_today_special(){
@@ -117,10 +133,13 @@
                   var col = row.insertCell(j);
                   console.log("2 * "+i+" + "+j+" = "+(2 * i + j));
                   console.log(data.data[2 * i + j]);
-                  col.innerHTML = "<img class='today_spceial_image' src='"+data.data[2 * i + j].image+"' />";
-                  col.innerHTML += "<span class='retail_price_label item_style'> "+data.data[2 * i + j].price+"</span>";
-                  col.innerHTML += "<span class='brand item_style'> "+brand_map[data.data[2 * i + j].brand]+"</span>";
-                  col.innerHTML += "<span class='product_name item_style'> "+data.data[2 * i + j].productName+"</span>";
+
+                  col.innerHTML = "<img class='today_spceial_image special_image_size' src='"+data.data[2 * i + j].image+"' />";
+                  col.innerHTML += "<span class='product_name item_style'> "+data.data[2 * i + j].productName+"</span><br>";
+                  col.innerHTML += "<span class='brand item_style'> "+brand_map[data.data[2 * i + j].brand]+"</span><br>";
+                  col.innerHTML += "<span class='reguarl_price_label item_style'> "+data.data[2 * i + j].price+"</span>";
+                  col.innerHTML += "<span class='special_price_label item_style'> "+data.data[2 * i + j].special_price+"</span>";
+
                   // col1.innerHTML = data.payload.today_specials[2 * i + j].product_name;
                   // col2.innerHTML = data.payload.today_specials[i + j].product_image;
                   // col3.innerHTML = data.payload.today_specials[i + j].product_retail_price;
@@ -160,6 +179,13 @@
                   // var store_pick_up_items_locations_placeholder = document.getElementById("store_pick_up_items_locations");
                   // store_pick_up_items_locations_placeholder.replaceWith(store_pick_up_items_locations_text);
 
+                  /**/
+                  var recommendation_title = document.getElementById("right_recommendation_title");
+                  if(data.responseMsg.trim().toLowerCase() === "randomized items from engine."){
+                    recommendation_title.textContent = "RANDOMIZED CLOTHING FOR THE SEASON";
+                  }else{
+                    recommendation_title.textContent = "RECOMMEDED CLOTHING FOR THE SEASON";
+                  }
 
                   /* recommendation create table  */
                   var _table_ = document.getElementById("right_recommendation_table");
@@ -171,10 +197,11 @@
                       var col = row.insertCell(j);
                       // console.log("4 * "+i+" + "+j+" = "+(4 * i + j));
                       // console.log(data.data[4 * i + j]);
-                      col.innerHTML = "<img class='recommendation_image' src='"+data.data[4 * i + j].image+"' />";
+                      col.innerHTML = "<img class='recommendation_image recommended_image_size' src='"+data.data[4 * i + j].image+"' />";
+                      col.innerHTML += "<span class='product_name item_style'> "+data.data[4 * i + j].productName+"</span><br>";
+                      col.innerHTML += "<span class='brand item_style'> "+brand_map[data.data[4 * i + j].brand]+"</span><br>";
                       col.innerHTML += "<span class='retail_price_label item_style'> "+data.data[4 * i + j].price+"</span>";
-                      col.innerHTML += "<span class='brand item_style'> "+brand_map[data.data[4 * i + j].brand]+"</span>";
-                      col.innerHTML += "<span class='product_name item_style'> "+data.data[4 * i + j].productName+"</span>";
+
                       // col1.innerHTML = data.payload.clothing_recommended[4 * i + j].product_name;
                       // col2.innerHTML = data.payload.clothing_recommended[4 * i + j].product_image;
                       // col3.innerHTML = data.payload.clothing_recommended[4 * i + j].product_retail_price;
