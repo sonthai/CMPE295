@@ -14,6 +14,7 @@ public class NonCustomerResponseService {
     private static NonCustomerResponseService nonCustomerResponseService;
     //Map<UUID, Integer> userIdMapProductId;
     List<String> imageList;
+    private int numberOfImagesRetrieved = 0;
 
     public NonCustomerResponseService () { imageList = new ArrayList<>();
     }
@@ -26,8 +27,12 @@ public class NonCustomerResponseService {
         return nonCustomerResponseService;
     }
 
-    public boolean hasImages() {
-        return imageList.size() > 0;
+    public boolean isRecommended() {
+        return this.numberOfImagesRetrieved > 0;
+    }
+
+    public void resetImageCnt() {
+        this.numberOfImagesRetrieved = 0;
     }
 
     public void addImages(String image) {
@@ -50,6 +55,7 @@ public class NonCustomerResponseService {
         } else {
             log.info("No recommended products are available");
         }
+        numberOfImagesRetrieved = requests.size();
 
         return requests;
     }
