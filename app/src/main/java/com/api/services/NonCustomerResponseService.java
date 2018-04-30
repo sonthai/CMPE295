@@ -13,6 +13,7 @@ public class NonCustomerResponseService {
 
     private static NonCustomerResponseService nonCustomerResponseService;
     Queue<String> imageList;
+    private boolean isImageRetrieved = false;
 
     public NonCustomerResponseService () { imageList = new LinkedList<>();
     }
@@ -26,7 +27,7 @@ public class NonCustomerResponseService {
     }
 
     public boolean hasImage() {
-        return imageList.isEmpty();
+        return isImageRetrieved;
     }
 
 
@@ -38,6 +39,7 @@ public class NonCustomerResponseService {
 
     public List<String> getImages(int limit) {
         List<String> result = new ArrayList<>();
+        isImageRetrieved = false;
         int lower = Math.min(limit, imageList.size());
         for (int i = 1; i <= lower; i++) {
             result.add(imageList.poll());
@@ -61,6 +63,9 @@ public class NonCustomerResponseService {
                 iterator.remove();
             }
         }*/
+        if (result.size() > 0) {
+            isImageRetrieved = true;
+        }
         return result;
     }
 }

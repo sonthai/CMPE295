@@ -49,7 +49,7 @@ public class DataProcessingService {
         String msg = "";
 
         boolean hasImage = NonCustomerResponseService.getMessageStoreInstance().hasImage();
-        if (data.containsKey("email") || !hasImage) { ;
+        if (data.containsKey("email") || hasImage) { ;
             msg = "Recommended items from engine.";
         } else {
             msg = "Randomized items from engine.";
