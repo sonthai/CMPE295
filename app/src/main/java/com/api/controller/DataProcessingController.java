@@ -66,7 +66,7 @@ public class DataProcessingController {
     public void uploadImage(@RequestBody Map<String, String> map) throws IOException {
         String image_file = map.get("image");
         Map<String, Object> params =  new HashMap<>();
-        params.put("--top_k", "10");
+        params.put("--top_k", "12");
         params.put("--image_file", Paths.get(Constant.IMAGE_PATH,  image_file).toString());
         Utils.executeScript("classify_images.py", params);
     }
