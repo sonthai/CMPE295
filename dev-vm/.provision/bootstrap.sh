@@ -17,6 +17,7 @@ pip3 install annoy
 pip3 install scipy 
 pip3 install nltk
 
+'''
 echo "Installing tomcat8..."
 sudo echo "export CATALINA_OPTS=\"-Xms512m -Xmx1024m\"" >> $ROOT/.bashrc
 sudo apt-get -y install tomcat8 tomcat8-docs tomcat8-examples tomcat8-admin
@@ -57,7 +58,7 @@ sudo cp -R engine/ $ROOT
 echo "Create uploads folder to store uploaded images ..."
 mkdir -p $ROOT/engine/uploads
 sudo chown tomcat8:tomcat8 $ROOT/engine/uploads
-
+'''
 echo "Testing tensorflow set up"
 sudo cp -R tests/ $ROOT
 python3 tests/tftest.py
