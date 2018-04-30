@@ -38,20 +38,21 @@ public class NonCustomerResponseService {
 
     public List<String> getImages(int limit) {
         List<String> requests = new ArrayList<>();
+        List<String> toReomove = new ArrayList<>();
         if (imageList.size() > 0) {
             if (limit >= imageList.size()) {
                 requests = imageList.subList(0, imageList.size());
-                imageList.clear();
+                toReomove.addAll(imageList);
             } else {
                 requests = imageList.subList(0, limit);
-                imageList = imageList.subList(limit, imageList.size());
+                toReomove.addAll(imageList.subList(0, limit));
             }
 
             log.info("Retrieved: {}, available products left: {}", requests.size(), imageList.size());
         } else {
             log.info("No recommended products are available");
         }
-
+        imageList.removeAll(toReomove);
         return requests;
     }
 }
