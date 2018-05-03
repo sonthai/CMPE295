@@ -1,4 +1,4 @@
-package com.quangpham.drs;
+package com.quangpham.drs.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,26 +16,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.quangpham.drs.LoginActivity;
+import com.quangpham.drs.MainActivity;
+import com.quangpham.drs.R;
+import com.quangpham.drs.dto.ProductInfo;
+import com.quangpham.drs.utils.AppConstant;
+import com.quangpham.drs.utils.HttpUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
+
+import static com.quangpham.drs.utils.StringUtils.capitalizeAndShorten;
+import static com.quangpham.drs.utils.StringUtils.removeSpecialCharacters;
 
 /**
  * Created by quangpham on 4/4/18.
@@ -58,20 +60,6 @@ public class FragmentHome extends Fragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
-        //load data from DB into vector list
-        SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
-        Cursor dbList = LoginActivity.mDBHelper.getUserEntryByEmail(db, MainActivity.user.getEmail());
-        if (dbList != null && dbList.moveToFirst()) {
-            MainActivity.isExistInDB = true;
-            MainActivity.user.setFullName(dbList.getString(dbList.getColumnIndexOrThrow(UserInfo.FeedEntry.COLUMN_NAME_FULLNAME)));
-            MainActivity.user.setBirthDate(dbList.getString(dbList.getColumnIndexOrThrow(UserInfo.FeedEntry.COLUMN_NAME_BIRTHDATE)));
-            MainActivity.user.setGender(dbList.getString(dbList.getColumnIndexOrThrow(UserInfo.FeedEntry.COLUMN_NAME_GENDER)));
-            MainActivity.user.setAvatar(dbList.getString(dbList.getColumnIndexOrThrow(UserInfo.FeedEntry.COLUMN_NAME_AVATAR_BASE64)));
-            MainActivity.user.setYearJoined(dbList.getString(dbList.getColumnIndexOrThrow(UserInfo.FeedEntry.COLUMN_NAME_YEAR_JOINED)));
-            dbList.close();
-        }
-        db.close();
     }
 
     @Override
@@ -84,6 +72,7 @@ public class FragmentHome extends Fragment {
 
 
         final ProductInfoAdapter productInfoAdapter = new ProductInfoAdapter(FragmentHome.this.getContext(), lsProduct);
+        productInfoAdapter.setPromotion(true);
 
         mFormView = rootView.findViewById(R.id.home_form);
         mFormView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -134,8 +123,9 @@ public class FragmentHome extends Fragment {
             }
             isFirstLoad = true;
         } else { //load from memory
-
-            mFormView.setAdapter(new ProductInfoAdapter(FragmentHome.this.getContext(), lsProduct));
+            ProductInfoAdapter productInfoAdapter1 = new ProductInfoAdapter(FragmentHome.this.getContext(), lsProduct);
+            productInfoAdapter1.setPromotion(true);
+            mFormView.setAdapter(productInfoAdapter1);
         }
 
         return rootView;
@@ -209,6 +199,7 @@ public class FragmentHome extends Fragment {
                         for(int i = 0; i < data.length(); i++) {
                             String imageName = data.getJSONObject(i).getString("image");
                             String productName = data.getJSONObject(i).getString("productName");
+                            productName = removeSpecialCharacters(capitalizeAndShorten(productName));
                             int price = data.getJSONObject(i).getInt("price");
                             String imageUrl = imageName;
                             Bitmap image = null;
@@ -270,7 +261,18 @@ public class FragmentHome extends Fragment {
             showProgress(false);
 
             if (success) {
+                //process the star
+                if (MainActivity.favoritedProductsInfo.size() > 0) {
+                    for (int i = 0; i < lsProduct.size(); i++) {
+                        int index = MainActivity.getIndexEntryFavoritedList(MainActivity.favoritedProductsInfo, lsProduct.get(i));
+                        if (index >= 0) {
+                            lsProduct.get(i).toggleFavorite();
+                        }
+                    }
+                }
+
                 ProductInfoAdapter productInfoAdapter = new ProductInfoAdapter(FragmentHome.this.getContext(), lsProduct);
+                productInfoAdapter.setPromotion(true);
                 mFormView.setAdapter(productInfoAdapter);
             }
         }

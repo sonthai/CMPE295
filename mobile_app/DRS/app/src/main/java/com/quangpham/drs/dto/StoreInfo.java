@@ -1,4 +1,4 @@
-package com.quangpham.drs;
+package com.quangpham.drs.dto;
 
 import com.google.android.gms.maps.model.LatLng;
 

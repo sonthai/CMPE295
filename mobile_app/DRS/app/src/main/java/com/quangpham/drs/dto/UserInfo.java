@@ -1,4 +1,4 @@
-package com.quangpham.drs;
+package com.quangpham.drs.dto;
 
 import android.provider.BaseColumns;
 

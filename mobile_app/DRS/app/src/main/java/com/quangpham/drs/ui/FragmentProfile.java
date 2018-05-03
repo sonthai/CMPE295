@@ -1,11 +1,10 @@
-package com.quangpham.drs;
+package com.quangpham.drs.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -26,6 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.quangpham.drs.LoginActivity;
+import com.quangpham.drs.MainActivity;
+import com.quangpham.drs.R;
+import com.quangpham.drs.dto.ProductInfo;
+import com.quangpham.drs.dto.UserInfo;
+import com.quangpham.drs.utils.AppConstant;
+import com.quangpham.drs.utils.HttpUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +42,7 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 import static android.app.Activity.RESULT_OK;
-import static com.quangpham.drs.AppConstant.REQUEST_IMAGE_CAPTURE;
+import static com.quangpham.drs.utils.AppConstant.REQUEST_IMAGE_CAPTURE;
 
 /**
  * Created by quangpham on 4/4/18.
@@ -49,6 +55,7 @@ public class FragmentProfile extends Fragment {
     private EditText newPasswordView;
     private View mProgressView;
     private View mProfileFormView;
+    private View mUserInoFormView;
 
     private EditText fullNameView;
     private EditText birthDateView;
@@ -68,7 +75,7 @@ public class FragmentProfile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         EditText usernameView = rootView.findViewById(R.id.user_name);
         usernameView.setText(MainActivity.user.getEmail());
@@ -82,8 +89,8 @@ public class FragmentProfile extends Fragment {
                 attemptUpdatePwd();
             }
         });
-        mProfileFormView = rootView.findViewById(R.id.login_form);
-        mProgressView = rootView.findViewById(R.id.login_progress);
+        mProfileFormView = rootView.findViewById(R.id.profile_form);
+        mProgressView = rootView.findViewById(R.id.profile_progress);
 
         fullNameView = rootView.findViewById(R.id.full_name);
         birthDateView = rootView.findViewById(R.id.DOB);
@@ -99,7 +106,7 @@ public class FragmentProfile extends Fragment {
         mProgressUserInfoView = rootView.findViewById(R.id.user_info_progress);
 
         imageProfile = rootView.findViewById(R.id.profile_image);
-        if (MainActivity.user.getAvatar() != null && !MainActivity.user.getAvatar().equals("")) {
+        if (MainActivity.user.getAvatar() != null && !MainActivity.user.getAvatar().equals("null")) {
             imageProfile.setImageBitmap(ProductInfo.covertBase64ToBitmap(MainActivity.user.getAvatar()));
         }
         imageProfile.setOnClickListener(new OnClickListener() {
@@ -116,15 +123,12 @@ public class FragmentProfile extends Fragment {
             }
         });
 
-        if (MainActivity.isExistInDB) { //change text in button
-            submitView.setText("UPDATE");
+        String userName = MainActivity.user.getFullName();
+        if (userName != null && !userName.equals("null")) {
             fullNameView.setText(MainActivity.user.getFullName());
             birthDateView.setText(MainActivity.user.getBirthDate());
             genderView.setText(MainActivity.user.getGender());
-            String avatar = MainActivity.user.getAvatar();
-            if (!avatar.equals("")) {
-                imageProfile.setImageBitmap(ProductInfo.covertBase64ToBitmap(avatar));
-            }
+            submitView.setText("UPDATE");
         }
 
         return rootView;
@@ -149,7 +153,13 @@ public class FragmentProfile extends Fragment {
 
             //update into db
             LoginActivity.mDBHelper.updateAvatarByID(MainActivity.user);
+
+            //update into back-end
+            showProgressUserInfo(true);
+            mUpdateInfoTask = new UserInfoTask(MainActivity.user, true);
+            mUpdateInfoTask.execute((Void) null);
         }
+
     }
 
     private void attemptUpdatePwd() {
@@ -266,7 +276,7 @@ public class FragmentProfile extends Fragment {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgressUserInfo(true);
-            mUpdateInfoTask = new UserInfoTask(new UserInfo(MainActivity.user.getEmail(), mFullName, mGender, mDOB));
+            mUpdateInfoTask = new UserInfoTask(new UserInfo(MainActivity.user.getEmail(), mFullName, mGender, mDOB), false);
             mUpdateInfoTask.execute((Void) null);
         }
     }
@@ -388,7 +398,6 @@ public class FragmentProfile extends Fragment {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
             StringEntity entity = null;
             try {
@@ -404,7 +413,7 @@ public class FragmentProfile extends Fragment {
                 Log.e("HttpEntity", e.getStackTrace().toString());
             }
 
-            HttpUtils.post(AppConstant.URL_REST_API_UPDATE_PROFILE, entity, new JsonHttpResponseHandler() {
+            HttpUtils.post(AppConstant.URL_REST_API_UPDATE_PASSWORD, entity, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
@@ -476,35 +485,151 @@ public class FragmentProfile extends Fragment {
     public class UserInfoTask extends AsyncTask<Void, Void, Boolean> {
 
         private final UserInfo userInfo;
+        private final boolean isUpdateAvatar;
 
-        public UserInfoTask(UserInfo userInfo) {
+        public UserInfoTask(UserInfo userInfo, boolean isUpdateAvatar) {
             this.userInfo = userInfo;
+            this.isUpdateAvatar = isUpdateAvatar;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            MainActivity.user.setFullName(userInfo.getFullName());
-            MainActivity.user.setGender(userInfo.getGender());
-            MainActivity.user.setBirthDate(userInfo.getBirthDate());
-            if(MainActivity.isExistInDB) {
-                LoginActivity.mDBHelper.updateUserEntryByID(userInfo);
-            } else {
-                SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put(UserInfo.FeedEntry.COLUMN_NAME_EMAIL, userInfo.getEmail());
-                values.put(UserInfo.FeedEntry.COLUMN_NAME_FULLNAME, userInfo.getFullName());
-                values.put(UserInfo.FeedEntry.COLUMN_NAME_GENDER, userInfo.getGender());
-                values.put(UserInfo.FeedEntry.COLUMN_NAME_BIRTHDATE, userInfo.getBirthDate());
-                String avatar = (userInfo.getAvatar() != null ? userInfo.getAvatar() : "");
-                values.put(UserInfo.FeedEntry.COLUMN_NAME_AVATAR_BASE64, avatar);
 
+            if (!isUpdateAvatar) {
+                //write into local variable
+                MainActivity.user.setFullName(userInfo.getFullName());
+                MainActivity.user.setGender(userInfo.getGender());
+                MainActivity.user.setBirthDate(userInfo.getBirthDate());
+
+                //write into local DB
                 Calendar now = Calendar.getInstance();
                 int year = now.get(Calendar.YEAR);
-                values.put(UserInfo.FeedEntry.COLUMN_NAME_YEAR_JOINED, String.valueOf(year));
-                db.insert(UserInfo.FeedEntry.TABLE_NAME, null, values);
-                db.close();
-            }
+                if (MainActivity.isExistInDB) {
+                    LoginActivity.mDBHelper.updateUserEntryByID(userInfo);
+                } else {
+                    SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
+                    ContentValues values = new ContentValues();
+                    values.put(UserInfo.FeedEntry.COLUMN_NAME_EMAIL, userInfo.getEmail());
+                    values.put(UserInfo.FeedEntry.COLUMN_NAME_FULLNAME, userInfo.getFullName());
+                    values.put(UserInfo.FeedEntry.COLUMN_NAME_GENDER, userInfo.getGender());
+                    values.put(UserInfo.FeedEntry.COLUMN_NAME_BIRTHDATE, userInfo.getBirthDate());
+                    String avatar = (userInfo.getAvatar() != null ? userInfo.getAvatar() : "");
+                    values.put(UserInfo.FeedEntry.COLUMN_NAME_AVATAR_BASE64, avatar);
 
+                    values.put(UserInfo.FeedEntry.COLUMN_NAME_YEAR_JOINED, String.valueOf(year));
+                    db.insert(UserInfo.FeedEntry.TABLE_NAME, null, values);
+                    db.close();
+                }
+
+                //send data into back-end
+                StringEntity entity = null;
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.accumulate("email", userInfo.getEmail());
+                    jsonObject.accumulate("fullName", userInfo.getFullName());
+                    jsonObject.accumulate("gender", userInfo.getGender());
+                    jsonObject.accumulate("birthDate", userInfo.getBirthDate());
+                    String avatar = (userInfo.getAvatar() != null && !userInfo.getAvatar().equals("null") ? userInfo.getAvatar() : "null");
+                    jsonObject.accumulate("avatarBase64", avatar);
+                    jsonObject.accumulate("yearJoined", String.valueOf(year));
+                    String sJson = jsonObject.toString();
+
+                    entity = new StringEntity(sJson, "UTF-8");
+                    entity.setContentType("application/json");
+                } catch (JSONException e) {
+                    Log.e("HttpEntity", e.getStackTrace().toString());
+                }
+
+                HttpUtils.post(AppConstant.URL_REST_API_UPDATE_PROFILE, entity, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            String resMsg = response.getString("responseMsg");
+                            String resCode = response.getString("responseCode");
+
+                            if (resCode.equals("OK")) {
+                                Log.d("PROFILE", "SUCCESS--- this is response : " + resMsg);
+                            } else {
+                                Log.d("PROFILE", "FAILED--- this is response : " + resMsg);
+                            }
+                        } catch (JSONException e) {
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.e("PROFILE", "Failed to connect to the server - responseString" + responseString);
+                        Toast.makeText(rootView.getContext(), "There is an error occurred when " +
+                                "connecting to the server .", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Log.e("PROFILE", "Failed to connect to the server - JSONObject");
+                        Toast.makeText(rootView.getContext(), "There is an error occurred when " +
+                                "connecting to the server .", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            } else { //update avatar only
+                //send data into back-end
+                StringEntity entity = null;
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.accumulate("email", userInfo.getEmail());
+                    String avatar = (userInfo.getAvatar() != null && !userInfo.getAvatar().equals("null") ? userInfo.getAvatar() : "null");
+                    if (userInfo.getFullName() == null || userInfo.getFullName().equals("null")) {
+                        jsonObject.accumulate("fullName", "null");
+                        jsonObject.accumulate("gender", "null");
+                        jsonObject.accumulate("birthDate", "null");
+                        jsonObject.accumulate("avatarBase64", avatar);
+                        jsonObject.accumulate("yearJoined", "null");
+                    } else {
+                        jsonObject.accumulate("fullName", userInfo.getFullName());
+                        jsonObject.accumulate("gender", userInfo.getGender());
+                        jsonObject.accumulate("birthDate", userInfo.getBirthDate());
+                        jsonObject.accumulate("avatarBase64", avatar);
+                        jsonObject.accumulate("yearJoined", userInfo.getYearJoined());
+                    }
+                    String sJson = jsonObject.toString();
+
+                    entity = new StringEntity(sJson, "UTF-8");
+                    entity.setContentType("application/json");
+                } catch (JSONException e) {
+                    Log.e("HttpEntity", e.getStackTrace().toString());
+                }
+
+                HttpUtils.post(AppConstant.URL_REST_API_UPDATE_PROFILE, entity, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            String resMsg = response.getString("responseMsg");
+                            String resCode = response.getString("responseCode");
+
+                            if (resCode.equals("OK")) {
+                                Log.d("PROFILE", "SUCCESS--- this is response : " + resMsg);
+                            } else {
+                                Log.d("PROFILE", "FAILED--- this is response : " + resMsg);
+                            }
+                        } catch (JSONException e) {
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.e("PROFILE", "Failed to connect to the server - responseString" + responseString);
+                        Toast.makeText(rootView.getContext(), "There is an error occurred when " +
+                                "connecting to the server .", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Log.e("PROFILE", "Failed to connect to the server - JSONObject");
+                        Toast.makeText(rootView.getContext(), "There is an error occurred when " +
+                                "connecting to the server .", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
             return true;
         }
 

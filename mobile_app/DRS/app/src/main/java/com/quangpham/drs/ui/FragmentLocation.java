@@ -1,15 +1,11 @@
-package com.quangpham.drs;
+package com.quangpham.drs.ui;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Handler;
-import android.os.ResultReceiver;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -17,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,8 +23,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.quangpham.drs.MainActivity;
+import com.quangpham.drs.R;
+import com.quangpham.drs.dto.ProductInfo;
+import com.quangpham.drs.utils.AppConstant;
+
 
 import java.util.Calendar;
 
@@ -39,12 +37,12 @@ import java.util.Calendar;
 
 public class FragmentLocation extends Fragment implements OnMapReadyCallback, LocationListener {
 
-    public static GoogleMap mMap;
-    public View rootView;
-    public AddressResultReceiver mResultReceiver;
+    private static GoogleMap mMap;
+    private View rootView;
     private Location currentBestLocation = null;
-    static final int WAIT_TIME = 1000 * 60 * 2;
-    public TextView mallName;
+    private final int WAIT_TIME = 1000 * 60 * 2;
+    private TextView mallName;
+    private TextView mallHour;
 
     public static Fragment newInstance() {
         return new FragmentLocation();
@@ -59,21 +57,19 @@ public class FragmentLocation extends Fragment implements OnMapReadyCallback, Lo
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ImageView avatar = rootView.findViewById(R.id.profile_image_location);
-        if (MainActivity.user.getAvatar() != null && !MainActivity.user.getAvatar().equals("")) {
+        if (MainActivity.user.getAvatar() != null && !MainActivity.user.getAvatar().equals("null")) {
             avatar.setImageBitmap(ProductInfo.covertBase64ToBitmap(MainActivity.user.getAvatar()));
         }
 
         TextView memberSince = rootView.findViewById(R.id.member_since);
         memberSince.setText("Member since " + MainActivity.user.getYearJoined());
 
-        TextView hour = rootView.findViewById(R.id.hour);
-        hour.setText("Hour today: " + AppConstant.STORE_HOUR_1[Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1]);
-
+        mallHour = rootView.findViewById(R.id.hour);
         mallName = rootView.findViewById(R.id.mall_name);
 
         TextView userName = rootView.findViewById(R.id.location_username);
         String fullName = MainActivity.user.getFullName();
-        if (fullName != null && !fullName.equals("")) {
+        if (fullName != null && !fullName.equals("null")) {
             userName.setText(fullName);
         } else {
             userName.setText(MainActivity.user.getEmail().split("@")[0]);
@@ -107,6 +103,7 @@ public class FragmentLocation extends Fragment implements OnMapReadyCallback, Lo
                     }
                 }
                 mallName.setText(AppConstant.STORES[pos].getStoreName());
+                mallHour.setText("Hour today: " + AppConstant.STORE_HOUR_1[Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1]);
                 //user location
                 mMap.addMarker(new MarkerOptions().position(geo).icon(BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).title(MainActivity.user.getEmail()));
@@ -230,32 +227,4 @@ public class FragmentLocation extends Fragment implements OnMapReadyCallback, Lo
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
 
-
-
-
-    public void startIntentService() {
-        Intent intent = new Intent(rootView.getContext(), FetchAddressIntentService.class);
-        mResultReceiver = new AddressResultReceiver(new Handler());
-        intent.putExtra(AppConstant.RECEIVER, mResultReceiver);
-        //intent.putExtra(AppConstant.LOCATION_DATA_EXTRA, mLastLocation);
-        startActivity(intent);
-    }
-
-    class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            if (resultData == null) {
-                return;
-            }
-
-            if (resultCode == AppConstant.SUCCESS_RESULT) {
-
-            }
-        }
-    }
 }

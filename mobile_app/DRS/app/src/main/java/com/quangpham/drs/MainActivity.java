@@ -3,7 +3,6 @@ package com.quangpham.drs;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,16 +12,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.quangpham.drs.dto.ProductInfo;
+import com.quangpham.drs.dto.UserInfo;
+import com.quangpham.drs.ui.FragmentHistory;
+import com.quangpham.drs.ui.FragmentHome;
+import com.quangpham.drs.ui.FragmentLocation;
+import com.quangpham.drs.ui.FragmentProfile;
+import com.quangpham.drs.ui.FragmentSearch;
 
 import java.util.ArrayList;
 
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    public static Toolbar toolbar;
+    public Toolbar toolbar;
     public static UserInfo user = new UserInfo();
     //public static UserInfo user = new UserInfo("xuanquangpham@yahoo.com", "2018");
     public static MainActivity mainActivity;
@@ -60,22 +60,13 @@ public class MainActivity extends AppCompatActivity {
         //Add toolbar
         toolbar = findViewById(R.id.toolbar);
 
-        FeedReaderDBHelper.resetTable(LoginActivity.mDBHelper.getWritableDatabase());
-
-        SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
-        Cursor dbList = LoginActivity.mDBHelper.getAllUserEntry(db);
-        String user = MainActivity.user.getEmail().split("@")[0];
-        if (dbList == null || !dbList.moveToFirst()) toolbar.setTitle("Welcome " + user + "!");
-        else { //get Name
-            String name = dbList.getString(dbList.getColumnIndexOrThrow(UserInfo.FeedEntry.COLUMN_NAME_FULLNAME));
-            if (!name.equals(""))
-                toolbar.setTitle("Welcome back, " + name.split(" ")[0] + "!");
-            else {
-                toolbar.setTitle("Welcome back " + user + "!");
-            }
+        String email = MainActivity.user.getEmail().split("@")[0];
+        String name = MainActivity.user.getFullName();
+        if (name != null && !name.equals("null"))
+            toolbar.setTitle("Welcome " + name + "!");
+        else {
+            toolbar.setTitle("Welcome, " + email.split(" ")[0] + "!");
         }
-        dbList.close();
-        db.close();
         setSupportActionBar(toolbar);
 
         // Create the adapter that will return a fragment for each of the three
@@ -153,10 +144,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_sign_out) {
-            MainActivity.user = new UserInfo();
+            //reset all static variables
+            user = new UserInfo();
+            favoritedProductsInfo = new ArrayList<>();
+            FragmentHome.lsProduct = new ArrayList<>();
+            FragmentSearch.lsProduct = new ArrayList<>();
+
             //move to LoginActivity
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
+            finish();
             return true;
         }
 

@@ -11,7 +11,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.preference.PreferenceActivity;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -39,12 +38,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import com.loopj.android.http.*;
+import com.quangpham.drs.dto.UserInfo;
+import com.quangpham.drs.utils.AppConstant;
+import com.quangpham.drs.utils.FeedReaderDBHelper;
+import com.quangpham.drs.utils.HttpUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,8 +55,6 @@ import org.json.JSONObject;
 //import cz.msebera.android.httpclient.Header;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.HttpEntity;
-import cz.msebera.android.httpclient.entity.ContentType;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -186,19 +186,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_empty_input));
-            focusView = mPasswordView;
-            cancel = true;
-        } else {
-            if (!isPasswordValid(password)) {
-                mPasswordView.setError(getString(R.string.error_invalid_password));
-                focusView = mPasswordView;
-                cancel = true;
-            }
-        }
-
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
@@ -208,6 +195,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
+        }
+
+        // Check for a valid password, if the user entered one.
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_empty_input));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
+                mPasswordView.setError(getString(R.string.error_invalid_password));
+                focusView = mPasswordView;
+                cancel = true;
         }
 
         if (cancel) {
@@ -331,6 +329,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        String fullName;
+        String yearJoined;
+        String gender;
+        String avatar;
+        String birthDate;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -339,14 +342,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-//            try {
-//                // Simulate network access.
-//                Thread.sleep(2000);
-//            } catch (InterruptedException e) {
-//                return false;
-//            }
 
             //Try login first
             StringEntity entity = null;
@@ -368,8 +363,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     try {
                         String resMsg = response.getString("responseMsg");
                         String resCode = response.getString("responseCode");
+                        JSONArray data = response.getJSONArray("data");
 
                         if (resCode.equals("OK")) {
+                            fullName = data.getJSONObject(0).getString("FullName");
+                            yearJoined = data.getJSONObject(0).getString("YearJoined");
+                            gender = data.getJSONObject(0).getString("Gender");
+                            birthDate = data.getJSONObject(0).getString("BirthDate");
+                            avatar = data.getJSONObject(0).getString("Avatar");
+
                             Log.d("LOGIN", "SUCCESS--- this is response : " + resMsg);
                             isSuccessLogin = true;
                         } else {
@@ -382,7 +384,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 isWrongPwd = true;
                             }
                         }
-                    } catch (JSONException e) {}
+                    } catch (JSONException e) {
+                        Log.e("LOGIN", e.getMessage());
+                    }
                 }
 
                 @Override
@@ -402,6 +406,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (isSuccessLogin) { //login success
                 return isSuccessLogin;
+
             } else { //login fails
 
                 if (isWrongPwd) { //fails because wrong pwd
@@ -444,25 +449,50 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
+                Calendar now = Calendar.getInstance();
+                int year = now.get(Calendar.YEAR);
 
                 MainActivity.user.setEmail(mEmail);
 
                 if (isSuccessLogin) {
-                    //TODO
+                    if (fullName != null && !fullName.equals("null")) {
+                        MainActivity.user.setFullName(fullName);
+                        MainActivity.user.setGender(gender);
+                        MainActivity.user.setBirthDate(birthDate);
+                    } else {
+                        MainActivity.user.setFullName("null");
+                        MainActivity.user.setGender("null");
+                        MainActivity.user.setBirthDate("null");
+                    }
+
+                    if (avatar != null && !avatar.equals("null")) {
+                        MainActivity.user.setAvatar(avatar);
+                    } else {
+                        MainActivity.user.setAvatar("null");
+                    }
+
+                    if (yearJoined != null && !yearJoined.equals("null")) {
+                        MainActivity.user.setYearJoined(yearJoined);
+                    } else {
+                        MainActivity.user.setYearJoined(String.valueOf(year));
+                    }
                 } else if (isSuccessRegister) {
-                    //TODO
-                    Calendar now = Calendar.getInstance();
-                    int year = now.get(Calendar.YEAR);
+                    //new user doesn't have any of below info
+                    //until he/she updates them
+                    MainActivity.user.setFullName("null");
+                    MainActivity.user.setGender("null");
+                    MainActivity.user.setBirthDate("null");
+                    MainActivity.user.setAvatar("null");
                     MainActivity.user.setYearJoined(String.valueOf(year));
 
                     //write into local db
                     SQLiteDatabase db = LoginActivity.mDBHelper.getWritableDatabase();
                     ContentValues values = new ContentValues();
                     values.put(UserInfo.FeedEntry.COLUMN_NAME_EMAIL, mEmail);
-                    values.put(UserInfo.FeedEntry.COLUMN_NAME_FULLNAME, "");
-                    values.put(UserInfo.FeedEntry.COLUMN_NAME_GENDER, "");
-                    values.put(UserInfo.FeedEntry.COLUMN_NAME_BIRTHDATE, "");
-                    values.put(UserInfo.FeedEntry.COLUMN_NAME_AVATAR_BASE64, "");
+                    values.put(UserInfo.FeedEntry.COLUMN_NAME_FULLNAME, "null");
+                    values.put(UserInfo.FeedEntry.COLUMN_NAME_GENDER, "null");
+                    values.put(UserInfo.FeedEntry.COLUMN_NAME_BIRTHDATE, "null");
+                    values.put(UserInfo.FeedEntry.COLUMN_NAME_AVATAR_BASE64, "null");
                     values.put(UserInfo.FeedEntry.COLUMN_NAME_YEAR_JOINED, String.valueOf(year));
                     db.insert(UserInfo.FeedEntry.TABLE_NAME, null, values);
                     db.close();

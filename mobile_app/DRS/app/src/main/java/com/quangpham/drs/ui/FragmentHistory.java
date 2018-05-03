@@ -1,4 +1,4 @@
-package com.quangpham.drs;
+package com.quangpham.drs.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -15,7 +15,10 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
+import com.quangpham.drs.LoginActivity;
+import com.quangpham.drs.MainActivity;
+import com.quangpham.drs.R;
+import com.quangpham.drs.dto.ProductInfo;
 
 /**
  * Created by quangpham on 4/4/18.
@@ -84,6 +87,7 @@ public class FragmentHistory extends Fragment {
                     if (index >= 0) {
                         FragmentHome.lsProduct.get(index).toggleFavorite();
                     }
+                    //disable star from search tab
                     index = MainActivity.getIndexEntryFavoritedList(FragmentSearch.lsProduct, productInfo);
                     if (index >= 0) {
                         FragmentSearch.lsProduct.get(index).toggleFavorite();
