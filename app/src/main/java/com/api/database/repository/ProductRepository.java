@@ -33,7 +33,6 @@ public class ProductRepository extends BasicAWSDynamoOps<ProductDao> {
             // Modified image url
             for (Map<String, Object> item : results) {
                 String encodedImageName = URLEncoder.encode(item.get("Image").toString(), StandardCharsets.UTF_8.name());
-                //String imagePath = Constant.IMAGE_URL + item.get("Image");
                 item.put("Image", Constant.IMAGE_URL + encodedImageName);
             }
         } catch (UnsupportedEncodingException e) {

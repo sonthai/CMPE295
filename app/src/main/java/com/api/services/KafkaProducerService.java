@@ -1,6 +1,5 @@
 package com.api.services;
 
-import com.api.model.ResponseMessage;
 import com.api.model.UserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

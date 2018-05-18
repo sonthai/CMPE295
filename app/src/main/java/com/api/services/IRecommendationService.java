@@ -1,6 +1,5 @@
 package com.api.services;
 
-import com.api.model.ResponseMessage;
 import com.api.model.UserRequest;
 
 import java.util.List;

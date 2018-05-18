@@ -12,10 +12,6 @@ public class Constant {
     public static String VECTOR_PATH_PLAG = "--vector_path";
     public static String GENDER = "gender";
 
-    //public static String PYTHON_CMD = "C:\\Users\\sjsu\\Desktop\\CMPE295\\engine\\scripts\\python\\python.exe";
-    //public static String SCRIPTS_PATH = "C:\\Users\\sjsu\\Desktop\\CMPE295\\engine\\scripts";
-    //public static String IMAGE_PATH = "C:\\Users\\sjsu\\Desktop\\CMPE295\\engine\\uploads";
-
     // Error message
     public static String UPLOAD_FAILED = "Failed to upload the image";
 

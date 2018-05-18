@@ -1,8 +1,6 @@
 package com.api.controller;
 
 import com.api.constant.Constant;
-import com.api.database.repository.UserHistoryRepository;
-import com.api.database.transaction.UserHistoryTransaction;
 import com.api.model.ResponseMessage;
 import com.api.services.ProductService;
 import com.api.services.UserHistoryService;
