@@ -18,7 +18,7 @@ public final class AppConstant {
     public final static String URL_REST_API_PROCESS_IMAGE = "/customer/processData";
     public final static String URL_REST_API_PROCESS_RECOMMENDATION = "/customer/recommend";
     public final static String URL_CLOUD_FRONT_IMAGE = "https://dln7rdaxtcw3b.cloudfront.net/";
-    public final static int NUMBER_IMAGES_HOME_TAB = 20;
+    public final static int NUMBER_IMAGES_HOME_TAB = 500;
     public final static int NUMBER_IMAGES_SEARCH_TAB = 20;
     public final static String IMAGE_DIR = "MyImages";
 

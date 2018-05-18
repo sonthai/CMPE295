@@ -10,18 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.quangpham.drs.LoginActivity">
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textColor="@color/colorPrimaryDark"-->
-        <!--android:textSize="50dp"-->
-        <!--android:textStyle="italic|bold-->
-<!--"-->
-        <!--android:fontFamily="sans-serif-condensed"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:layout_marginTop="50dp"-->
-        <!--android:text="@string/title_name"-->
-        <!--/>-->
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="250dp"

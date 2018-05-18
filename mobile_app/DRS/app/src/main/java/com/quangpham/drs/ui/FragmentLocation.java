@@ -28,7 +28,6 @@ import com.quangpham.drs.R;
 import com.quangpham.drs.dto.ProductInfo;
 import com.quangpham.drs.utils.AppConstant;
 
-
 import java.util.Calendar;
 
 /**
@@ -153,7 +152,6 @@ public class FragmentLocation extends Fragment implements OnMapReadyCallback, Lo
         if(currentBestLocation == null){
             currentBestLocation = location;
         }
-
     }
 
     void makeUseOfNewLocation(Location location) {

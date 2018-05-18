@@ -94,9 +94,6 @@ public class FragmentSearch extends Fragment {
                 ProductInfo productInfo = lsProduct.get(position);
                 productInfo.toggleFavorite();
 
-                // This tells the GridView to redraw itself
-                // in turn calling your BooksAdapter's getView method again for each cell
-
                 productInfoAdapter.notifyDataSetChanged();
                 mFormView.invalidateViews();
 
@@ -111,7 +108,6 @@ public class FragmentSearch extends Fragment {
                         if (!(cursor != null && cursor.moveToFirst())) {
                             LoginActivity.mDBHelper.insertProductEntry(productInfo);
                         }
-
                         db.close();
                     }
                 } else { //remove from favorite list & db
@@ -162,7 +158,6 @@ public class FragmentSearch extends Fragment {
                 mDownloadImageTask = new DownloadImageTask(mFormView);
                 mDownloadImageTask.execute((Void) null);
             }
-
         }
     }
 
@@ -222,17 +217,6 @@ public class FragmentSearch extends Fragment {
 
             try {
                 File imageFile = new File(Environment.getExternalStorageDirectory(),"/"+AppConstant.IMAGE_DIR+"/image.jpg" );
-//                FileInputStream fis = null;
-//                try {
-//                    fis = new FileInputStream(imageFile);
-//                } catch (FileNotFoundException e) {
-//                    Log.e("OPEN FILE", "ERROR ");
-//                    e.printStackTrace();
-//                }
-
-//                        Intent i = new Intent(Intent.ACTION_VIEW);
-//                        i.setDataAndType(Uri.fromFile(imageFile), "image/jpeg");
-//                        startActivity(i);
 
                 InputStream inputStream = new FileInputStream(imageFile);
                 byte[] bytes;
@@ -248,9 +232,6 @@ public class FragmentSearch extends Fragment {
                 }
                 bytes = output.toByteArray();
                 String encoded = Base64.encodeToString(bytes, Base64.DEFAULT);
-
-                Log.d("FRAGMENTSEARCH", "onActivityResult");
-                //System.out.println(encoded);
 
                 //send to REST API
                 StringEntity entity = null;

@@ -69,8 +69,6 @@ public class FragmentHome extends Fragment {
 
         mProgressView = rootView.findViewById(R.id.home_progress);
 
-
-
         final ProductInfoAdapter productInfoAdapter = new ProductInfoAdapter(FragmentHome.this.getContext(), lsProduct);
         productInfoAdapter.setPromotion(true);
 
@@ -130,7 +128,6 @@ public class FragmentHome extends Fragment {
 
         return rootView;
     }
-
 
     /**
      * Shows the progress UI and hides the login form.
@@ -205,6 +202,7 @@ public class FragmentHome extends Fragment {
                             Bitmap image = null;
                             try {
                                 image = BitmapFactory.decodeStream(new URL(imageUrl).openConnection().getInputStream());
+                                Log.d("Loading...", "image");
 
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -249,7 +247,6 @@ public class FragmentHome extends Fragment {
             }
             catch (Exception e) {
                 e.printStackTrace();
-                //return false;
             }
             return true;
         }

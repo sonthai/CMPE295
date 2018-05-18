@@ -5,7 +5,6 @@ package com.quangpham.drs.utils;
  */
 
 import com.loopj.android.http.*;
-import com.quangpham.drs.utils.AppConstant;
 
 import cz.msebera.android.httpclient.HttpEntity;
 

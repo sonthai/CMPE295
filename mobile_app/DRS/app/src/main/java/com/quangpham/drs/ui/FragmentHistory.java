@@ -159,5 +159,4 @@ public class FragmentHistory extends Fragment {
             mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
 }

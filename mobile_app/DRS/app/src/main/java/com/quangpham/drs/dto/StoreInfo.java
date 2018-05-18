@@ -2,8 +2,6 @@ package com.quangpham.drs.dto;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
-
 /**
  * Created by quangpham on 4/14/18.
  */

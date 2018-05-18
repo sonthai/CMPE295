@@ -51,7 +51,6 @@ public class ProductInfo {
         this.productImage = productImage;
     }
 
-
     public ProductInfo(String productName, String productImageName, String productPrice) {
         this.productName = productName;
         this.productImageName = productImageName;

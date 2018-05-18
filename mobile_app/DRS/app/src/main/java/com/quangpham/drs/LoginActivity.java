@@ -52,8 +52,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-//import cz.msebera.android.httpclient.Header;
-
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
@@ -163,7 +161,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         }
     }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -523,7 +520,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         public void resetFlags() {
             isNotFound = isWrongPwd = isSuccessLogin = isSuccessRegister = false;
         }
-
     }
 }
 

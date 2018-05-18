@@ -55,7 +55,6 @@ public class FragmentProfile extends Fragment {
     private EditText newPasswordView;
     private View mProgressView;
     private View mProfileFormView;
-    private View mUserInoFormView;
 
     private EditText fullNameView;
     private EditText birthDateView;

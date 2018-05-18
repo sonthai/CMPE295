@@ -78,7 +78,6 @@ public class UserInfo {
         this.yearJoined = yearJoined;
     }
 
-
     public static class FeedEntry implements BaseColumns {
         public static final String TABLE_NAME = "user_info";
         public static final String COLUMN_NAME_EMAIL = "email";

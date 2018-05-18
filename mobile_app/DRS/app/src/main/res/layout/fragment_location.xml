@@ -105,6 +105,5 @@
             android:layout_marginLeft="20dp"
             android:text="Hour today: 9AM - 9PM"/>
 
-
     </LinearLayout>
 </LinearLayout>
