@@ -1,12 +1,17 @@
-package com.quangpham.drs;
+package com.quangpham.drs.ui;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.quangpham.drs.R;
+import com.quangpham.drs.dto.ProductInfo;
+import com.quangpham.drs.utils.AppConstant;
 
 import java.util.ArrayList;
 
@@ -19,32 +24,28 @@ public class ProductInfoAdapter extends BaseAdapter {
     private final Context mContext;
     private ArrayList<ProductInfo> mproductInfos;
     private boolean isShoppingList = false;
+    private boolean isPromotion = false;
 
-    // 1
     public ProductInfoAdapter(Context context, ArrayList<ProductInfo> productInfos) {
         this.mContext = context;
         this.mproductInfos = productInfos;
     }
 
-    // 2
     @Override
     public int getCount() {
         return mproductInfos.size();
     }
 
-    // 3
     @Override
     public long getItemId(int position) {
         return 0;
     }
 
-    // 4
     @Override
     public Object getItem(int position) {
         return null;
     }
 
-    // 5
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -57,13 +58,22 @@ public class ProductInfoAdapter extends BaseAdapter {
 
         final ImageView imageView = (ImageView)convertView.findViewById(R.id.imageview_cover_art);
         final TextView nameTextView = (TextView)convertView.findViewById(R.id.textview_product_name);
-        final TextView authorTextView = (TextView)convertView.findViewById(R.id.textview_product_price);
+        final TextView priceTextView = (TextView)convertView.findViewById(R.id.textview_product_price);
+        final TextView priceDiscountTextView = (TextView)convertView.findViewById(R.id.textview_product_price_discount);
         final ImageView imageViewFavorite = (ImageView)convertView.findViewById(R.id.imageview_favorite);
 
         imageView.setImageBitmap(productInfo.getProductImage());
-        nameTextView.setText(capitalizeAndShorten(productInfo.getProductName()));
+        nameTextView.setText(productInfo.getProductName());
 
-        authorTextView.setText("$"+productInfo.getProductPrice());
+        priceTextView.setText("$"+productInfo.getProductPrice());
+
+        if (isPromotion) {
+            int discountPrice = (int) (Integer.valueOf(productInfo.getProductPrice()) * AppConstant.PROMO_RATE);
+            priceDiscountTextView.setText("$" + discountPrice);
+            priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            priceDiscountTextView.setVisibility(View.GONE);
+        }
 
         if (isShoppingList) {
             imageViewFavorite.setImageResource(R.drawable.delete);
@@ -83,19 +93,13 @@ public class ProductInfoAdapter extends BaseAdapter {
         isShoppingList = shoppingList;
     }
 
-    private String capitalizeAndShorten(String source) {
-        String result = "";
-
-        String[] strArr = source.split(" ");
-        int len = strArr.length;
-        for (int i = 0; i < len; i++) {
-            String str = strArr[i];
-//            if (str.length() < 10)
-                result += str.toUpperCase() + " ";
-            if (result.length() > 35 && i < (len -1))
-                return (result + strArr[len - 1]).trim();
-        }
-        return result.trim();
+    public boolean isPromotion() {
+        return isPromotion;
     }
+
+    public void setPromotion(boolean promotion) {
+        isPromotion = promotion;
+    }
+
 }
 

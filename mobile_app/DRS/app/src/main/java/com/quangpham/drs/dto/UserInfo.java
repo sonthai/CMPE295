@@ -1,4 +1,4 @@
-package com.quangpham.drs;
+package com.quangpham.drs.dto;
 
 import android.provider.BaseColumns;
 
@@ -77,7 +77,6 @@ public class UserInfo {
     public void setYearJoined(String yearJoined) {
         this.yearJoined = yearJoined;
     }
-
 
     public static class FeedEntry implements BaseColumns {
         public static final String TABLE_NAME = "user_info";

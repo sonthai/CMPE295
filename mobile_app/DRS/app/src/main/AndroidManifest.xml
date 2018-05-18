@@ -33,9 +33,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDKpvgp4PQse62AtBU2rglJSugw3C0QGuM" />
 
-        <service
-            android:name=".FetchAddressIntentService"
-            android:exported="false"/>
+        <!--<service-->
+            <!--android:name=".FetchAddressIntentService"-->
+            <!--android:exported="false"/>-->
 
         <activity
             android:name=".MainActivity"

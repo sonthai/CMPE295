@@ -75,20 +75,20 @@
 </div>
   <script>
   (function(){
-    var window_height = window.outerHeight;
-    var window_width = window.outerWidth;
-    var div_height = window.outerHeight;
-    var div_width_recommendation = window.outerWidth * .65;
-    var div_width_special = window.outerWidth * .20;
-    var image_height = div_height / 4.2;
-    var image_width_recommendation = div_width_recommendation / 4;
-    var image_width_special = div_width_special / 2;
+    // var window_height = window.outerHeight;
+    // var window_width = window.outerWidth;
+    // var div_height = window.outerHeight;
+    // var div_width_recommendation = window.outerWidth * .65;
+    // var div_width_special = window.outerWidth * .20;
+    // var image_height = div_height / 4.2;
+    // var image_width_recommendation = div_width_recommendation / 4;
+    // var image_width_special = div_width_special / 2;
     var sheet = document.styleSheets[0];
     var rules = sheet.cssRules || sheet.rules;
     // var new_rule_1 = ".recommended_image_size { height: "+image_height+"px; width:"+image_width_recommendation+"px;}";
     // var new_rule_2 = ".special_image_size { height: "+image_width_special+"px; width:"+image_width_special+"px;}";
-    var new_rule_1 = ".recommended_image_size { height: 280px; width: auto;}";
-    var new_rule_2 = ".special_image_size { height: "+image_width_special+"px; width: auto;}";
+    var new_rule_1 = ".recommended_image_size { height: 260px; width: auto;}";
+    var new_rule_2 = ".special_image_size { height: 137px; width: auto;}";
     sheet.insertRule(new_rule_1, 0);
     sheet.insertRule(new_rule_2, 0);
   })();

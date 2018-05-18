@@ -12,11 +12,10 @@ public class NonCustomerResponseService {
     private static final Logger log = LoggerFactory.getLogger(NonCustomerResponseService.class);
 
     private static NonCustomerResponseService nonCustomerResponseService;
-    //Map<UUID, Integer> userIdMapProductId;
-    List<String> imageList;
-    private int numberOfImagesRetrieved = 0;
+    Queue<String> imageList;
+    private boolean isImageRetrieved = false;
 
-    public NonCustomerResponseService () { imageList = new ArrayList<>();
+    public NonCustomerResponseService () { imageList = new LinkedList<>();
     }
 
     public static NonCustomerResponseService getMessageStoreInstance() {
@@ -27,36 +26,46 @@ public class NonCustomerResponseService {
         return nonCustomerResponseService;
     }
 
-    public boolean isRecommended() {
-        return this.numberOfImagesRetrieved > 0;
+    public boolean hasImage() {
+        return isImageRetrieved;
     }
 
-    public void resetImageCnt() {
-        this.numberOfImagesRetrieved = 0;
-    }
 
     public void addImages(String image) {
-        imageList.add(image);
+        imageList.offer(image);
         log.info("Available products for NonCustomerMember {}", imageList.size());
     }
 
+
     public List<String> getImages(int limit) {
-        List<String> requests = new ArrayList<>();
-        if (imageList.size() > 0) {
+        List<String> result = new ArrayList<>();
+        isImageRetrieved = false;
+        int lower = Math.min(limit, imageList.size());
+        for (int i = 1; i <= lower; i++) {
+            result.add(imageList.poll());
+        }
+
+        log.info("Retrieved: {}, available products left: {}", result.size(), imageList.size());
+        /*if (imageList.size() > 0) {
             if (limit >= imageList.size()) {
                 requests = imageList.subList(0, imageList.size());
-                imageList.clear();
             } else {
                 requests = imageList.subList(0, limit);
-                imageList = imageList.subList(limit, imageList.size());
             }
 
-            log.info("Retrieved: {}, available products left: {}", requests.size(), imageList.size());
         } else {
             log.info("No recommended products are available");
         }
-        numberOfImagesRetrieved = requests.size();
 
-        return requests;
+        for (Iterator iterator = imageList.iterator(); iterator.hasNext();) {
+            String image = iterator.next().toString();
+            if (requests.contains(image)) {
+                iterator.remove();
+            }
+        }*/
+        if (result.size() > 0) {
+            isImageRetrieved = true;
+        }
+        return result;
     }
 }

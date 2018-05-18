@@ -34,7 +34,7 @@
                 android:id="@+id/edit_avatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:text="Edit"/>
 
             <!-- Update pwd progress -->
@@ -129,7 +129,7 @@
 
             <!-- Update pwd progress -->
             <ProgressBar
-                android:id="@+id/login_progress"
+                android:id="@+id/profile_progress"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

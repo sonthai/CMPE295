@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textColor="@color/colorAccent"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
@@ -39,7 +39,7 @@
                 android:id="@+id/map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="wrap_content"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
                 tools:context="com.quangpham.drs.MainActivity" />
         </FrameLayout>
 
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp">
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -68,14 +68,14 @@
                     android:id="@+id/location_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     android:text=""/>
                 <TextView
                     android:id="@+id/member_since"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15dp"
+                    android:textSize="15sp"
                     android:text=""/>
             </LinearLayout>
         </LinearLayout>
@@ -84,14 +84,14 @@
             android:id="@+id/approaching"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
+            android:textSize="17sp"
             android:layout_marginLeft="20dp"
             android:text="You are approaching..."/>
         <TextView
             android:id="@+id/mall_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="23dp"
+            android:textSize="23sp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
@@ -101,10 +101,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:textSize="17dp"
+            android:textSize="17sp"
             android:layout_marginLeft="20dp"
             android:text="Hour today: 9AM - 9PM"/>
-
 
     </LinearLayout>
 </LinearLayout>

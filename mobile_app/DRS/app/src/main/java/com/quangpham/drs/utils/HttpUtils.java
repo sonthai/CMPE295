@@ -1,10 +1,11 @@
-package com.quangpham.drs;
+package com.quangpham.drs.utils;
 
 /**
  * Created by quangpham on 3/31/18.
  */
 
 import com.loopj.android.http.*;
+
 import cz.msebera.android.httpclient.HttpEntity;
 
 public class HttpUtils {

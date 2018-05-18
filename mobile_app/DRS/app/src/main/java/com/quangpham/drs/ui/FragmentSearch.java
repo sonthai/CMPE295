@@ -1,4 +1,4 @@
-package com.quangpham.drs;
+package com.quangpham.drs.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -26,6 +26,12 @@ import android.widget.ImageView;
 
 import com.loopj.android.http.Base64;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.quangpham.drs.LoginActivity;
+import com.quangpham.drs.MainActivity;
+import com.quangpham.drs.R;
+import com.quangpham.drs.dto.ProductInfo;
+import com.quangpham.drs.utils.AppConstant;
+import com.quangpham.drs.utils.HttpUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +40,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -44,7 +49,9 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 import static android.app.Activity.RESULT_OK;
-import static com.quangpham.drs.AppConstant.REQUEST_IMAGE_CAPTURE;
+import static com.quangpham.drs.utils.AppConstant.REQUEST_IMAGE_CAPTURE;
+import static com.quangpham.drs.utils.StringUtils.capitalizeAndShorten;
+import static com.quangpham.drs.utils.StringUtils.removeSpecialCharacters;
 
 /**
  * Created by quangpham on 4/4/18.
@@ -57,6 +64,7 @@ public class FragmentSearch extends Fragment {
     private View mProgressView;
     private GridView mFormView;
     private ImageView cameraView;
+    private boolean isNewSearch = false;
     public static ArrayList<ProductInfo> lsProduct = new ArrayList<>();
 
     public static Fragment newInstance() {
@@ -86,9 +94,6 @@ public class FragmentSearch extends Fragment {
                 ProductInfo productInfo = lsProduct.get(position);
                 productInfo.toggleFavorite();
 
-                // This tells the GridView to redraw itself
-                // in turn calling your BooksAdapter's getView method again for each cell
-
                 productInfoAdapter.notifyDataSetChanged();
                 mFormView.invalidateViews();
 
@@ -103,7 +108,6 @@ public class FragmentSearch extends Fragment {
                         if (!(cursor != null && cursor.moveToFirst())) {
                             LoginActivity.mDBHelper.insertProductEntry(productInfo);
                         }
-
                         db.close();
                     }
                 } else { //remove from favorite list & db
@@ -154,7 +158,6 @@ public class FragmentSearch extends Fragment {
                 mDownloadImageTask = new DownloadImageTask(mFormView);
                 mDownloadImageTask.execute((Void) null);
             }
-
         }
     }
 
@@ -214,17 +217,6 @@ public class FragmentSearch extends Fragment {
 
             try {
                 File imageFile = new File(Environment.getExternalStorageDirectory(),"/"+AppConstant.IMAGE_DIR+"/image.jpg" );
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(imageFile);
-                } catch (FileNotFoundException e) {
-                    Log.e("OPEN FILE", "ERROR ");
-                    e.printStackTrace();
-                }
-
-//                        Intent i = new Intent(Intent.ACTION_VIEW);
-//                        i.setDataAndType(Uri.fromFile(imageFile), "image/jpeg");
-//                        startActivity(i);
 
                 InputStream inputStream = new FileInputStream(imageFile);
                 byte[] bytes;
@@ -241,9 +233,6 @@ public class FragmentSearch extends Fragment {
                 bytes = output.toByteArray();
                 String encoded = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-                Log.d("FRAGMENTSEARCH", "onActivityResult");
-                //System.out.println(encoded);
-
                 //send to REST API
                 StringEntity entity = null;
                 try {
@@ -253,6 +242,10 @@ public class FragmentSearch extends Fragment {
                     jsonObject.accumulate("image", encoded);
                     jsonObject.accumulate("email", email);
                     jsonObject.accumulate("quantity", AppConstant.NUMBER_IMAGES_SEARCH_TAB);
+                    String gender = MainActivity.user.getGender();
+                    if (gender != null & !gender.equals("null")) {
+                        jsonObject.accumulate("gender", gender.toLowerCase());
+                    }
                     String sJson = jsonObject.toString();
 
                     entity = new StringEntity(sJson, "UTF-8");
@@ -278,6 +271,7 @@ public class FragmentSearch extends Fragment {
                                     for(int i = 0; i < data.length(); i++) {
                                         String imageName = data.getJSONObject(i).getString("image");
                                         String productName = data.getJSONObject(i).getString("productName");
+                                        productName = removeSpecialCharacters(capitalizeAndShorten(productName));
                                         int price = data.getJSONObject(i).getInt("price");
                                         String imageUrl = imageName;
                                         Bitmap image = null;
@@ -326,6 +320,16 @@ public class FragmentSearch extends Fragment {
             if (success) {
                 showCameraImage(false);
                 mDownloadImageTask = null;
+
+                //process the favorite star
+                if (MainActivity.favoritedProductsInfo.size() > 0) {
+                    for (int i = 0; i < lsProduct.size(); i++) {
+                        int index = MainActivity.getIndexEntryFavoritedList(MainActivity.favoritedProductsInfo, lsProduct.get(i));
+                        if (index >= 0) {
+                            lsProduct.get(i).toggleFavorite();
+                        }
+                    }
+                }
                 ProductInfoAdapter productInfoAdapter = new ProductInfoAdapter(FragmentSearch.this.getContext(), lsProduct);
                 mFormView.setAdapter(productInfoAdapter);
             }

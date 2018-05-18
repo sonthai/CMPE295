@@ -1,4 +1,4 @@
-package com.quangpham.drs;
+package com.quangpham.drs.dto;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -50,7 +50,6 @@ public class ProductInfo {
     public void setProductImage(Bitmap productImage) {
         this.productImage = productImage;
     }
-
 
     public ProductInfo(String productName, String productImageName, String productPrice) {
         this.productName = productName;
