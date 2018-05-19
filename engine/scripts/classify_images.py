@@ -3,14 +3,10 @@ from __future__ import absolute_import, division, print_function
 """
 
 This is a modification of the classify_images.py
-script in Tensorflow. The original script produces
-string labels for input images (e.g. you input a picture
-of a cat and the script returns the string "cat"); this
-modification reads in a directory of images and 
-generates a vector representation of the image using
-the penultimate layer of neural network weights.
+script in Tensorflow. We followed the tutorial on
+http://douglasduhaime.com/posts/identifying-similar-images-with-tensorflow.html
+and made necessary changes to suit our purposes for this project.
 
-Usage: python classify_images.py "../image_dir/*.jpg"
 
 """
 
