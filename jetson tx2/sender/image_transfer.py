@@ -13,7 +13,7 @@ path = '../darknet_old/saved'
 url = 'http://app-balancer-2089768567.us-west-2.elb.amazonaws.com/app-1/customer/processData'
 
 def execute():
-	threading.Timer(5.0, execute).start()
+	#threading.Timer(5.0, execute).start()
 	listOfFiles = [f for f in listdir(path) if isfile(join(path, f))]
 	for file in listOfFiles:
 	   path_file = path+'/'+file
@@ -36,6 +36,7 @@ def execute():
 	       payload['id'] = ts
 	       payload['image'] = encoded_string
 	       payload['gender'] = 'male'
+	       payload['quantity'] = 20
 	       data_json = json.dumps(payload)
 	       request = urllib2.Request(url)
 	       request.add_header('Content-Type', 'application/json')
@@ -46,6 +47,10 @@ def execute():
 	       else:
 			print path_file+" was stoppped!"
 	       os.remove(path_file)
-	   break
+	   #break
+while True:
+	execute()
+	print "PAUSE FOR 5 SECONDS"
+	time.sleep(5)
 
-execute()
+
