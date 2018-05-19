@@ -7,91 +7,10 @@
   + Destroy vm: vagrant destroy
 
 
-### Available Rest APIs
-
-#### User API
-- Login 
-
-POST /user/login
-
-	Body: {"email": "", "password": ""}
-	
-- Register 
-
-POST /user/register
-
-	Body: {"email": "", "password": ""}
-	
-- Update password
-
-POST /user/update_password
-
-	Body: {"email": "", "old_password": "", "new_password": ""}
-	
-#### Product API
-- Get info of one product by name
-
-POST /product/info
-
-	Body: {"name": ""}
-	
-where name is the image name of one product
-
-- Get info of multiple products
-
-POST /product/list
-
-	Body: {"name": ""}
-	
-where name is the comma separated image names of products
-
-#### Data Processing API  
-- Process recommendation: 
-
-POST /customer/processData
-
-	Body: {"id": "", 
-	       "image": "" , 
-	       "email": "" (Note: only mobile needs to send user_id over network)
-	      }
-	      
-- Get Product recommendation (This is only for Camera)
-
-GET /customer/recommend
-
-  	Body {"quantity": (number), "email": "" (for mobile case)}
-	
-where quantity will indicate how many result returned. If it is not specified, it will return 5 results by default.
-If the quantity is higher than the available images, it will return all the available products
-else it will return the number of products being requested
-
-	Response: 
-
-	      {
-		    "responseCode": "OK",
-		    
-		    "responseMsg": "Retrieve result from engine",
-		    
-		    "data": [
-		    
-			{
-			    "id": 251,
-			    "image": "aero_womentop_1.jpg",
-			    "brand": 12,
-			    "price": 12,
-			    "productName": "Long Sleeve Heathered Henley "
-			},
-			
-			{
-			    "id": 154,
-			    "image": "levi_slim_fit_v-neck_tees.jpg",
-			    "brand": 19,
-			    "price": 10,
-			    "productName": "Slim Fit V-neck Tees"
-			}
-			
-		    ]
-		    
-		}
-	
-		   
+### Project structure
+- app folder: contains the backend services written in Spring framework.
+- engine/scripts folder: contains images vector folder and python script to perform the recommendation.
+- jetson tx2 folder: contains pooler (web UI) and sender (python script used for object detection).
+- mobile_app/DRS: contains the android application.
+- aws-install.sh: automated scripted used to set up and deploy application on AWS.
+- dev-vm folder: contains the code to create the dev environment using vagrant
